@@ -8,63 +8,54 @@ if (hamburgerBtn && navMenu) {
     navMenu.classList.toggle("active");
   });
 
-  // Close menu when clicking on a link (NHƯNG TRỪ DROP-DOWN)
-  document.querySelectorAll(".nav-menu a").forEach((link) => {
+  // ===== DROPDOWN TOGGLE (MOBILE) =====
+  document.querySelectorAll(".dropdown > a").forEach((link) => {
     link.addEventListener("click", function (e) {
-      // Kiểm tra xem link này có chứa menu con không
-      const hasDropdown = this.parentElement.classList.contains("dropdown");
+      if (window.innerWidth <= 768) {
+        e.preventDefault(); // không nhảy link #
 
-      if (!hasDropdown) {
-        // Nếu là link bình thường (Trang chủ, Liên hệ...) thì mới đóng menu
+        const dropdownMenu = this.nextElementSibling;
+        if (!dropdownMenu) return;
+
+        // Đóng tất cả dropdown khác
+        document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+          if (menu !== dropdownMenu) {
+            menu.classList.remove("active");
+          }
+        });
+
+        // Toggle dropdown hiện tại
+        dropdownMenu.classList.toggle("active");
+      }
+    });
+  });
+
+  // ===== CLOSE MENU WHEN CLICK NORMAL LINK =====
+  document.querySelectorAll(".nav-menu > li > a").forEach((link) => {
+    link.addEventListener("click", function () {
+      if (
+        window.innerWidth <= 768 &&
+        !this.parentElement.classList.contains("dropdown")
+      ) {
         hamburgerBtn.classList.remove("active");
         navMenu.classList.remove("active");
-      } else {
-        // Nếu là link Dropdown trên Mobile, ngăn không cho nó đóng menu và nhảy trang
-        if (window.innerWidth <= 768) {
-          e.preventDefault();
-          const dropdownMenu = this.nextElementSibling;
 
-          // Toggle hiện/ẩn menu con
-          if (dropdownMenu) {
-            const isVisible = dropdownMenu.style.display === "block";
-            // Đóng các dropdown khác đang mở
-            document
-              .querySelectorAll(".dropdown-menu")
-              .forEach((m) => (m.style.display = "none"));
-            // Bật/tắt cái hiện tại
-            dropdownMenu.style.display = isVisible ? "none" : "block";
-          }
-        }
+        // Đóng luôn dropdown nếu có
+        document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+          menu.classList.remove("active");
+        });
       }
     });
   });
 }
 
-// ===== DROPDOWN MENU TOGGLE ON MOBILE =====
-document.querySelectorAll(".dropdown").forEach((dropdown) => {
-  const dropdownLink = dropdown.querySelector("a");
-  const dropdownMenu = dropdown.querySelector(".dropdown-menu");
-
-  // Only apply click toggle on mobile (when hamburger is visible)
-  dropdownLink.addEventListener("click", function (e) {
-    if (window.innerWidth <= 480 && dropdownMenu) {
-      e.preventDefault();
-
-      // Close other dropdowns
-      document.querySelectorAll(".dropdown-menu").forEach((menu) => {
-        if (menu !== dropdownMenu) {
-          menu.style.display = "none";
-        }
-      });
-
-      // Toggle current dropdown
-      if (dropdownMenu.style.display === "block") {
-        dropdownMenu.style.display = "none";
-      } else {
-        dropdownMenu.style.display = "block";
-      }
-    }
-  });
+// ===== CLICK OUTSIDE TO CLOSE DROPDOWN (MOBILE) =====
+document.addEventListener("click", function (e) {
+  if (window.innerWidth <= 768 && !e.target.closest(".dropdown")) {
+    document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+      menu.classList.remove("active");
+    });
+  }
 });
 
 // ===== CONTACT FORM SUBMIT =====

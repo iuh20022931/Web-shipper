@@ -1276,6 +1276,10 @@ section button.btn-primary {
     display: block !important;
   }
 
+  .dropdown-menu.active {
+    display: block;
+  }
+
   /* ===== HERO SECTION ===== */
   #hero {
     flex-direction: column;
