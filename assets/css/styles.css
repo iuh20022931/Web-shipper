@@ -957,11 +957,17 @@ section button.btn-primary {
   /* ===== HEADER / NAVBAR ===== */
   #header {
     padding: 12px 20px;
+    position: relative;
+    height: auto;
+    overflow: visible !important;
+    z-index: 1000;
   }
 
   .navbar {
     flex-wrap: wrap;
     gap: 12px;
+    position: relative;
+    overflow: visible !important;
   }
 
   .logo h1 {
@@ -969,15 +975,37 @@ section button.btn-primary {
   }
 
   .nav-menu {
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
     width: 100%;
-    order: 3;
+    flex-direction: column;
+    gap: 0;
+    padding: 20px 0;
+    background-color: #0a2a66;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    justify-content: center;
+  }
+
+  .nav-menu.active {
+    display: flex !important;
+  }
+
+  .nav-menu li {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .nav-menu a {
     font-size: 14px;
+    display: block;
+    padding: 8px 20px;
+    color: #ffffff;
   }
 
   /* ===== HERO SECTION ===== */
@@ -1163,11 +1191,11 @@ section button.btn-primary {
   /* ===== HEADER / NAVBAR ===== */
   #header {
     padding: 10px 15px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: relative;
+    height: auto;
+    overflow: visible !important;
+    z-index: 1000;
     background-color: #0a2a66;
-    overflow: visible;
   }
 
   .navbar {
@@ -1176,7 +1204,7 @@ section button.btn-primary {
     align-items: center;
     position: relative;
     gap: 0;
-    overflow: visible;
+    overflow: visible !important;
   }
 
   .logo h1 {
@@ -1191,8 +1219,9 @@ section button.btn-primary {
   }
 
   .nav-menu {
-    position: fixed;
-    top: 50px;
+    display: none;
+    position: absolute;
+    top: 100%;
     left: 0;
     right: 0;
     flex-direction: column;
@@ -1201,20 +1230,17 @@ section button.btn-primary {
     padding: 0;
     background-color: #0a2a66;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    z-index: 99;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 999;
   }
 
   .nav-menu.active {
-    max-height: calc(100vh - 50px);
-    overflow-y: auto;
+    display: flex !important;
   }
 
   .nav-menu li {
     width: 100%;
+    text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
@@ -1229,19 +1255,21 @@ section button.btn-primary {
   .dropdown-menu {
     position: static !important;
     display: none;
-    background-color: #f5f7fb;
+    background-color: #0d3580;
     margin-top: 0;
     border: none;
     border-radius: 0;
     box-shadow: none;
     padding: 8px 0;
     min-width: auto;
+    width: 100%;
   }
 
   .dropdown-menu li a {
-    color: #0a2a66;
-    padding: 8px 15px;
+    color: #ffffff;
+    padding: 8px 30px;
     font-size: 12px;
+    background-color: #0d3580;
   }
 
   .dropdown:hover .dropdown-menu {
