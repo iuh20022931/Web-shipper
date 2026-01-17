@@ -468,9 +468,9 @@ footer {
     color 0.3s ease;
 }
 
-.dropdown:hover > .dropdown-menu {
+/* .dropdown:hover > .dropdown-menu {
   display: block;
-}
+} */
 
 .dropdown-menu li a:hover {
   background-color: #f0f4ff;
