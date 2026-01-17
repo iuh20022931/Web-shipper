@@ -1,3 +1,22 @@
+// ===== HAMBURGER MENU TOGGLE =====
+const hamburgerBtn = document.getElementById("hamburger-btn");
+const navMenu = document.getElementById("nav-menu");
+
+if (hamburgerBtn && navMenu) {
+  hamburgerBtn.addEventListener("click", function () {
+    hamburgerBtn.classList.toggle("active");
+    navMenu.classList.toggle("active");
+  });
+
+  // Close menu when clicking on a link
+  document.querySelectorAll(".nav-menu a").forEach((link) => {
+    link.addEventListener("click", function () {
+      hamburgerBtn.classList.remove("active");
+      navMenu.classList.remove("active");
+    });
+  });
+}
+
 // ===== CONTACT FORM SUBMIT =====
 const form = document.getElementById("contact-form");
 
@@ -28,7 +47,7 @@ form.addEventListener("submit", function (e) {
 
   // Nếu hợp lệ, hiển thị thông báo đẹp mắt
   alert(
-    `✅ Cảm ơn ${name}, FastGo đã nhận yêu cầu của bạn!\n\nChúng tôi sẽ liên hệ bạn sớm nhất.`
+    `✅ Cảm ơn ${name}, FastGo đã nhận yêu cầu của bạn!\n\nChúng tôi sẽ liên hệ bạn sớm nhất.`,
   );
 
   // Xóa trắng các ô nhập liệu
@@ -172,10 +191,10 @@ if (quickQuoteForm) {
 
     // Kiểm tra xem địa chỉ có hợp lệ không (phải nằm trong mảng validDistricts)
     const isFromValid = validDistricts.some(
-      (district) => district.toLowerCase() === fromLocation.toLowerCase()
+      (district) => district.toLowerCase() === fromLocation.toLowerCase(),
     );
     const isToValid = validDistricts.some(
-      (district) => district.toLowerCase() === toLocation.toLowerCase()
+      (district) => district.toLowerCase() === toLocation.toLowerCase(),
     );
 
     if (!isFromValid || !isToValid) {
@@ -210,13 +229,13 @@ if (quickQuoteForm) {
         <hr style="margin: 16px 0; border: none; border-top: 1px solid #e0e0e0;">
         <p><strong>💰 Báo giá:</strong></p>
         <p>Phí cơ bản: <strong>${basePrice.toLocaleString(
-          "vi-VN"
+          "vi-VN",
         )}đ</strong></p>
         <p>Phí hành chính (5%): <strong>${adminFee.toLocaleString(
-          "vi-VN"
+          "vi-VN",
         )}đ</strong></p>
         <p><strong>💵 Tổng cộng: ${totalPrice.toLocaleString(
-          "vi-VN"
+          "vi-VN",
         )}đ</strong></p>
         <button class="btn-order" onclick="alert('Cảm ơn! Yêu cầu của bạn sẽ được xử lý sớm nhất.')">Đặt đơn ngay</button>
       </div>
