@@ -949,7 +949,8 @@ section button.btn-primary {
 /* ===== TABLET: max-width 768px ===== */
 @media (max-width: 768px) {
   /* ===== GLOBAL ===== */
-  * {
+  body,
+  html {
     overflow-x: hidden;
   }
 
@@ -1166,6 +1167,7 @@ section button.btn-primary {
     top: 0;
     z-index: 100;
     background-color: #0a2a66;
+    overflow: visible;
   }
 
   .navbar {
@@ -1174,6 +1176,7 @@ section button.btn-primary {
     align-items: center;
     position: relative;
     gap: 0;
+    overflow: visible;
   }
 
   .logo h1 {
@@ -1188,8 +1191,8 @@ section button.btn-primary {
   }
 
   .nav-menu {
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 50px;
     left: 0;
     right: 0;
     flex-direction: column;
@@ -1202,10 +1205,12 @@ section button.btn-primary {
     overflow: hidden;
     transition: max-height 0.3s ease;
     z-index: 99;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
 
   .nav-menu.active {
-    max-height: 600px;
+    max-height: calc(100vh - 50px);
+    overflow-y: auto;
   }
 
   .nav-menu li {
