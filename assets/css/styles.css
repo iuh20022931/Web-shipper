@@ -1223,7 +1223,7 @@ section button.btn-primary {
   /* Dropdown menu responsive */
   .dropdown-menu {
     position: static !important;
-    display: none !important;
+    display: none;
     background-color: #f5f7fb;
     margin-top: 0;
     border: none;

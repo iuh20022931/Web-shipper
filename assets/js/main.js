@@ -17,6 +17,33 @@ if (hamburgerBtn && navMenu) {
   });
 }
 
+// ===== DROPDOWN MENU TOGGLE ON MOBILE =====
+document.querySelectorAll(".dropdown").forEach((dropdown) => {
+  const dropdownLink = dropdown.querySelector("a");
+  const dropdownMenu = dropdown.querySelector(".dropdown-menu");
+
+  // Only apply click toggle on mobile (when hamburger is visible)
+  dropdownLink.addEventListener("click", function (e) {
+    if (window.innerWidth <= 480 && dropdownMenu) {
+      e.preventDefault();
+
+      // Close other dropdowns
+      document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+        if (menu !== dropdownMenu) {
+          menu.style.display = "none";
+        }
+      });
+
+      // Toggle current dropdown
+      if (dropdownMenu.style.display === "block") {
+        dropdownMenu.style.display = "none";
+      } else {
+        dropdownMenu.style.display = "block";
+      }
+    }
+  });
+});
+
 // ===== CONTACT FORM SUBMIT =====
 const form = document.getElementById("contact-form");
 
