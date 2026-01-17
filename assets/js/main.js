@@ -4,6 +4,7 @@ const navMenu = document.getElementById("nav-menu");
 
 if (hamburgerBtn && navMenu) {
   hamburgerBtn.addEventListener("click", function () {
+    e.stopPropagation();
     hamburgerBtn.classList.toggle("active");
     navMenu.classList.toggle("active");
   });
