@@ -8,11 +8,34 @@ if (hamburgerBtn && navMenu) {
     navMenu.classList.toggle("active");
   });
 
-  // Close menu when clicking on a link
+  // Close menu when clicking on a link (NHƯNG TRỪ DROP-DOWN)
   document.querySelectorAll(".nav-menu a").forEach((link) => {
-    link.addEventListener("click", function () {
-      hamburgerBtn.classList.remove("active");
-      navMenu.classList.remove("active");
+    link.addEventListener("click", function (e) {
+      // Kiểm tra xem link này có chứa menu con không
+      const hasDropdown = this.parentElement.classList.contains("dropdown");
+
+      if (!hasDropdown) {
+        // Nếu là link bình thường (Trang chủ, Liên hệ...) thì mới đóng menu
+        hamburgerBtn.classList.remove("active");
+        navMenu.classList.remove("active");
+      } else {
+        // Nếu là link Dropdown trên Mobile, ngăn không cho nó đóng menu và nhảy trang
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          const dropdownMenu = this.nextElementSibling;
+
+          // Toggle hiện/ẩn menu con
+          if (dropdownMenu) {
+            const isVisible = dropdownMenu.style.display === "block";
+            // Đóng các dropdown khác đang mở
+            document
+              .querySelectorAll(".dropdown-menu")
+              .forEach((m) => (m.style.display = "none"));
+            // Bật/tắt cái hiện tại
+            dropdownMenu.style.display = isVisible ? "none" : "block";
+          }
+        }
+      }
     });
   });
 }
