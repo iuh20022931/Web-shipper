@@ -68,22 +68,91 @@
     </header>
 
     <!-- ================= HERO SECTION ================= -->
-    <!-- Phần giới thiệu chính, slogan, CTA -->
-    <section id="hero">
-      <div class="hero-content">
-        <h2>Giao hàng nhanh – An toàn – Đúng giờ</h2>
-        <p>Dịch vụ giao hàng nội thành & liên tỉnh, hỗ trợ 24/7</p>
+    <!-- Phần giới thiệu chính của website: slogan + CTA + hình minh họa -->
+    <section id="hero" class="hero-section">
+      <!-- Container dùng để căn giữa nội dung và giới hạn chiều rộng -->
+      <div class="container hero-container">
+        <!-- Nội dung chữ bên trái -->
+        <div class="hero-content">
+          <!-- Tiêu đề chính (animation từ trên xuống) -->
+          <h1 class="animate-top">Giao hàng nhanh – An toàn – Đúng giờ</h1>
 
-        <!-- Nút hành động -->
-        <a href="#contact" class="btn-primary">Liên hệ ngay</a>
-      </div>
+          <!-- Mô tả ngắn dịch vụ -->
+          <p class="animate-bottom">
+            Dịch vụ giao hàng nội thành & liên tỉnh, hỗ trợ 24/7. Nhận hàng ngay
+            sau 15 phút!
+          </p>
 
-      <!-- Hình minh họa -->
-      <div class="hero-image">
-        <img src="assets/images/hero.png" alt="Shipper illustration" />
+          <!-- Nhóm nút CTA -->
+          <div class="hero-btns animate-bottom">
+            <!-- CTA chính -->
+            <a href="#quick-quote" class="btn-primary">Tính giá ngay</a>
+
+            <!-- CTA phụ -->
+            <a href="#contact" class="btn-secondary">Liên hệ đặt ship</a>
+          </div>
+        </div>
+
+        <!-- Hình minh họa bên phải -->
+        <div class="hero-image animate-right">
+          <img src="assets/images/hero.png" alt="FastGo Shipper" />
+        </div>
       </div>
     </section>
 
+    <!-- ================= PROCESS ================= -->
+    <section id="process" class="process-section">
+      <div class="container">
+        <h2 class="section-title">Quy trình giao hàng đơn giản</h2>
+        <p class="section-subtitle">
+          Chỉ với 3 bước, hàng hóa của bạn sẽ được giao đến nơi an toàn
+        </p>
+
+        <div class="process-container">
+          <div class="process-item animate-up">
+            <img
+              src="assets/images/order.png"
+              alt="Đặt đơn trực tuyến"
+              class="process-img"
+            />
+            <h3>Đặt đơn trực tuyến</h3>
+            <p>
+              Nhập thông tin người gửi, người nhận và loại dịch vụ ngay trên
+              website.
+            </p>
+          </div>
+
+          <div class="process-arrow">➔</div>
+
+          <div class="process-item animate-up" style="animation-delay: 0.2s">
+            <img
+              src="assets/images/hero-shipper.png"
+              alt="Đặt đơn trực tuyến"
+              class="process-img"
+            />
+            <h3>Lấy hàng trong 15p</h3>
+            <p>
+              Shipper gần nhất sẽ đến nhận hàng chỉ sau vài phút xác nhận đơn.
+            </p>
+          </div>
+
+          <div class="process-arrow">➔</div>
+
+          <div class="process-item animate-up" style="animation-delay: 0.4s">
+            <img
+              src="assets/images/package.png"
+              alt="Đặt đơn trực tuyến"
+              class="process-img"
+            />
+            <h3>Giao tận tay</h3>
+            <p>
+              Hàng hóa được vận chuyển siêu tốc và giao tận tay người nhận an
+              toàn.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
     <!-- ================= SERVICES ================= -->
     <!-- Các dịch vụ giao hàng -->
     <section id="services">
@@ -233,41 +302,33 @@
       </p>
 
       <form id="quick-quote-form">
-        <div class="form-row">
-          <div class="form-group">
-            <input
-              type="text"
-              id="from-location"
-              placeholder="Điểm đi"
-              list="districts-list"
-              required
-            />
-          </div>
+        <input
+          type="text"
+          id="from-location"
+          list="districts-list"
+          placeholder="Điểm đi (Quận/Huyện)"
+          required
+        />
+        <input
+          type="text"
+          id="to-location"
+          list="districts-list"
+          placeholder="Điểm đến (Quận/Huyện)"
+          required
+        />
 
-          <div class="form-group">
-            <input
-              type="text"
-              id="to-location"
-              placeholder="Điểm đến"
-              list="districts-list"
-              required
-            />
-          </div>
-        </div>
+        <select id="service-type" required>
+          <option value="">-- Chọn loại dịch vụ --</option>
+          <option value="standard">Giao tiêu chuẩn (30k)</option>
+          <option value="express">Giao hỏa tốc (50k)</option>
+          <option value="bulk">Giao số lượng lớn (Ô tô)</option>
+        </select>
 
-        <div class="form-row">
-          <div class="form-group">
-            <select id="service-type" required>
-              <option value="">-- Chọn loại dịch vụ --</option>
-              <option value="express">Giao nhanh</option>
-              <option value="standard">Giao tiết kiệm</option>
-            </select>
-          </div>
+        <label class="checkbox-label">
+          <input type="checkbox" id="is-cod" /> Có thu hộ COD (+5k)
+        </label>
 
-          <div class="form-group">
-            <button type="submit" class="btn-primary">Tính giá</button>
-          </div>
-        </div>
+        <button type="submit" class="btn-primary">Tính giá ngay</button>
       </form>
 
       <!-- Datalist danh sách quận TP.HCM -->
@@ -310,19 +371,53 @@
       </p>
 
       <form id="contact-form">
-        <div class="form-group">
-          <input type="text" id="name" placeholder="Họ tên" required />
+        <div class="form-section">
+          <h4><i class="icon">👤</i> Thông tin người gửi</h4>
+          <div class="form-group">
+            <input type="text" id="name" placeholder="Họ và tên" required />
+            <input type="tel" id="phone" placeholder="Số điện thoại" required />
+          </div>
         </div>
 
-        <div class="form-group">
-          <input type="tel" id="phone" placeholder="Số điện thoại" required />
+        <div class="form-section">
+          <h4><i class="icon">📍</i> Địa chỉ giao nhận</h4>
+          <div class="form-group">
+            <input
+              type="text"
+              id="pickup-addr"
+              placeholder="Địa chỉ lấy hàng (Số nhà, tên đường...)"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              id="delivery-addr"
+              placeholder="Địa chỉ giao hàng (Số nhà, tên đường...)"
+              required
+            />
+          </div>
         </div>
 
-        <div class="form-group">
-          <textarea id="note" placeholder="Ghi chú đơn hàng"></textarea>
+        <div class="form-section">
+          <h4><i class="icon">📦</i> Thông tin hàng hóa</h4>
+          <div class="form-row">
+            <select id="package-type">
+              <option value="document">Tài liệu/Hồ sơ</option>
+              <option value="food">Đồ ăn/Thức uống</option>
+              <option value="clothes">Quần áo/Mỹ phẩm</option>
+              <option value="electronic">Đồ điện tử</option>
+              <option value="other">Khác...</option>
+            </select>
+            <input type="number" id="weight" placeholder="Khối lượng (kg)" />
+          </div>
+          <textarea
+            id="note"
+            placeholder="Ghi chú cho shipper (Ví dụ: Hàng dễ vỡ, gọi trước khi đến...)"
+          ></textarea>
         </div>
 
-        <button type="submit" class="btn-primary">Gửi yêu cầu</button>
+        <button type="submit" class="btn-primary">Xác nhận đặt đơn</button>
       </form>
     </section>
 

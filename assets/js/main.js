@@ -66,35 +66,33 @@ const form = document.getElementById("contact-form");
 form.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
+  const name = document.getElementById("name").value;
+  const pickup = document.getElementById("pickup-addr").value;
+  const delivery = document.getElementById("delivery-addr").value;
+  const packageType =
+    document.getElementById("package-type").options[
+      document.getElementById("package-type").selectedIndex
+    ].text;
 
-  // Kiểm tra họ tên không để trống
-  if (name === "") {
-    alert("❌ Vui lòng nhập họ tên.");
-    return;
-  }
+  // Hiệu ứng gửi đơn
+  const btn = form.querySelector("button");
+  btn.innerText = "Đang tạo đơn hàng...";
 
-  // Kiểm tra số điện thoại không để trống
-  if (phone === "") {
-    alert("❌ Vui lòng nhập số điện thoại.");
-    return;
-  }
-
-  // Kiểm tra số điện thoại có đúng 10 số không (loại bỏ ký tự không phải số)
-  const phoneDigitsOnly = phone.replace(/\D/g, "");
-  if (phoneDigitsOnly.length !== 10) {
-    alert("❌ Số điện thoại phải có đúng 10 chữ số.");
-    return;
-  }
-
-  // Nếu hợp lệ, hiển thị thông báo đẹp mắt
-  alert(
-    `✅ Cảm ơn ${name}, FastGo đã nhận yêu cầu của bạn!\n\nChúng tôi sẽ liên hệ bạn sớm nhất.`,
-  );
-
-  // Xóa trắng các ô nhập liệu
-  form.reset();
+  setTimeout(() => {
+    form.innerHTML = `
+            <div class="success-message">
+                <div class="check-icon">✓</div>
+                <h3>Đã tạo đơn thành công!</h3>
+                <p>Chào <strong>${name}</strong>, đơn hàng <strong>${packageType}</strong> của bạn đang được hệ thống điều phối shipper.</p>
+                <div style="text-align:left; font-size:14px; background:#fff; padding:10px; border-radius:5px;">
+                    <p>🚩 <strong>Lấy tại:</strong> ${pickup}</p>
+                    <p>🏁 <strong>Giao đến:</strong> ${delivery}</p>
+                </div>
+                <p style="margin-top:15px;">Vui lòng chuẩn bị hàng hóa, chúng tôi sẽ gọi cho bạn ngay!</p>
+                <button onclick="location.reload()" class="btn-secondary">Quay lại</button>
+            </div>
+        `;
+  }, 1200);
 });
 // FAQ Accordion
 document.querySelectorAll(".faq-question").forEach((q) => {
@@ -107,102 +105,131 @@ document.querySelectorAll(".faq-question").forEach((q) => {
     ans.style.display = isVisible ? "none" : "block";
   });
 });
-// Tracking Functionality
+// ===== TRACKING FUNCTIONALITY (Hợp nhất với Loading & Giao diện Card) =====
 function trackOrder(event, type) {
   event.preventDefault();
-  let code = "";
-  let resultDiv = null;
 
+  // 1. Xác định các phần tử
+  const spinner = document.getElementById("loading-spinner");
+  let resultDiv = document.getElementById(`result-${type}`);
+  let code = "";
+
+  // 2. Lấy mã đơn hàng từ ô input tương ứng
   if (type === "standard") {
     code = document.getElementById("standard-code").value.trim().toUpperCase();
-    resultDiv = document.getElementById("result-standard");
   } else if (type === "bulk") {
     code = document.getElementById("bulk-code").value.trim().toUpperCase();
-    resultDiv = document.getElementById("result-bulk");
   } else if (type === "cod") {
     code = document.getElementById("cod-code").value.trim().toUpperCase();
-    resultDiv = document.getElementById("result-cod");
   }
 
+  // 3. Nếu không nhập mã, báo lỗi ngay (giữ nguyên style đỏ của bạn)
   if (!code) {
-    resultDiv.innerHTML =
-      '<p style="color: #d9534f;"><strong>❌ Lỗi:</strong> Vui lòng nhập mã đơn hàng!</p>';
+    resultDiv.innerHTML = `
+      <div style="background-color: #f8e8e8; border-left: 4px solid #d9534f; padding: 20px; border-radius: 8px; margin-top: 15px;">
+        <p style="color: #d9534f;"><strong>❌ Lỗi:</strong> Vui lòng nhập mã đơn hàng!</p>
+      </div>`;
     return;
   }
 
-  // Database giả lập cho tracking
-  const trackingDatabase = {
-    "FAST-STD": {
-      type: "Đơn hàng tiêu chuẩn",
-      status: "Đang xử lý",
-      icon: "⏳",
-      color: "#ff7a00",
-    },
-    "FAST-BULK": {
-      type: "Đơn hàng số lượng lớn",
-      status: "Đang giao",
-      icon: "🚚",
-      color: "#0a2a66",
-    },
-    "FAST-COD": {
-      type: "Đơn hàng COD",
-      status: "Hoàn tất",
-      icon: "✅",
-      color: "#27ae60",
-    },
-  };
+  // 4. Hiện hiệu ứng Loading và xóa kết quả cũ
+  spinner.style.display = "block";
+  resultDiv.innerHTML = "";
 
-  // Kiểm tra mã đơn hàng
-  if (trackingDatabase[code]) {
-    const order = trackingDatabase[code];
-    resultDiv.innerHTML = `
-      <div style="background-color: #e8f4f8; border-left: 4px solid ${order.color}; padding: 20px; border-radius: 8px;">
-        <p><strong>Mã đơn:</strong> ${code}</p>
-        <p><strong>Loại:</strong> ${order.type}</p>
-        <p style="font-size: 18px; color: ${order.color}; margin-top: 12px;">
-          <strong>${order.icon} Trạng thái: ${order.status}</strong>
-        </p>
-      </div>
-    `;
-  } else {
-    // Mã không tìm thấy
-    resultDiv.innerHTML = `
-      <div style="background-color: #f8e8e8; border-left: 4px solid #d9534f; padding: 20px; border-radius: 8px;">
-        <p style="color: #d9534f;"><strong>❌ Lỗi:</strong> Không tìm thấy đơn hàng với mã <strong>${code}</strong></p>
-        <p style="color: #999; font-size: 14px; margin-top: 8px;">Vui lòng kiểm tra lại mã đơn hàng.</p>
-      </div>
-    `;
+  // 5. Chờ 0.8 giây để "giả lập" quét dữ liệu, sau đó hiện kết quả bạn thích
+  setTimeout(() => {
+    spinner.style.display = "none"; // Tắt loading
+
+    // Database giả lập
+    const trackingDatabase = {
+      "FAST-STD": {
+        type: "Đơn hàng tiêu chuẩn",
+        status: "Đang xử lý",
+        icon: "⏳",
+        color: "#ff7a00",
+      },
+      "FAST-BULK": {
+        type: "Đơn hàng số lượng lớn",
+        status: "Đang giao",
+        icon: "🚚",
+        color: "#0a2a66",
+      },
+      "FAST-COD": {
+        type: "Đơn hàng COD",
+        status: "Hoàn tất",
+        icon: "✅",
+        color: "#27ae60",
+      },
+    };
+
+    // 6. Hiển thị kết quả theo Style bạn thích
+    if (trackingDatabase[code]) {
+      const order = trackingDatabase[code];
+      resultDiv.innerHTML = `
+        <div style="background-color: #e8f4f8; border-left: 4px solid ${order.color}; padding: 20px; border-radius: 8px; margin-top: 15px; text-align: left;">
+          <p><strong>Mã đơn:</strong> ${code}</p>
+          <p><strong>Loại:</strong> ${order.type}</p>
+          <p style="font-size: 18px; color: ${order.color}; margin-top: 12px;">
+            <strong>${order.icon} Trạng thái: ${order.status}</strong>
+          </p>
+        </div>
+      `;
+      saveToHistory(code); // Lưu vào lịch sử (nếu bạn đã thêm hàm này)
+    } else {
+      // Style báo lỗi khi không tìm thấy mã
+      resultDiv.innerHTML = `
+        <div style="background-color: #f8e8e8; border-left: 4px solid #d9534f; padding: 20px; border-radius: 8px; margin-top: 15px; text-align: left;">
+          <p style="color: #d9534f;"><strong>❌ Lỗi:</strong> Không tìm thấy đơn hàng với mã <strong>${code}</strong></p>
+          <p style="color: #999; font-size: 14px; margin-top: 8px;">Vui lòng kiểm tra lại mã đơn hàng.</p>
+        </div>
+      `;
+    }
+  }, 800);
+}
+// Lưu mã vào lịch sử khi bấm Kiểm tra
+function saveToHistory(code) {
+  let history = JSON.parse(localStorage.getItem("trackingHistory")) || [];
+  if (!history.includes(code)) {
+    history.push(code);
+    if (history.length > 5) history.shift(); // Lưu tối đa 5 mã gần nhất
+    localStorage.setItem("trackingHistory", JSON.stringify(history));
   }
 }
-
 // ===== QUICK QUOTE FORM =====
 // Mảng danh sách các quận hợp lệ của TP.HCM
-const validDistricts = [
-  "Quận 1",
-  "Quận 2",
-  "Quận 3",
-  "Quận 4",
-  "Quận 5",
-  "Quận 6",
-  "Quận 7",
-  "Quận 8",
-  "Quận 9",
-  "Quận 10",
-  "Quận 11",
-  "Quận 12",
-  "Bình Thạnh",
-  "Bình Tân",
-  "Gò Vấp",
-  "Phú Nhuận",
-  "Tân Bình",
-  "Tân Phú",
-  "Thủ Đức",
-  "Hóc Môn",
-  "Cần Thơ",
-  "Huyện Bình Chánh",
-  "Huyện Cần Giờ",
-  "Huyện Nhà Bè",
-];
+const districtGroups = {
+  inner: [
+    "Quận 1",
+    "Quận 3",
+    "Quận 4",
+    "Quận 5",
+    "Quận 6",
+    "Quận 10",
+    "Quận 11",
+    "Phú Nhuận",
+    "Bình Thạnh",
+    "Gò Vấp",
+    "Tân Bình",
+    "Tân Phú",
+  ],
+  outer: [
+    "Quận 2",
+    "Quận 7",
+    "Quận 8",
+    "Quận 9",
+    "Quận 12",
+    "Thủ Đức",
+    "Bình Tân",
+    "Hóc Môn",
+    "Bình Chánh",
+    "Nhà Bè",
+    "Củ Chi",
+    "Cần Giờ",
+  ],
+};
+
+// Danh sách tất cả để kiểm tra hợp lệ
+const allDistricts = [...districtGroups.inner, ...districtGroups.outer];
 
 const quickQuoteForm = document.getElementById("quick-quote-form");
 
@@ -210,79 +237,78 @@ if (quickQuoteForm) {
   quickQuoteForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // Lấy giá trị từ form
-    const fromLocation = document.getElementById("from-location").value.trim();
-    const toLocation = document.getElementById("to-location").value.trim();
-    const serviceType = document.getElementById("service-type").value;
+    const from = document.getElementById("from-location").value.trim();
+    const to = document.getElementById("to-location").value.trim();
+    const service = document.getElementById("service-type").value;
+    const isCod = document.getElementById("is-cod").checked;
     const resultDiv = document.getElementById("quote-result");
 
-    // Kiểm tra dữ liệu
-    if (!fromLocation || !toLocation || !serviceType) {
-      resultDiv.innerHTML =
-        '<p style="color: #d9534f;"><strong>❌ Lỗi:</strong> Vui lòng nhập đầy đủ thông tin!</p>';
-      resultDiv.classList.add("show");
-      return;
-    }
-
-    // Kiểm tra điểm đi và điểm đến có giống nhau không
-    if (fromLocation.toLowerCase() === toLocation.toLowerCase()) {
-      resultDiv.innerHTML =
-        '<p style="color: #d9534f;"><strong>❌ Lỗi:</strong> Điểm đi và điểm đến không thể giống nhau!</p>';
-      resultDiv.classList.add("show");
-      return;
-    }
-
-    // Kiểm tra xem địa chỉ có hợp lệ không (phải nằm trong mảng validDistricts)
-    const isFromValid = validDistricts.some(
-      (district) => district.toLowerCase() === fromLocation.toLowerCase(),
+    // 1. Kiểm tra hợp lệ
+    const isFromValid = allDistricts.some(
+      (d) => d.toLowerCase() === from.toLowerCase(),
     );
-    const isToValid = validDistricts.some(
-      (district) => district.toLowerCase() === toLocation.toLowerCase(),
+    const isToValid = allDistricts.some(
+      (d) => d.toLowerCase() === to.toLowerCase(),
     );
 
     if (!isFromValid || !isToValid) {
       resultDiv.innerHTML =
-        '<p style="color: #d9534f;"><strong>❌ Lỗi:</strong> FastGo hiện chưa hỗ trợ khu vực này, vui lòng chọn quận từ danh sách gợi ý.</p>';
-      resultDiv.classList.add("show");
+        "❌ Khu vực không hợp lệ. Vui lòng chọn quận tại TP.HCM.";
       return;
     }
 
-    // Tính giá tiền dựa theo loại dịch vụ
-    let basePrice = 0;
-    let serviceName = "";
+    // 2. Xác định vùng (Nội hay Ngoại thành)
+    const isOuter = districtGroups.outer.some(
+      (d) =>
+        d.toLowerCase() === from.toLowerCase() ||
+        d.toLowerCase() === to.toLowerCase(),
+    );
 
-    if (serviceType === "express") {
-      basePrice = 30000;
-      serviceName = "Giao nhanh";
-    } else if (serviceType === "standard") {
-      basePrice = 15000;
-      serviceName = "Giao tiết kiệm";
+    // 3. Tính giá cước theo Bảng giá của bạn
+    let price = 0;
+    let vehicle = "Xe máy";
+
+    if (service === "standard") {
+      price = 30000;
+    } else if (service === "express") {
+      price = 50000;
+    } else if (service === "bulk") {
+      resultDiv.innerHTML =
+        "📞 <strong>Giao số lượng lớn:</strong> Vui lòng liên hệ Hotline để có giá tốt nhất cho Ô tô.";
+      return;
     }
 
-    // Tính phí hành chính 5% dựa trên phí cơ bản
-    const adminFee = Math.round(basePrice * 0.05);
-    const totalPrice = basePrice + adminFee;
+    // Phụ phí ngoại thành (ví dụ cộng thêm 10k nếu có 1 điểm ở ngoại thành)
+    if (isOuter) price += 10000;
 
-    // Hiển thị kết quả
+    // Phụ phí COD theo bảng giá của bạn
+    if (isCod) price += 5000;
+
+    // 4. Hiển thị kết quả xịn xò
     resultDiv.innerHTML = `
-      <div>
-        <p><strong>📍 Từ:</strong> ${fromLocation}</p>
-        <p><strong>📍 Đến:</strong> ${toLocation}</p>
-        <p><strong>📦 Loại dịch vụ:</strong> ${serviceName}</p>
-        <hr style="margin: 16px 0; border: none; border-top: 1px solid #e0e0e0;">
-        <p><strong>💰 Báo giá:</strong></p>
-        <p>Phí cơ bản: <strong>${basePrice.toLocaleString(
-          "vi-VN",
-        )}đ</strong></p>
-        <p>Phí hành chính (5%): <strong>${adminFee.toLocaleString(
-          "vi-VN",
-        )}đ</strong></p>
-        <p><strong>💵 Tổng cộng: ${totalPrice.toLocaleString(
-          "vi-VN",
-        )}đ</strong></p>
-        <button class="btn-order" onclick="alert('Cảm ơn! Yêu cầu của bạn sẽ được xử lý sớm nhất.')">Đặt đơn ngay</button>
-      </div>
-    `;
+    <div class="quote-card">
+      <h4>Báo giá dự kiến</h4>
+      <p>🚚 Phương tiện: <strong>${vehicle}</strong></p>
+      <p>📍 Khu vực: <strong>${isOuter ? "Ngoại thành" : "Nội thành"}</strong></p>
+      <p>💰 Tổng cước: <strong style="color: #ff7a00; font-size: 20px;">${price.toLocaleString()}đ</strong></p>
+      ${isCod ? "<small>(Đã bao gồm phí COD 5.000đ)</small>" : ""}
+    </div>
+  `;
     resultDiv.classList.add("show");
   });
 }
+
+// Chạy animation khi trang load xong
+window.addEventListener("load", () => {
+  // Lấy tất cả phần tử có animation
+  const animatedElements = document.querySelectorAll(
+    ".animate-top, .animate-bottom, .animate-right",
+  );
+
+  // Hiện lần lượt từng phần tử cho mượt
+  animatedElements.forEach((el, index) => {
+    setTimeout(() => {
+      el.classList.add("animate-show");
+    }, index * 150);
+  });
+});
