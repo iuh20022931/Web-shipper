@@ -11,7 +11,7 @@ if (hamburgerBtn && navMenu) {
   // ===== DROPDOWN TOGGLE (MOBILE) =====
   document.querySelectorAll(".dropdown > a").forEach((link) => {
     link.addEventListener("click", function (e) {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 480) {
         e.preventDefault(); // không nhảy link #
 
         const dropdownMenu = this.nextElementSibling;
@@ -34,7 +34,7 @@ if (hamburgerBtn && navMenu) {
   document.querySelectorAll(".nav-menu > li > a").forEach((link) => {
     link.addEventListener("click", function () {
       if (
-        window.innerWidth <= 768 &&
+        window.innerWidth <= 480 &&
         !this.parentElement.classList.contains("dropdown")
       ) {
         hamburgerBtn.classList.remove("active");
@@ -51,7 +51,7 @@ if (hamburgerBtn && navMenu) {
 
 // ===== CLICK OUTSIDE TO CLOSE DROPDOWN (MOBILE) =====
 document.addEventListener("click", function (e) {
-  if (window.innerWidth <= 768 && !e.target.closest(".dropdown")) {
+  if (window.innerWidth <= 480 && !e.target.closest(".dropdown")) {
     document.querySelectorAll(".dropdown-menu").forEach((menu) => {
       menu.classList.remove("active");
     });

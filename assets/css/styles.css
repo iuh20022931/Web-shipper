@@ -1272,10 +1272,6 @@ section button.btn-primary {
     background-color: #0d3580;
   }
 
-  .dropdown:hover .dropdown-menu {
-    display: block !important;
-  }
-
   .dropdown-menu.active {
     display: block;
   }
