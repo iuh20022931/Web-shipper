@@ -13,6 +13,7 @@ if (hamburgerBtn && navMenu) {
     link.addEventListener("click", function (e) {
       if (window.innerWidth <= 480) {
         e.preventDefault(); // không nhảy link #
+        e.stopPropagation();
 
         const dropdownMenu = this.nextElementSibling;
         if (!dropdownMenu) return;
