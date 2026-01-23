@@ -1,18 +1,15 @@
 # 🚚 FastGo - Hệ Thống Quản Lý Vận Chuyển & Giao Hàng
 
-> **FastGo** là một nền tảng web quản lý dịch vụ giao hàng (Logistics/Shipper) toàn diện, được xây dựng bằng **PHP thuần** và **MySQL**. Hệ thống mô phỏng quy trình vận hành thực tế của một công ty vận chuyển: từ lúc khách đặt đơn, admin điều phối, tài xế (shipper) đi giao, đến khi hoàn tất và báo cáo doanh thu.
+> **FastGo** là một nền tảng web quản lý dịch vụ giao hàng (Logistics/Shipper) toàn diện, được xây dựng bằng **PHP thuần** và **MySQL**. Hệ thống mô phỏng quy trình vận hành thực tế của một công ty vận chuyển.
 
 ---
 
 ## 📋 Mục Lục
 
 1. [Tổng Quan Dự Án](#-tổng-quan-dự-án)
-2. [Tính Năng Chi Tiết](#-tính-năng-chi-tiết)
-3. [Công Nghệ Sử Dụng](#-công-nghệ-sử-dụng)
-4. [Cơ Sở Dữ Liệu](#-cơ-sở-dữ-liệu)
-5. [Hướng Dẫn Cài Đặt](#-hướng-dẫn-cài-đặt)
-6. [Cấu Trúc Thư Mục](#-cấu-trúc-thư-mục)
-7. [Thông Tin Tác Giả](#-thông-tin-tác-giả)
+2. [Tính Năng Nổi Bật](#-tính-năng-nổi-bật)
+3. [Hướng Dẫn Cài Đặt](#-hướng-dẫn-cài-đặt)
+4. [Thông Tin Thêm](#-thông-tin-thêm)
 
 ---
 
@@ -24,10 +21,10 @@ Hệ thống được thiết kế để giải quyết các bài toán cốt l�
 - **Minh bạch thông tin:** Khách hàng có thể theo dõi hành trình đơn hàng (Tracking Timeline) chi tiết từng phút.
 - **Quản lý tập trung:** Admin nắm toàn bộ số liệu, doanh thu, hiệu suất nhân viên qua Dashboard trực quan.
 
-### ✨ Điểm Nổi Bật
+### ✨ Tính năng nổi bật
 
 - ✅ **Timeline Tracking:** Theo dõi trạng thái đơn hàng dạng dòng thời gian dọc (Vertical Timeline) hiện đại.
-- ✅ **Proof of Delivery (POD):** Shipper bắt buộc phải tải lên ảnh chụp khi hoàn tất đơn hàng.
+- ✅ **Proof of Delivery (POD):** Shipper cần tải lên ảnh chụp khi hoàn tất đơn hàng.
 - ✅ **Tính giá tự động:** Hệ thống tự tính phí ship dựa trên khoảng cách (Nội/Ngoại thành), khối lượng và phí COD.
 - ✅ **AJAX Experience:** Đăng nhập, Đăng ký, Tra cứu đơn hàng, Tính giá... đều xử lý không cần tải lại trang.
 - ✅ **Responsive Design:** Giao diện tối ưu hoàn toàn cho Mobile (đặc biệt là giao diện Shipper).
@@ -150,146 +147,102 @@ Hệ thống sử dụng 4 bảng chính:
 
 ---
 
-## Cấu Trúc Thư Mục
+## 💡 Logic tính phí (tham khảo)
+
+Giá cước được tính dựa trên các yếu tố sau:
+
+- **Giá cơ bản:**
+  - Giao tiêu chuẩn: 30.000đ
+  - Giao hỏa tốc: 50.000đ
+- **Phụ phí (có thể có):**
+  - Phí COD: 1% giá trị đơn hàng (tối thiểu 5.000đ)
+  - Phí cân nặng: +5.000đ/kg (áp dụng cho các đơn hàng > 2kg)
+
+_Lưu ý: Giá trên chỉ mang tính chất tham khảo và có thể thay đổi._
+
+---
+
+## ℹ️ Thông tin thêm
+
+<details>
+<summary><b>Tài khoản Demo</b></summary>
+<br>
+
+| Vai trò  | Tên đăng nhập | Mật khẩu |
+| -------- | ------------- | -------- |
+| Admin    | `admin`       | `123456` |
+| Shipper  | `shipper`     | `123456` |
+| Customer | `customer`    | `123456` |
+
+> _Lưu ý: Bạn cần tạo các tài khoản này thủ công hoặc import file `database.sql` có sẵn._
+
+</details>
+
+<details>
+<summary><b>Công nghệ & Kỹ thuật</b></summary>
+<br>
+
+- **Backend:** **PHP** (Native - Không Framework).
+- **Database:** **MySQL** (Sử dụng **Prepared Statements** để chống SQL Injection).
+- **Frontend:** HTML5, CSS3 (Flexbox/Grid), **JavaScript** (Vanilla).
+- **Kỹ thuật nổi bật:**
+  - **AJAX:** Xử lý bất đồng bộ cho đăng nhập, đăng ký, tra cứu, tính giá...
+  - **Bảo mật:** Password Hashing (**Bcrypt**), chống XSS, Session Fixation.
+  - **Responsive Design:** Tối ưu giao diện cho Mobile, Tablet và Desktop.
+
+</details>
+
+<details>
+<summary><b>Cấu trúc thư mục</b></summary>
+<br>
 
 ```
 Web shipper/
-├──  assets/                  # Tài nguyên tĩnh
-│   ├── 📁 css/                 # Stylesheets (styles.css, admin.css)
-│   ├── 📁 js/                  # JavaScript (main.js)
-│   ├── 📁 images/              # Hình ảnh giao diện
-│   └── 📁 uploads/             # Ảnh POD do shipper tải lên
-├── 📁 config/                  # Cấu hình hệ thống (db.php)
-├── 📁 includes/                # Các đoạn mã dùng chung (Header, Footer)
+├──  assets/                  # Tài nguyên tĩnh (CSS, JS, Images)
+├──  config/                  # Cấu hình hệ thống (db.php)
+├──  includes/                # Các đoạn mã dùng chung (Header, Footer)
 │
-├── 📄 index.php                # Trang chủ (Landing Page)
-├── 📄 login.php                # Trang đăng nhập
-├── 📄 register.php             # Trang đăng ký
-├── 📄 tracking.php             # Trang tra cứu đơn hàng (Public)
+├──  index.php                # Trang chủ (Landing Page)
+├──  login.php / register.php # Trang đăng nhập / đăng ký
+├──  tracking.php             # Trang tra cứu đơn hàng công khai
 │
-├── 📄 dashboard.php            # Dashboard Khách hàng
-├── 📄 order.php                # Xử lý tạo đơn hàng
-├── 📄 order_history.php        # Lịch sử đơn hàng
-├── 📄 customer_order_detail.php # Chi tiết đơn hàng (cho Khách)
-├── 📄 print_invoice.php        # Trang in hóa đơn
-├── 📄 profile.php              # Hồ sơ khách hàng
+├──  dashboard.php            # Dashboard Khách hàng & Lịch sử đơn
+├──  order.php                # File xử lý tạo đơn hàng
 │
-├── 📄 shipper_dashboard.php    # Dashboard Shipper
-├── 📄 shipper_order_detail.php # Chi tiết & Xử lý đơn (cho Shipper)
-├── 📄 shipper_profile.php      # Hồ sơ & Thống kê Shipper
+├──  shipper_dashboard.php    # Dashboard cho Shipper
+├──  shipper_order_detail.php # Chi tiết & Xử lý đơn của Shipper
 │
-├── 📄 orders_manage.php        # Quản lý đơn hàng (Admin)
-├── 📄 order_detail.php         # Chi tiết & Phân công đơn (Admin)
-├── 📄 users_manage.php         # Quản lý người dùng (Admin)
-├── 📄 services_manage.php      # Quản lý dịch vụ (Admin)
-├── 📄 admin_stats.php          # Báo cáo thống kê (Admin)
-├── 📄 admin_pricing_guide.php  # Hướng dẫn tính phí (Admin)
+├──  orders_manage.php        # Quản lý toàn bộ đơn hàng (Admin)
+├──  users_manage.php         # Quản lý người dùng (Admin)
+├──  services_manage.php      # Quản lý dịch vụ & giá cước (Admin)
 │
-└── ... (các file xử lý AJAX: login_ajax.php, tracking_ajax.php...)
+└── ... (các file xử lý AJAX và chi tiết khác)
 ```
 
-### Pricing Logic
+</details>
 
-```
-Base Price:
-- Standard: 30,000đ
-- Express: 50,000đ
+<details>
+<summary><b>Cơ sở dữ liệu</b></summary>
+<br>
 
-Surcharge:
-- Outer district: +10,000đ
-- COD fee: +5,000đ
+Hệ thống sử dụng 4 bảng chính:
 
-Total = Base + Surcharge(s)
-```
+1.  **`users`**: Lưu thông tin người dùng (Admin, Shipper, Customer).
+2.  **`orders`**: Lưu thông tin đơn hàng (Mã đơn, người gửi/nhận, trạng thái, phí ship, COD, ảnh POD...).
+3.  **`services`**: Lưu cấu hình các gói dịch vụ và giá cước cơ bản.
+4.  **`order_logs`**: Lưu lịch sử thay đổi trạng thái của đơn hàng.
 
----
-
-## ⚙️ Cài Đặt Mô Tả
-
-Không cần cài đặt thêm! Chỉ cần:
-
-1. Download/Clone project
-2. Mở `index.html` trong trình duyệt
-3. Tất cả tính năng hoạt động ngay
-
----
-
-## 📞 Liên Hệ
-
-**FastGo Services**
-
-- 📧 Email: contact@fastgo.vn
-- ☎️ Hotline: 0123 456 789
-- 📍 Địa chỉ: TP. Hồ Chí Minh
-- 🕒 Hỗ trợ: 24/7
-
----
-
-## 📄 Ghi Chú
-
-- Tất cả dữ liệu tracking & quote là **mô phỏng** (mock data)
-- Trong production, cần kết nối backend API
-- Form data cần gửi đến server để xử lý
-
----
-
-**Cập nhật lần cuối:** 23/01/2026  
-**Phiên bản:** 1.2  
-**Trạng thái:** ✅ Hoàn thành - Responsive - Phân trang & Thống kê
-
-- 📋 Menu điều hướng responsive với dropdown
-- 📦 Phần giới thiệu các dịch vụ giao hàng:
-  - Giao tiêu chuẩn
-  - Giao hỏa tốc
-  - Giao COD (thu tiền tận nơi)
-  - Giao số lượng lớn
-  - Dịch vụ doanh nghiệp
-  - Chuyển nhà / vận chuyển lớn
-- 💰 Bảng giá dịch vụ chi tiết
-- 🌟 Phần "Why Us" - Những lý do chọn FastGo
-- ❓ FAQ Accordion tương tác
-- 📞 Form liên hệ với xác thực dữ liệu
-- 📄 **Phân trang (Pagination)**: Áp dụng cho Admin, Shipper và Lịch sử đơn hàng.
-- 📊 **Thống kê Shipper**: Trang hồ sơ riêng xem thu nhập và hiệu suất.
-- 🔔 **Thông báo**: Cảnh báo đơn mới cho Shipper.
-
-#### 2. **Trang Theo Dõi Đơn Hàng (tracking.php)**
-
-- 🔍 Tra cứu đơn hàng đơn lẻ
-- 📊 Tra cứu đơn số lượng lớn
-- 💳 Tra cứu đơn COD
-- 📍 Hiển thị trạng thái vận chuyển
-
-#### 3. **Chức Năng JavaScript (main.js)**
-
-- ✅ Xác thực form liên hệ (kiểm tra họ tên, số điện thoại)
-- 📱 Accordion FAQ mở/đóng tương tác
-- 🔎 Hệ thống tracking đơn hàng
-- 📢 Thông báo user-friendly
-
----
-
-## 💻 Công Nghệ Sử Dụng
-
-| Công Nghệ                | Phiên Bản | Mục Đích                            |
-| ------------------------ | --------- | ----------------------------------- |
-| **HTML5**                | -         | Cấu trúc semantic của ứng dụng      |
-| **CSS3**                 | -         | Styling responsive & hiệu ứng       |
-| **JavaScript (Vanilla)** | ES6+      | Xử lý logic & tương tác người dùng  |
-| **Responsive Design**    | -         | Tương thích Mobile, Tablet, Desktop |
-
-### Các Tính Năng CSS
-
-- 🎨 Flexbox & Grid layout
-- 📱 Mobile-first responsive design
-- ⚡ Smooth transitions & animations
-- 🌈 Color scheme chuyên nghiệp
+</details>
 
 ---
 
 ## 👤 Thông Tin Tác Giả
 
 **Tên dự án:** FastGo - Nền tảng giao hàng  
-**Phiên bản:** 1.2  
+**Phiên bản:** 1.2.1
 **Ngày tạo:** 2026  
 **Mục đích:** Dự án thực tập lập trình web
+
+---
+
+Cảm ơn bạn đã sử dụng FastGo! 🚀
