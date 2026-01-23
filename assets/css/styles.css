@@ -513,6 +513,7 @@
 }
 
 .form-group input,
+.form-group select,
 .form-row input,
 .form-row select,
 #contact-form textarea {
@@ -1891,4 +1892,336 @@ section button.btn-primary {
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* ===== FORM VALIDATION STYLES ===== */
+.input-error {
+  border-color: #dc3545 !important; /* Màu đỏ bootstrap */
+  background-color: #fff8f8 !important;
+}
+
+.field-error-msg {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 5px;
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ===== AUTH PAGES (Login/Register) ===== */
+body.auth-page {
+  background-color: #f5f7fb;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.auth-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.auth-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+.auth-title {
+  text-align: center;
+  color: #0a2a66;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+.auth-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+.auth-link a {
+  color: #ff7a00;
+  text-decoration: none;
+  font-weight: 600;
+}
+.error-box {
+  background: #fee;
+  color: #d9534f;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ===== AUTH MODAL STYLES ===== */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 2000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+  animation: fadeIn 0.3s;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 30px;
+  border: 1px solid #888;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.close-modal {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+}
+.close-modal:hover,
+.close-modal:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ===== HISTORY TABLE STYLES ===== */
+.table-responsive {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px; /* Đảm bảo không bị co quá nhỏ trên mobile */
+}
+
+.history-table th,
+.history-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.history-table th {
+  background-color: #f8f9fa;
+  color: #0a2a66;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.history-table tr:last-child td {
+  border-bottom: none;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+.status-shipping {
+  background: #cce5ff;
+  color: #004085;
+}
+.status-completed {
+  background: #d4edda;
+  color: #155724;
+}
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ===== TRACKING TIMELINE ===== */
+.tracking-timeline {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  position: relative;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 24px;
+  position: relative;
+}
+
+/* Đường nối dọc */
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 19px; /* Canh giữa icon 40px */
+  top: 40px;
+  bottom: 0;
+  width: 2px;
+  background-color: #e0e0e0;
+  z-index: 0;
+}
+
+.timeline-item:last-child::before {
+  display: none; /* Bỏ đường nối ở item cuối */
+}
+
+.timeline-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #f0f4ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  z-index: 1;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-content {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.timeline-time {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.timeline-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Highlight trạng thái mới nhất */
+.timeline-item:last-child .timeline-icon {
+  background-color: #0a2a66;
+  color: #fff;
+  border-color: #0a2a66;
+}
+
+.timeline-item:last-child .timeline-content {
+  background-color: #fff;
+  border: 1px solid #0a2a66;
+  box-shadow: 0 4px 10px rgba(10, 42, 102, 0.1);
+}
+
+/* ===== MODERN VERTICAL TIMELINE (CUSTOMER DETAIL) ===== */
+.modern-timeline {
+  position: relative;
+  padding: 10px 0;
+  margin-left: 10px;
+}
+
+.modern-timeline .timeline-item {
+  position: relative;
+  padding-left: 45px;
+  padding-bottom: 30px;
+}
+
+/* Đường kẻ dọc */
+.modern-timeline .timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 11px; /* (24px marker / 2) - (2px line / 2) */
+  top: 5px;
+  bottom: 0;
+  width: 2px;
+  background-color: #eee; /* Đường kẻ xám nhạt */
+  z-index: 0;
+}
+
+.modern-timeline .timeline-item:last-child::before {
+  display: none;
+}
+
+/* Chấm tròn marker */
+.modern-timeline .timeline-marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #bbb; /* Mốc cũ màu xám đậm hơn */
+  border: 4px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.modern-timeline .timeline-content {
+  position: relative;
+  top: -2px;
+}
+
+.modern-timeline .time {
+  font-size: 13px;
+  color: #666; /* Thời gian màu xám đậm dễ đọc */
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.modern-timeline .status {
+  font-size: 16px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.modern-timeline .desc {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Trạng thái mới nhất (Latest) - Mặc định Xanh Navy */
+.modern-timeline .timeline-item.latest .timeline-marker {
+  background-color: #0a2a66;
+  box-shadow: 0 0 0 4px rgba(10, 42, 102, 0.15); /* Bóng mờ xanh Navy */
+}
+
+.modern-timeline .timeline-item.latest .status {
+  color: #0a2a66;
+  font-weight: 700;
+}
+
+/* Trạng thái đặc biệt: Hủy đơn (Màu Cam) */
+.modern-timeline .timeline-item.latest.status-cancelled .timeline-marker {
+  background-color: #ff7a00;
+  box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.15);
+}
+
+.modern-timeline .timeline-item.latest.status-cancelled .status {
+  color: #ff7a00;
 }

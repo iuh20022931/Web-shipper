@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- CSS chính -->
-    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="assets/css/styles.css?v=<?php echo time(); ?>"
+    />
   </head>
   <body>
     <!-- ================= HEADER / NAVBAR ================= -->
@@ -42,13 +45,13 @@
           </li>
           <li><a href="#pricing">Bảng giá</a></li>
           <li class="dropdown">
-            <a href="tracking.html">Tracking ▾</a>
+            <a href="tracking.php">Tracking ▾</a>
             <ul class="dropdown-menu">
-              <li><a href="tracking.html#track-order">Tra cứu đơn hàng</a></li>
+              <li><a href="tracking.php#track-order">Tra cứu đơn hàng</a></li>
               <li>
-                <a href="tracking.html#track-bulk">Tra cứu đơn số lượng lớn</a>
+                <a href="tracking.php#track-bulk">Tra cứu đơn số lượng lớn</a>
               </li>
-              <li><a href="tracking.html#track-cod">Tra cứu đơn COD</a></li>
+              <li><a href="tracking.php#track-cod">Tra cứu đơn COD</a></li>
             </ul>
           </li>
 
@@ -370,12 +373,28 @@
         Điền thông tin bên dưới, chúng tôi sẽ liên hệ để xác nhận đơn hàng.
       </p>
 
-      <form id="contact-form">
+      <form id="contact-form" method="POST" action="order.php" novalidate>
         <div class="form-section">
           <h4><i class="icon">👤</i> Thông tin người gửi</h4>
           <div class="form-group">
-            <input type="text" id="name" placeholder="Họ và tên" required />
-            <input type="tel" id="phone" placeholder="Số điện thoại" required />
+            <div>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Họ và tên"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="Số điện thoại"
+                required
+              />
+            </div>
           </div>
         </div>
 
@@ -385,6 +404,7 @@
             <input
               type="text"
               id="pickup-addr"
+              name="pickup"
               placeholder="Địa chỉ lấy hàng (Số nhà, tên đường...)"
               required
             />
@@ -393,6 +413,7 @@
             <input
               type="text"
               id="delivery-addr"
+              name="delivery"
               placeholder="Địa chỉ giao hàng (Số nhà, tên đường...)"
               required
             />
@@ -402,22 +423,34 @@
         <div class="form-section">
           <h4><i class="icon">📦</i> Thông tin hàng hóa</h4>
           <div class="form-row">
-            <select id="package-type">
-              <option value="document">Tài liệu/Hồ sơ</option>
-              <option value="food">Đồ ăn/Thức uống</option>
-              <option value="clothes">Quần áo/Mỹ phẩm</option>
-              <option value="electronic">Đồ điện tử</option>
-              <option value="other">Khác...</option>
-            </select>
-            <input type="number" id="weight" placeholder="Khối lượng (kg)" />
+            <div>
+              <select id="package-type" name="package_type">
+                <option value="document">Tài liệu/Hồ sơ</option>
+                <option value="food">Đồ ăn/Thức uống</option>
+                <option value="clothes">Quần áo/Mỹ phẩm</option>
+                <option value="electronic">Đồ điện tử</option>
+                <option value="other">Khác...</option>
+              </select>
+            </div>
+            <div>
+              <input
+                type="number"
+                id="weight"
+                name="weight"
+                placeholder="Khối lượng (kg)"
+              />
+            </div>
           </div>
           <textarea
             id="note"
+            name="note"
             placeholder="Ghi chú cho shipper (Ví dụ: Hàng dễ vỡ, gọi trước khi đến...)"
           ></textarea>
         </div>
 
         <button type="submit" class="btn-primary">Xác nhận đặt đơn</button>
+        <!-- Div hiển thị message -->
+        <div id="form-message"></div>
       </form>
     </section>
 
@@ -487,6 +520,6 @@
     </footer>
 
     <!-- JS chính -->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
   </body>
 </html>
