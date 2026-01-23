@@ -171,8 +171,8 @@ _Lưu ý: Giá trên chỉ mang tính chất tham khảo và có thể thay đ�
 | Vai trò  | Tên đăng nhập | Mật khẩu |
 | -------- | ------------- | -------- |
 | Admin    | `admin`       | `123456` |
-| Shipper  | `shipper`     | `123456` |
-| Customer | `customer`    | `123456` |
+| Shipper  | `Thien`     | `123456` |
+| Customer | `Anguyen`    | `291503` |
 
 > _Lưu ý: Bạn cần tạo các tài khoản này thủ công hoặc import file `database.sql` có sẵn._
 
