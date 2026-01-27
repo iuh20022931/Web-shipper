@@ -72,74 +72,158 @@ $conn->close();
     <meta charset="UTF-8">
     <title>Đăng ký tài khoản | FastGo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <style>
-        /* Style riêng cho trang auth để căn giữa */
-        body {
-            background-color: #f5f7fb;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+    /* Style riêng cho trang auth để căn giữa */
+    body {
+        background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'Poppins', sans-serif;
+        padding: 20px;
+        margin: 0;
+    }
 
+    .auth-card {
+        background: white;
+        padding: 40px 35px;
+        border-radius: 16px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px;
+        border-top: 5px solid #ff7a00;
+        /* Brand accent */
+        transition: transform 0.3s ease;
+    }
+
+    .auth-title {
+        text-align: center;
+        color: #0a2a66;
+        margin-bottom: 5px;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .auth-subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .error-box {
+        background: #fff5f5;
+        color: #e53e3e;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        text-align: center;
+        border: 1px solid #fed7d7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #4a5568;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        outline: none;
+        color: #2d3748;
+        background-color: #f8fafc;
+    }
+
+    .form-group input:focus {
+        border-color: #0a2a66;
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(10, 42, 102, 0.1);
+    }
+
+    .form-group input::placeholder {
+        color: #a0aec0;
+    }
+
+    .auth-link {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 14px;
+        color: #718096;
+    }
+
+    .auth-link a {
+        color: #ff7a00;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+
+    .auth-link a:hover {
+        color: #e96f00;
+        text-decoration: underline;
+    }
+
+    /* Button override */
+    .btn-primary {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        background-color: #0a2a66;
+        border: none;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 10px;
+        box-shadow: 0 4px 6px rgba(10, 42, 102, 0.2);
+    }
+
+    .btn-primary:hover {
+        background-color: #0f3b99;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(10, 42, 102, 0.3);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    @media (max-width: 480px) {
         .auth-card {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
+            padding: 30px 20px;
         }
-
-        .auth-title {
-            text-align: center;
-            color: #0a2a66;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-
-        .error-box {
-            background: #fee;
-            color: #d9534f;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .auth-link {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .auth-link a {
-            color: #ff7a00;
-            text-decoration: none;
-            font-weight: 600;
-        }
+    }
     </style>
 </head>
 
 <body>
     <div class="auth-card">
         <h2 class="auth-title">Đăng Ký FastGo</h2>
+        <p class="auth-subtitle">Tạo tài khoản mới để bắt đầu vận chuyển</p>
 
         <?php if (!empty($error_msg)): ?>
-            <div class="error-box"><?php echo $error_msg; ?></div>
+        <div class="error-box">⚠️ <?php echo $error_msg; ?></div>
         <?php endif; ?>
 
         <form method="POST" action="">

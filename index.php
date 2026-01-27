@@ -58,13 +58,14 @@ $pricing_config = ['weight_free'=>2, 'weight_price'=>5000, 'cod_min'=>5000];
     <section id="hero" class="hero-section">
         <div class="container hero-container">
             <div class="hero-content">
-                <h1 class="animate-top">Giao hàng nhanh – An toàn – Đúng giờ</h1>
+                <h1 class="animate-top">Giao hàng nhanh– An toàn – Đúng giờ</h1>
                 <p class="animate-bottom">
                     Dịch vụ giao hàng nội thành & liên tỉnh, hỗ trợ 24/7. Nhận hàng ngay sau 15 phút!
                 </p>
                 <div class="hero-btns animate-bottom">
                     <a href="#quick-quote" class="btn-primary">Tính giá ngay</a>
                     <a href="#contact" class="btn-secondary">Liên hệ đặt ship</a>
+                    <a href="huong-dan-dat-hang.html" class="btn-secondary btn-blink" target="_blank">📖 Hướng dẫn</a>
                 </div>
             </div>
             <div class="hero-image animate-right">

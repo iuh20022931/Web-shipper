@@ -1,4 +1,5 @@
 <?php
+session_start(); // Khởi động session để lấy thông tin người dùng đăng nhập
 require_once 'config/db.php';
 header('Content-Type: application/json');
 
@@ -11,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Kiểm tra trạng thái hiện tại của đơn hàng
-    $stmt = $conn->prepare("SELECT id, status FROM orders WHERE order_code = ?");
+    $stmt = $conn->prepare("SELECT id, status, user_id FROM orders WHERE order_code = ?");
     $stmt->bind_param("s", $code);
     $stmt->execute();
     $res = $stmt->get_result();
@@ -27,6 +28,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($order['status'] !== 'pending') {
         echo json_encode(['status' => 'error', 'message' => 'Không thể hủy đơn hàng này (đã giao hoặc đã hủy).']);
         exit;
+    }
+
+    // BẢO MẬT: Nếu người dùng đã đăng nhập, kiểm tra xem đơn này có phải của họ không
+    if (isset($_SESSION['user_id'])) {
+        if ($order['user_id'] != $_SESSION['user_id'] && $_SESSION['role'] !== 'admin') {
+            echo json_encode(['status' => 'error', 'message' => 'Bạn không có quyền hủy đơn hàng của người khác.']);
+            exit;
+        }
     }
 
     // Cập nhật trạng thái thành 'cancelled'
