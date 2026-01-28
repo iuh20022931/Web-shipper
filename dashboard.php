@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'config/db.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
@@ -39,7 +40,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'shipper') {
             <div class="service-card">
                 <h3>📦 Đặt đơn mới</h3>
                 <p>Tạo đơn hàng vận chuyển ngay lập tức.</p>
-                <a href="index.php#contact" class="btn-primary" style="margin-top: 10px; display:inline-block;">Tạo đơn
+                <a href="create_order.php" class="btn-primary" style="margin-top: 10px; display:inline-block;">Tạo đơn
                     ngay</a>
             </div>
 
@@ -50,6 +51,15 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'shipper') {
                 <a href="order_history.php" class="btn-secondary"
                     style="margin-top: 10px; color: #0a2a66; border-color: #0a2a66; display:inline-block; text-decoration:none;">Xem
                     lịch sử</a>
+            </div>
+
+            <!-- Card 4: Sổ địa chỉ (MỚI) -->
+            <div class="service-card">
+                <h3>📒 Sổ địa chỉ</h3>
+                <p>Quản lý danh sách địa chỉ giao nhận thường dùng.</p>
+                <a href="address_book.php" class="btn-secondary"
+                    style="margin-top: 10px; color: #0a2a66; border-color: #0a2a66; display:inline-block; text-decoration:none;">Quản
+                    lý</a>
             </div>
 
             <!-- Card 3 -->

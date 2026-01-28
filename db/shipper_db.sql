@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th1 23, 2026 lúc 07:02 AM
+-- Thời gian đã tạo: Th1 28, 2026 lúc 10:57 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.0.30
 
@@ -20,6 +20,43 @@ SET time_zone = "+00:00";
 --
 -- Cơ sở dữ liệu: `shipper_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `contact_messages`
+--
+
+CREATE TABLE `contact_messages` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `message` text NOT NULL,
+  `status` tinyint(4) DEFAULT 0,
+  `note_admin` text DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL COMMENT 'ID của người nhận thông báo',
+  `order_id` int(11) DEFAULT NULL,
+  `message` varchar(255) NOT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -45,23 +82,32 @@ CREATE TABLE `orders` (
   `shipping_fee` decimal(15,2) DEFAULT 0.00,
   `pickup_time` varchar(100) DEFAULT NULL,
   `note` text DEFAULT NULL,
+  `payment_method` varchar(50) NOT NULL DEFAULT 'cod' COMMENT 'Phương thức thanh toán (cod, bank_transfer)',
+  `payment_status` varchar(50) NOT NULL DEFAULT 'unpaid' COMMENT 'Trạng thái thanh toán (unpaid, paid)',
   `shipper_note` text DEFAULT NULL,
   `pod_image` varchar(255) DEFAULT NULL,
   `status` enum('pending','shipping','completed','cancelled') DEFAULT 'pending',
   `rating` int(11) DEFAULT NULL,
   `feedback` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_corporate` tinyint(1) DEFAULT 0,
+  `company_name` varchar(255) DEFAULT NULL,
+  `company_tax_code` varchar(50) DEFAULT NULL,
+  `company_address` text DEFAULT NULL,
+  `company_bank_info` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `orders`
 --
 
-INSERT INTO `orders` (`id`, `order_code`, `user_id`, `shipper_id`, `pickup_address`, `name`, `phone`, `receiver_name`, `receiver_phone`, `delivery_address`, `package_type`, `service_type`, `weight`, `cod_amount`, `shipping_fee`, `pickup_time`, `note`, `shipper_note`, `pod_image`, `status`, `rating`, `feedback`, `created_at`) VALUES
-(1, 'FAST-000001', 2, NULL, '123 Lê Lợi Quận 1', 'Nguyễn Văn A', '0987654321', '', '', '45 Nguyễn Huệ Quận 1', 'document', 'standard', 1.00, 0.00, 30000.00, '', '', NULL, NULL, 'cancelled', NULL, NULL, '2026-01-22 13:44:23'),
-(2, 'FAST-BB02CD', 2, 3, '123 Lê Lợi Quận 1', 'Nguyễn Văn A', '0987654321', 'Nguyễn Văn B', '0987654322', '45 Nguyễn Huệ Quận 1', 'document', 'standard', 1.00, 0.00, 30000.00, '', '', NULL, NULL, 'completed', NULL, NULL, '2026-01-22 16:31:32'),
-(3, 'FAST-9B0EC1', 2, 3, '123 Lê Lợi Quận 1', 'Nguyễn Văn A', '0987654321', 'Nguyễn Văn B', '0987654322', '45 Nguyễn Huệ Quận 1', 'document', 'standard', 2.00, 25000.00, 30000.00, '', '', '', NULL, 'cancelled', NULL, NULL, '2026-01-23 00:42:34'),
-(4, 'FAST-0287AE', 2, 3, '123 Lê Lợi Quận 1', 'Nguyễn Văn A', '0987654321', 'Nguyễn Văn B', '0987654322', '45 Nguyễn Huệ Quận 12', 'document', 'standard', 2.00, 0.00, 45000.00, '', '', '', NULL, 'completed', NULL, NULL, '2026-01-23 01:38:20');
+INSERT INTO `orders` (`id`, `order_code`, `user_id`, `shipper_id`, `pickup_address`, `name`, `phone`, `receiver_name`, `receiver_phone`, `delivery_address`, `package_type`, `service_type`, `weight`, `cod_amount`, `shipping_fee`, `pickup_time`, `note`, `payment_method`, `payment_status`, `shipper_note`, `pod_image`, `status`, `rating`, `feedback`, `created_at`) VALUES
+(1, 'FAST-000001', 2, NULL, '123 Lê Lợi Quận 1', 'Nguyễn Văn A', '0987654321', '', '', '45 Nguyễn Huệ Quận 1', 'document', 'standard', 1.00, 0.00, 30000.00, '', '', 'cod', 'unpaid', NULL, NULL, 'cancelled', NULL, NULL, '2026-01-22 13:44:23'),
+(2, 'FAST-BB02CD', 2, 3, '123 Lê Lợi Quận 1', 'Nguyễn Văn A', '0987654321', 'Nguyễn Văn B', '0987654322', '45 Nguyễn Huệ Quận 1', 'document', 'standard', 1.00, 0.00, 30000.00, '', '', 'cod', 'paid', NULL, NULL, 'completed', NULL, NULL, '2026-01-22 16:31:32'),
+(3, 'FAST-9B0EC1', 2, 3, '123 Lê Lợi Quận 1', 'Nguyễn Văn A', '0987654321', 'Nguyễn Văn B', '0987654322', '45 Nguyễn Huệ Quận 1', 'document', 'standard', 2.00, 25000.00, 30000.00, '', '', 'cod', 'unpaid', '', NULL, 'cancelled', NULL, NULL, '2026-01-23 00:42:34'),
+(4, 'FAST-0287AE', 2, 3, '123 Lê Lợi Quận 1', 'Nguyễn Văn A', '0987654321', 'Nguyễn Văn B', '0987654322', '45 Nguyễn Huệ Quận 12', 'document', 'standard', 2.00, 0.00, 45000.00, '', '', 'cod', 'paid', '', NULL, 'completed', NULL, NULL, '2026-01-23 01:38:20'),
+(5, 'TEST-RATE-01', NULL, NULL, '123 Lê Lợi, Quận 1', 'Nguyễn Văn A', '0901234567', 'Trần Thị B', '0909876543', '456 Nguyễn Huệ, Quận 1', 'document', 'standard', 1.00, 0.00, 30000.00, NULL, NULL, 'cod', 'unpaid', NULL, NULL, 'completed', 5, 'Dịch vụ rất tốt, giao hàng siêu nhanh!', '2026-01-28 07:07:14'),
+(6, 'TEST-RATE-02', NULL, NULL, '789 Võ Văn Kiệt, Quận 5', 'Phạm Văn C', '0912345678', 'Lê Thị D', '0918765432', '101 Pasteur, Quận 3', 'food', 'express', 2.50, 50000.00, 45000.00, NULL, NULL, 'cod', 'unpaid', NULL, NULL, 'completed', 4, 'Shipper thân thiện, đồ ăn vẫn còn nóng hổi.', '2026-01-28 07:07:14');
 
 -- --------------------------------------------------------
 
@@ -115,6 +161,32 @@ INSERT INTO `services` (`id`, `name`, `type_key`, `base_price`, `description`, `
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `testimonials`
+--
+
+CREATE TABLE `testimonials` (
+  `id` int(11) NOT NULL,
+  `customer_name` varchar(100) NOT NULL,
+  `customer_role` varchar(100) DEFAULT 'Khách hàng',
+  `rating` tinyint(4) DEFAULT 5,
+  `content` text NOT NULL,
+  `is_visible` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1: Visible, 0: Hidden',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `testimonials`
+--
+
+INSERT INTO `testimonials` (`id`, `customer_name`, `customer_role`, `rating`, `content`, `is_visible`, `created_at`) VALUES
+(1, 'Nguyễn Thu Hà', 'Shop Online', 5, 'Giao hàng siêu nhanh, shipper thân thiện. Mình gửi hàng từ Q1 sang Thủ Đức mà chưa đầy 1 tiếng đã nhận được.', 1, '2026-01-28 06:55:38'),
+(2, 'Trần Minh Tuấn', 'Văn phòng phẩm', 5, 'Hệ thống tracking rất tiện lợi, mình có thể theo dõi đơn hàng từng phút. Rất yên tâm khi sử dụng dịch vụ.', 1, '2026-01-28 06:55:38'),
+(3, 'Lê Bảo Ngọc', 'Cửa hàng thời trang', 4, 'Giá cước hợp lý, có thu hộ COD nhanh chóng. Sẽ ủng hộ FastGo dài dài.', 1, '2026-01-28 06:55:38'),
+(4, 'Phạm Văn C', 'Khách hàng', 4, 'Shipper thân thiện, đồ ăn vẫn còn nóng hổi.', 1, '2026-01-28 07:07:37');
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `users`
 --
 
@@ -126,21 +198,37 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` enum('customer','admin','shipper') DEFAULT 'customer',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `email` varchar(255) DEFAULT NULL
+  `email` varchar(255) DEFAULT NULL,
+  `company_name` varchar(255) DEFAULT NULL,
+  `tax_code` varchar(50) DEFAULT NULL,
+  `company_address` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `fullname`, `phone`, `password`, `role`, `created_at`, `email`) VALUES
-(1, 'admin', NULL, NULL, '$2y$10$GXB0ZfzHjcDOR8oa5XSEv.G2nQiN6.O2ZZo/leShPqqKTd4LoKw/a', 'admin', '2026-01-22 13:37:41', ''),
-(2, 'Anguyen', 'Nguyễn Văn A', '0987654321', '$2y$10$UP.X471ZkmUjBMASEoR/yuH9Ug4DTXCuC.8YksMl52mHqqgZGdHDq', 'customer', '2026-01-22 13:38:42', 'nguyenvana@gmail.com'),
-(3, 'Thien', 'Thiện Bảo', '0987654332', '$2y$10$jyiF4rZilRjMX.X8JVQIzORG36ab7o9exKM3.yzmOsTs18pBVLm4O', 'shipper', '2026-01-22 17:48:43', 'thienbao@gmail.com');
+INSERT INTO `users` (`id`, `username`, `fullname`, `phone`, `password`, `role`, `created_at`, `email`, `company_name`, `tax_code`, `company_address`) VALUES
+(1, 'admin', NULL, NULL, '$2y$10$GXB0ZfzHjcDOR8oa5XSEv.G2nQiN6.O2ZZo/leShPqqKTd4LoKw/a', 'admin', '2026-01-22 13:37:41', '', NULL, NULL, NULL),
+(2, 'Anguyen', 'Nguyễn Văn A', '0987654321', '$2y$10$UP.X471ZkmUjBMASEoR/yuH9Ug4DTXCuC.8YksMl52mHqqgZGdHDq', 'customer', '2026-01-22 13:38:42', 'nguyenvana@gmail.com', NULL, NULL, NULL),
+(3, 'Thien', 'Thiện Bảo', '0987654332', '$2y$10$jyiF4rZilRjMX.X8JVQIzORG36ab7o9exKM3.yzmOsTs18pBVLm4O', 'shipper', '2026-01-22 17:48:43', 'thienbao@gmail.com', NULL, NULL, NULL);
 
 --
 -- Chỉ mục cho các bảng đã đổ
 --
+
+--
+-- Chỉ mục cho bảng `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Chỉ mục cho bảng `orders`
@@ -165,6 +253,12 @@ ALTER TABLE `services`
   ADD UNIQUE KEY `type_key` (`type_key`);
 
 --
+-- Chỉ mục cho bảng `testimonials`
+--
+ALTER TABLE `testimonials`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Chỉ mục cho bảng `users`
 --
 ALTER TABLE `users`
@@ -177,10 +271,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT cho bảng `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT cho bảng `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `order_logs`
@@ -193,6 +299,12 @@ ALTER TABLE `order_logs`
 --
 ALTER TABLE `services`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT cho bảng `testimonials`
+--
+ALTER TABLE `testimonials`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `users`

@@ -17,7 +17,15 @@ $weight = $_POST['weight'] ?? 0;
 $cod_amount = $_POST['cod_amount'] ?? 0;
 $shipping_fee = $_POST['shipping_fee'] ?? 0; // Nhận phí ship
 $pickup_time = $_POST['pickup_time'] ?? '';
+$payment_method = $_POST['payment_method'] ?? 'cod';
 $note = $_POST['note'] ?? '';
+
+// Thêm: Nhận dữ liệu hóa đơn công ty
+$is_corporate = isset($_POST['is_corporate']) ? 1 : 0;
+$company_name = $is_corporate ? trim($_POST['company_name'] ?? '') : null;
+$company_tax_code = $is_corporate ? trim($_POST['company_tax_code'] ?? '') : null;
+$company_address = $is_corporate ? trim($_POST['company_address'] ?? '') : null;
+$company_bank_info = $is_corporate ? trim($_POST['company_bank_info'] ?? '') : null;
 
 $errors = [];
 
@@ -69,6 +77,21 @@ $valid_types = ['document', 'food', 'clothes', 'electronic', 'other'];
 if (!in_array($package_type, $valid_types))
     $errors[] = "Loại hàng không hợp lệ";
 
+// Nếu là chuyển khoản, tiền thu hộ phải bằng 0
+if ($payment_method === 'bank_transfer') {
+    $cod_amount = 0;
+}
+
+// Nếu yêu cầu xuất hóa đơn, các trường công ty là bắt buộc
+if ($is_corporate) {
+    if (empty($company_name))
+        $errors[] = "Chưa nhập Tên công ty";
+    if (empty($company_tax_code))
+        $errors[] = "Chưa nhập Mã số thuế";
+    if (empty($company_address))
+        $errors[] = "Chưa nhập Địa chỉ công ty";
+}
+
 if (count($errors) > 0) {
     foreach ($errors as $err)
         echo $err . "<br>";
@@ -83,19 +106,28 @@ $order_code = 'FAST-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6));
 
 // 3. Chèn vào database
 // Sử dụng prepared statements để chống SQL Injection
-// LƯU Ý: Cần thêm cột `user_id` (INT, NULLABLE) vào bảng `orders` trong Database
-$stmt = $conn->prepare("INSERT INTO `orders` 
-(order_code, name, phone, receiver_name, receiver_phone, pickup_address, delivery_address, package_type, service_type, weight, cod_amount, shipping_fee, pickup_time, note, user_id) 
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO `orders`
+(order_code, name, phone, receiver_name, receiver_phone, pickup_address, delivery_address, package_type, service_type, weight, cod_amount, shipping_fee, pickup_time, note, user_id, payment_method, payment_status, is_corporate, company_name, company_tax_code, company_address, company_bank_info)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 if (!$stmt) {
     error_log("Order Prepare Failed: " . $conn->error);
     die("Lỗi hệ thống. Không thể tạo đơn hàng.");
 }
-$stmt->bind_param("sssssssssdddssi", $order_code, $name, $phone, $receiver_name, $receiver_phone, $pickup, $delivery, $package_type, $service_type, $weight, $cod_amount, $shipping_fee, $pickup_time, $note, $user_id);
+
+$payment_status = 'unpaid'; // Trạng thái ban đầu
+$stmt->bind_param("sssssssssdddssississss", $order_code, $name, $phone, $receiver_name, $receiver_phone, $pickup, $delivery, $package_type, $service_type, $weight, $cod_amount, $shipping_fee, $pickup_time, $note, $user_id, $payment_method, $payment_status, $is_corporate, $company_name, $company_tax_code, $company_address, $company_bank_info);
 
 if ($stmt->execute()) {
     echo "SUCCESS";
+
+    // --- TÍNH NĂNG MỚI: Cập nhật thông tin công ty vào bảng users để ghi nhớ ---
+    if ($is_corporate && $user_id) {
+        $stmt_user = $conn->prepare("UPDATE users SET company_name = ?, tax_code = ?, company_address = ? WHERE id = ?");
+        $stmt_user->bind_param("sssi", $company_name, $company_tax_code, $company_address, $user_id);
+        $stmt_user->execute();
+        $stmt_user->close();
+    }
 } else {
     error_log("Order Execute Failed: " . $stmt->error);
     echo "ERROR: Có lỗi xảy ra khi lưu đơn hàng.";

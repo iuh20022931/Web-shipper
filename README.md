@@ -45,6 +45,8 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
 ### 2. Khách Hàng (Customer)
 
 - **Đặt hàng trực tuyến:** Form đặt hàng chi tiết, tự động điền thông tin cá nhân, hỗ trợ chọn dịch vụ (Tiêu chuẩn, Hỏa tốc, COD...).
+  - **MỚI:** Hỗ trợ lưu thông tin xuất hóa đơn công ty.
+  - **MỚI:** Tích hợp "Sổ địa chỉ" giúp chọn nhanh điểm giao/nhận.
 - **Quản lý đơn hàng:**
   - Xem lịch sử đơn hàng đã đặt.
   - Bộ lọc tìm kiếm theo trạng thái, ngày tháng.
@@ -55,6 +57,7 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
   - **In hóa đơn:** Xuất phiếu gửi hàng để dán lên kiện hàng.
   - **Đánh giá & Phản hồi:** Chấm điểm sao và gửi nhận xét về dịch vụ.
 - **Hồ sơ cá nhân:** Cập nhật thông tin, đổi mật khẩu.
+- **Sổ địa chỉ (Address Book):** Lưu và quản lý các địa chỉ thường dùng.
 
 ### 3. Tài Xế (Shipper)
 
@@ -68,6 +71,7 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
   - **Upload POD:** Bắt buộc chụp ảnh giao hàng thành công để hoàn tất đơn.
   - Ghi chú sự cố (Shipper Note).
 - **Thống kê thu nhập:** Xem tổng số đơn đã giao, tổng thu nhập, tỷ lệ hoàn thành.
+- **Hồ sơ Shipper:** Cập nhật thông tin cá nhân và xem báo cáo hiệu suất chi tiết.
 
 ### 4. Quản Trị Viên (Admin)
 
@@ -81,6 +85,9 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
   - Xem Log lịch sử thay đổi của đơn hàng.
 - **Quản lý người dùng:** Thêm/Sửa/Xóa/Phân quyền (Customer <-> Shipper <-> Admin).
 - **Quản lý Dịch vụ:** Thêm/Sửa/Xóa các gói cước và bảng giá.
+- **Quản lý Khiếu nại (Contact):** Tiếp nhận và xử lý thắc mắc/báo cáo từ người dùng.
+- **Quản lý Đánh giá (Testimonials):** Duyệt và hiển thị đánh giá tiêu biểu lên trang chủ.
+- **Công cụ tính giá (Pricing Guide):** Trang mô phỏng công thức tính cước phí vận chuyển.
 
 ---
 
@@ -101,12 +108,16 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
 
 ## 🗄 Cơ Sở Dữ Liệu
 
-Hệ thống sử dụng 4 bảng chính:
+Hệ thống sử dụng các bảng chính:
 
 1.  **`users`**: Lưu thông tin người dùng (Admin, Shipper, Customer).
 2.  **`orders`**: Lưu thông tin đơn hàng (Mã đơn, người gửi/nhận, trạng thái, phí ship, COD, ảnh POD...).
 3.  **`services`**: Lưu cấu hình các gói dịch vụ và giá cước cơ bản.
 4.  **`order_logs`**: Lưu lịch sử thay đổi trạng thái của đơn hàng (Ai đổi? Đổi khi nào? Từ trạng thái nào sang trạng thái nào?).
+5.  **`contact_messages`**: Lưu tin nhắn liên hệ và khiếu nại.
+6.  **`saved_addresses`**: Lưu sổ địa chỉ của khách hàng.
+7.  **`testimonials`**: Lưu đánh giá và phản hồi hiển thị công khai.
+8.  **`notifications`**: Lưu thông báo hệ thống gửi đến người dùng.
 
 ---
 

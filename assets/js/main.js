@@ -63,15 +63,6 @@ document.addEventListener("click", function (e) {
 // ===== CONTACT FORM SUBMIT (REAL DATA) =====
 const form = document.getElementById("contact-form");
 
-// Tạo div hiển thị message nếu chưa có
-let msgDiv = document.getElementById("form-message");
-if (!msgDiv) {
-  msgDiv = document.createElement("div");
-  msgDiv.id = "form-message";
-  msgDiv.style.display = "none";
-  form.parentNode.insertBefore(msgDiv, form.nextSibling);
-}
-
 // ===== HÀM HIỂN THỊ LỖI (Helper) =====
 function showFieldError(input, message) {
   // 1. Thêm class lỗi cho input (viền đỏ)
@@ -109,6 +100,70 @@ function escapeHtml(text) {
     .replace(/'/g, "&#039;");
 }
 
+// ===== HÀM TÍNH PHÍ VẬN CHUYỂN TRUNG TÂM =====
+function getShippingFeeDetails(serviceType, weight, codAmount) {
+  const config = window.pricingConfig || {
+    weight_free: 2,
+    weight_price: 5000,
+    cod_min: 5000,
+  };
+  const servicesData = window.servicesData || [];
+
+  let basePrice = 0;
+  let weightFee = 0;
+  let codFee = 0;
+  let isContactPrice = false;
+  let vehicle = "Xe máy";
+  let serviceName = "Không xác định";
+
+  // 1. Lấy giá cơ bản từ dịch vụ
+  const service = servicesData.find((s) => s.type_key === serviceType);
+  if (service) {
+    serviceName = service.name;
+    if (service.base_price == 0) {
+      isContactPrice = true;
+    } else {
+      basePrice = parseFloat(service.base_price);
+    }
+    if (service.type_key === "bulk") {
+      vehicle = "Ô tô";
+    }
+  } else {
+    // Fallback nếu không có data từ PHP
+    if (serviceType === "standard") basePrice = 30000;
+    else if (serviceType === "express") basePrice = 50000;
+  }
+
+  // Nếu là dịch vụ cần liên hệ, trả về ngay
+  if (isContactPrice) {
+    return { isContactPrice: true, serviceName: serviceName };
+  }
+
+  // 2. Tính phí khối lượng
+  const w = parseFloat(weight) || 0;
+  if (w > config.weight_free) {
+    weightFee = Math.ceil(w - config.weight_free) * config.weight_price;
+  }
+
+  // 3. Tính phí COD
+  const cod = parseFloat(codAmount) || 0;
+  if (cod > 0) {
+    codFee = Math.max(parseFloat(config.cod_min), cod * 0.01);
+  }
+
+  const total = basePrice + weightFee + codFee;
+
+  return {
+    basePrice,
+    weightFee,
+    codFee,
+    total,
+    vehicle,
+    serviceName,
+    isContactPrice: false,
+  };
+}
+
 // ===== TÍNH TIỀN SHIP TỰ ĐỘNG CHO FORM ĐẶT HÀNG =====
 function calculateOrderShipping() {
   const pickupVal = document.getElementById("pickup-addr").value.toLowerCase();
@@ -119,67 +174,24 @@ function calculateOrderShipping() {
   const pricePreview = document.getElementById("price-preview");
   const feeDisplay = document.getElementById("shipping-fee-display");
   const feeInput = document.getElementById("shipping-fee-input");
-  const weightInput = document.getElementById("weight");
-  const codInput = document.getElementById("cod_amount");
-
-  // Lấy config từ PHP (hoặc fallback mặc định)
-  const config = window.pricingConfig || {
-    weight_free: 2,
-    weight_price: 5000,
-    cod_min: 5000,
-  };
-
-  // Mặc định
-  let price = 0;
+  const weight = document.getElementById("weight").value;
+  const codAmount = document.getElementById("cod_amount").value;
 
   // Chỉ tính khi đã nhập cả 2 địa chỉ
   if (pickupVal.length > 5 && deliveryVal.length > 5) {
-    // Giá cơ bản
-    let service = null;
-    if (window.servicesData) {
-      service = window.servicesData.find((s) => s.type_key === serviceType);
+    const feeDetails = getShippingFeeDetails(serviceType, weight, codAmount);
+
+    if (feeDetails.isContactPrice) {
+      pricePreview.style.display = "block";
+      feeDisplay.innerText = "Liên hệ";
+      feeInput.value = 0;
+      return;
     }
-
-    if (service) {
-      if (service.base_price == 0) {
-        // Nếu giá = 0 (Liên hệ/Bulk)
-        pricePreview.style.display = "block";
-        feeDisplay.innerText = "Liên hệ";
-        feeInput.value = 0;
-        return;
-      }
-      price = parseFloat(service.base_price);
-    } else {
-      // Fallback nếu không có data
-      if (serviceType === "standard") price = 30000;
-      else if (serviceType === "express") price = 50000;
-    }
-
-    // --- 1. TÍNH PHÍ VÙNG MIỀN ---
-    // Đã bỏ tính năng phí vùng miền theo yêu cầu
-    let regionFee = 0;
-
-    // --- 2. TÍNH PHÍ KHỐI LƯỢNG ---
-    let weight = parseFloat(weightInput ? weightInput.value : 1) || 1;
-    let weightFee = 0;
-    if (weight > config.weight_free) {
-      weightFee = Math.ceil(weight - config.weight_free) * config.weight_price;
-    }
-
-    // --- 3. TÍNH PHÍ COD ---
-    let codAmount = parseFloat(codInput ? codInput.value : 0) || 0;
-    let codFee = 0;
-    if (codAmount > 0) {
-      codFee = Math.max(parseFloat(config.cod_min), codAmount * 0.01);
-    }
-
-    // TỔNG CỘNG
-    const total = price + regionFee + weightFee + codFee;
 
     // Hiển thị
     pricePreview.style.display = "block";
-    feeDisplay.innerText = total.toLocaleString();
-    feeInput.value = total;
+    feeDisplay.innerText = feeDetails.total.toLocaleString();
+    feeInput.value = feeDetails.total;
   } else {
     pricePreview.style.display = "none";
     feeInput.value = 0;
@@ -205,15 +217,17 @@ if (orderInputs[0]) {
 }
 
 if (form) {
+  // Tạo div hiển thị message nếu chưa có
+  let msgDiv = document.getElementById("form-message");
+  if (!msgDiv) {
+    msgDiv = document.createElement("div");
+    msgDiv.id = "form-message";
+    msgDiv.style.display = "none";
+    form.parentNode.insertBefore(msgDiv, form.nextSibling);
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault(); // chặn reload
-
-    // ===== KIỂM TRA ĐĂNG NHẬP =====
-    // Nếu chưa đăng nhập, hiện modal và dừng lại
-    if (!window.isLoggedIn) {
-      document.getElementById("auth-modal").style.display = "block";
-      return;
-    }
 
     const btn = form.querySelector("button");
     btn.innerText = "Đang tạo đơn hàng...";
@@ -472,17 +486,8 @@ if (modal && closeModal) {
       .then((data) => {
         if (data.status === "success") {
           // Đăng nhập thành công
-          window.isLoggedIn = true; // Cập nhật trạng thái
-          modal.style.display = "none"; // Ẩn modal
-
-          // Tự động điền thông tin user vào form đặt hàng nếu form đang trống
-          const nameInp = document.getElementById("name");
-          const phoneInp = document.getElementById("phone");
-          if (!nameInp.value) nameInp.value = data.user.fullname;
-          if (!phoneInp.value) phoneInp.value = data.user.phone;
-
-          // Tự động kích hoạt lại sự kiện submit form đặt hàng
-          form.dispatchEvent(new Event("submit"));
+          // Chuyển hướng đến trang dashboard
+          window.location.href = "dashboard.php";
         } else {
           errorDiv.innerText = data.message;
           errorDiv.style.display = "block";
@@ -520,17 +525,8 @@ if (modal && closeModal) {
       .then((data) => {
         if (data.status === "success") {
           // Đăng ký thành công
-          window.isLoggedIn = true;
-          modal.style.display = "none";
-
-          // Auto-fill thông tin vào form đặt hàng
-          const nameInp = document.getElementById("name");
-          const phoneInp = document.getElementById("phone");
-          if (!nameInp.value) nameInp.value = data.user.fullname;
-          if (!phoneInp.value) phoneInp.value = data.user.phone;
-
-          // Gửi đơn hàng luôn
-          form.dispatchEvent(new Event("submit"));
+          // Chuyển hướng đến trang dashboard
+          window.location.href = "dashboard.php";
         } else {
           errorDiv.innerText = data.message;
           errorDiv.style.display = "block";
@@ -793,20 +789,10 @@ if (quickQuoteForm) {
   quickQuoteForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // Lấy config
-    const config = window.pricingConfig || {
-      weight_free: 2,
-      weight_price: 5000,
-      cod_min: 5000,
-    };
-
     const from = document.getElementById("from-location").value.trim();
     const to = document.getElementById("to-location").value.trim();
-    const service = document.getElementById("service-type").value;
+    const serviceType = document.getElementById("service-type").value;
     const isCod = document.getElementById("is-cod").checked;
-    // Giả lập input weight/cod cho Quick Quote (hoặc lấy mặc định nếu chưa có input HTML)
-    const weight = 1;
-    const codAmount = isCod ? 1000000 : 0; // Giả định thu hộ 1tr nếu tick COD để demo phí
     const resultDiv = document.getElementById("quote-result");
 
     // 1. Kiểm tra hợp lệ
@@ -818,66 +804,43 @@ if (quickQuoteForm) {
     );
 
     if (!isFromValid || !isToValid) {
-      resultDiv.innerHTML =
-        "❌ Khu vực không hợp lệ. Vui lòng chọn quận tại TP.HCM.";
+      resultDiv.innerHTML = `
+        <div class="quote-error">
+            <p><strong>Lỗi:</strong> Khu vực không hợp lệ. Vui lòng chọn một quận/huyện trong danh sách gợi ý của TP.HCM.</p>
+        </div>
+      `;
+      resultDiv.classList.add("show");
       return;
     }
 
-    // 2. Logic Vùng miền
-    let regionFee = 0;
-    let regionText = "Tiêu chuẩn"; // Đổi text hiển thị mặc định
+    // 2. Sử dụng hàm tính phí trung tâm
+    const weight = 1; // Mặc định 1kg cho tính nhanh
+    const config = window.pricingConfig || { cod_min: 5000 };
+    const codAmount = isCod ? config.cod_min : 0; // Ước tính phí COD tối thiểu nếu tick
 
-    // 3. Tính giá cước theo Bảng giá của bạn
-    let price = 0;
-    let vehicle = "Xe máy";
+    const feeDetails = getShippingFeeDetails(serviceType, weight, codAmount);
 
-    // Tìm dịch vụ trong data
-    let svcData = null;
-    if (window.servicesData) {
-      svcData = window.servicesData.find((s) => s.type_key === service);
+    if (feeDetails.isContactPrice) {
+      resultDiv.innerHTML = `📞 <strong>${feeDetails.serviceName}:</strong> Vui lòng liên hệ Hotline để có giá tốt nhất.`;
+      resultDiv.classList.add("show");
+      return;
     }
-
-    if (svcData) {
-      if (svcData.base_price == 0) {
-        resultDiv.innerHTML = `📞 <strong>${svcData.name}:</strong> Vui lòng liên hệ Hotline để có giá tốt nhất.`;
-        return;
-      }
-      price = parseFloat(svcData.base_price);
-    } else {
-      // Fallback cũ
-      if (service === "standard") price = 30000;
-      else if (service === "express") price = 50000;
-    }
-
-    // Phụ phí Khối lượng (Mặc định 1kg cho Quick Quote)
-    let weightFee = 0;
-    if (weight > config.weight_free) {
-      weightFee = Math.ceil(weight - config.weight_free) * config.weight_price;
-    }
-
-    // Phụ phí COD
-    let codFee = 0;
-    if (isCod) {
-      // Nếu chỉ tick checkbox mà không có số tiền cụ thể, lấy phí tối thiểu
-      codFee = parseFloat(config.cod_min);
-    }
-
-    const total = price + regionFee + weightFee + codFee;
 
     // 4. Hiển thị kết quả chi tiết
     resultDiv.innerHTML = `
     <div class="quote-card">
       <h4>Báo giá dự kiến</h4>
-      <p>🚚 Phương tiện: <strong>${vehicle}</strong></p>
-      <p>📍 Khu vực: <strong>${regionText}</strong></p>
+      <p>🚚 Phương tiện: <strong>${feeDetails.vehicle}</strong></p>
+      <p>📍 Dịch vụ: <strong>${feeDetails.serviceName}</strong></p>
       <hr style="border: 0; border-top: 1px dashed #eee; margin: 10px 0;">
       <div style="font-size: 14px; color: #333;">
-          <p>🔹 Phí cơ bản: ${price.toLocaleString()}đ</p>
-          ${weightFee > 0 ? `<p>🔹 Phí quá tải (${weight}kg): ${weightFee.toLocaleString()}đ</p>` : ""}
-          ${codFee > 0 ? `<p>🔹 Phí COD: ${codFee.toLocaleString()}đ</p>` : ""}
+          <p>🔹 Phí cơ bản: ${feeDetails.basePrice.toLocaleString()}đ</p>
+          ${feeDetails.weightFee > 0 ? `<p>🔹 Phí quá tải (${weight}kg): ${feeDetails.weightFee.toLocaleString()}đ</p>` : ""}
+          ${feeDetails.codFee > 0 ? `<p>🔹 Phí COD: ${feeDetails.codFee.toLocaleString()}đ</p>` : ""}
       </div>
       <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
-      <p>💰 Tổng cộng: <strong style="color: #ff7a00; font-size: 22px;">${total.toLocaleString()}đ</strong></p>
+      <p>💰 Tổng cộng: <strong style="color: #ff7a00; font-size: 22px;">${feeDetails.total.toLocaleString()}đ</strong></p>
+      <a href="create_order.php" class="btn-primary" style="display: block; text-align: center; margin-top: 15px; text-decoration: none;">Đặt đơn ngay với giá này</a>
     </div>
   `;
     resultDiv.classList.add("show");
@@ -897,4 +860,68 @@ window.addEventListener("load", () => {
       el.classList.add("animate-show");
     }, index * 150);
   });
+});
+
+// ===== INQUIRY FORM AJAX (Gửi thắc mắc) =====
+const inquiryForm = document.getElementById("inquiry-form");
+if (inquiryForm) {
+  inquiryForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const btn = inquiryForm.querySelector("button");
+    const msgDiv = document.getElementById("inquiry-message");
+    const originalText = btn.innerText;
+
+    btn.innerText = "Đang gửi...";
+    btn.disabled = true;
+    msgDiv.style.display = "none";
+
+    const formData = new FormData(inquiryForm);
+
+    fetch("inquiry_ajax.php", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        msgDiv.style.display = "block";
+        msgDiv.innerText = data.message;
+        msgDiv.style.color = data.status === "success" ? "green" : "red";
+
+        if (data.status === "success") {
+          inquiryForm.reset();
+        }
+        btn.innerText = originalText;
+        btn.disabled = false;
+      })
+      .catch((err) => {
+        console.error(err);
+        msgDiv.style.display = "block";
+        msgDiv.innerText = "Lỗi kết nối. Vui lòng thử lại.";
+        msgDiv.style.color = "red";
+        btn.innerText = originalText;
+        btn.disabled = false;
+      });
+  });
+}
+
+// ===== TESTIMONIAL SLIDER (SWIPERJS) =====
+document.addEventListener("DOMContentLoaded", function () {
+  if (document.querySelector(".testimonial-slider")) {
+    const swiper = new Swiper(".testimonial-slider", {
+      // Tùy chọn
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      slidesPerView: 1,
+      spaceBetween: 30,
+      breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } },
+    });
+  }
 });

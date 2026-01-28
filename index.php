@@ -1,46 +1,41 @@
-<!doctype html>
 <?php
-// Logic lấy thông tin user nếu đã đăng nhập để auto-fill
 require_once 'config/db.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$user_info = ['fullname' => '', 'phone' => ''];
-if (isset($_SESSION['user_id'])) {
-    $stmt = $conn->prepare("SELECT fullname, phone FROM users WHERE id = ?");
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    if ($res->num_rows > 0)
-        $user_info = $res->fetch_assoc();
-    $stmt->close();
-}
-
-// --- LOGIC ĐẶT LẠI ĐƠN (RE-ORDER) ---
-$reorder_data = [];
-if (isset($_GET['reorder_id']) && isset($_SESSION['user_id'])) {
-    $rid = intval($_GET['reorder_id']);
-    $stmt = $conn->prepare("SELECT * FROM orders WHERE id = ? AND user_id = ?");
-    $stmt->bind_param("ii", $rid, $_SESSION['user_id']);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    if ($res->num_rows > 0) {
-        $reorder_data = $res->fetch_assoc();
-    }
-}
-// ------------------------------------
-
 // --- LẤY DANH SÁCH DỊCH VỤ TỪ DB ---
 $services_list = [];
 $svc_res = $conn->query("SELECT * FROM services ORDER BY base_price ASC");
 if ($svc_res) {
-    while ($r = $svc_res->fetch_assoc()) $services_list[] = $r;
+    while ($r = $svc_res->fetch_assoc())
+        $services_list[] = $r;
 }
 
 // Cấu hình phí cứng (vì đã bỏ DB settings)
-$pricing_config = ['weight_free'=>2, 'weight_price'=>5000, 'cod_min'=>5000];
+$pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000];
+
+// --- LẤY ĐÁNH GIÁ KHÁCH HÀNG TỪ DB ---
+$testimonials = [];
+$test_res = $conn->query("SELECT * FROM testimonials WHERE is_visible = 1 ORDER BY created_at DESC LIMIT 3");
+if ($test_res) {
+    while ($row = $test_res->fetch_assoc())
+        $testimonials[] = $row;
+}
+
+// --- LOGIC CHO LINK "ĐẶT HÀNG" ---
+// Mục tiêu: Bỏ qua bước trung gian, điều hướng thẳng tới trang phù hợp
+$order_now_link = "login.php?redirect=" . urlencode('create_order.php'); // Mặc định cho khách
+if (isset($_SESSION['user_id'])) {
+    if ($_SESSION['role'] === 'customer') {
+        $order_now_link = 'create_order.php'; // Khách hàng vào thẳng form tạo đơn
+    } else {
+        // Admin hoặc Shipper thì vào dashboard tương ứng của họ
+        $order_now_link = 'dashboard.php';
+    }
+}
 ?>
+<!doctype html>
 <html lang="vi">
 
 <head>
@@ -48,6 +43,9 @@ $pricing_config = ['weight_free'=>2, 'weight_price'=>5000, 'cod_min'=>5000];
     <title>Dịch vụ Shipper | FastGo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>" />
+    <!-- Thêm SwiperJS CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 </head>
 
 <body>
@@ -64,13 +62,28 @@ $pricing_config = ['weight_free'=>2, 'weight_price'=>5000, 'cod_min'=>5000];
                 </p>
                 <div class="hero-btns animate-bottom">
                     <a href="#quick-quote" class="btn-primary">Tính giá ngay</a>
-                    <a href="#contact" class="btn-secondary">Liên hệ đặt ship</a>
+                    <a href="<?php echo $order_now_link; ?>" class="btn-secondary">Đặt hàng ngay</a>
                     <a href="huong-dan-dat-hang.html" class="btn-secondary btn-blink" target="_blank">📖 Hướng dẫn</a>
                 </div>
             </div>
             <div class="hero-image animate-right">
                 <img src="assets/images/hero.png" alt="FastGo Shipper" />
             </div>
+        </div>
+    </section>
+
+    <!-- TRACKING SECTION -->
+    <section id="home-tracking">
+        <div class="container">
+            <h2 class="section-title">Tra cứu hành trình đơn hàng</h2>
+            <p class="section-desc">Nhập mã vận đơn để theo dõi tình trạng đơn hàng của bạn (VD: FAST-XXXXXX)</p>
+
+            <form class="tracking-form" onsubmit="trackOrder(event, 'standard')">
+                <input type="text" id="standard-code" placeholder="Nhập mã đơn hàng..." required>
+                <button type="submit" class="btn-primary">Tra cứu</button>
+            </form>
+            <div id="loading-spinner-standard" class="spinner" style="display:none;"></div>
+            <div id="result-standard"></div>
         </div>
     </section>
 
@@ -215,10 +228,10 @@ $pricing_config = ['weight_free'=>2, 'weight_price'=>5000, 'cod_min'=>5000];
             <input type="text" id="to-location" list="districts-list" placeholder="Điểm đến (Quận/Huyện)" required />
             <select id="service-type" required>
                 <option value="">-- Chọn loại dịch vụ --</option>
-                <?php foreach($services_list as $svc): ?>
+                <?php foreach ($services_list as $svc): ?>
                 <option value="<?php echo $svc['type_key']; ?>">
                     <?php echo $svc['name']; ?>
-                    (<?php echo ($svc['base_price'] > 0) ? number_format($svc['base_price']).'đ' : 'Liên hệ'; ?>)
+                    (<?php echo ($svc['base_price'] > 0) ? number_format($svc['base_price']) . 'đ' : 'Liên hệ'; ?>)
                 </option>
                 <?php endforeach; ?>
             </select>
@@ -241,93 +254,46 @@ $pricing_config = ['weight_free'=>2, 'weight_price'=>5000, 'cod_min'=>5000];
 
     <!-- CONTACT -->
     <section id="contact">
-        <h2 class="section-title">Liên hệ đặt ship</h2>
-        <form id="contact-form" method="POST" action="order.php" novalidate>
-            <div class="form-section">
-                <h4><i class="icon">👤</i> Thông tin người gửi</h4>
-                <div class="form-group">
-                    <div><input type="text" id="name" name="name" placeholder="Họ và tên" required
-                            value="<?php echo htmlspecialchars($reorder_data['name'] ?? $user_info['fullname']); ?>" />
+        <h2 class="section-title">Sẵn sàng vận chuyển?</h2>
+        <p class="section-desc">Tạo tài khoản hoặc đăng nhập để bắt đầu gửi hàng cùng FastGo ngay hôm nay!</p>
+        <div class="hero-btns centered-btns">
+            <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="create_order.php" class="btn-primary">Tạo đơn hàng ngay</a>
+            <a href="dashboard.php" class="btn-secondary">Vào trang quản lý</a>
+            <?php else: ?>
+            <a href="login.php" class="btn-primary">Đăng nhập & Đặt đơn</a>
+            <a href="register.php" class="btn-secondary">Đăng ký tài khoản mới</a>
+            <?php endif; ?>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS (MỚI) -->
+    <section id="testimonials">
+        <h2 class="section-title">Khách hàng nói gì về FastGo?</h2>
+        <p class="section-desc">Sự hài lòng của khách hàng là động lực phát triển của chúng tôi.</p>
+        <!-- Cấu trúc Slider -->
+        <?php if (!empty($testimonials)): ?>
+        <div class="swiper testimonial-slider">
+            <div class="swiper-wrapper">
+                <?php foreach ($testimonials as $t): ?>
+                <div class="swiper-slide">
+                    <div class="testimonial-item">
+                        <div class="stars"><?php echo str_repeat('⭐', intval($t['rating'])); ?></div>
+                        <p class="feedback">"<?php echo htmlspecialchars($t['content']); ?>"</p>
+                        <div class="customer-info">
+                            <strong><?php echo htmlspecialchars($t['customer_name']); ?></strong>
+                            <span>- <?php echo htmlspecialchars($t['customer_role']); ?></span>
+                        </div>
                     </div>
-                    <div><input type="tel" id="phone" name="phone" placeholder="Số điện thoại" required
-                            value="<?php echo htmlspecialchars($reorder_data['phone'] ?? $user_info['phone']); ?>" />
-                    </div>
                 </div>
+                <?php endforeach; ?>
             </div>
-            <div class="form-section">
-                <h4><i class="icon">👤</i> Thông tin người nhận</h4>
-                <div class="form-group">
-                    <div><input type="text" name="receiver_name" placeholder="Tên người nhận" required
-                            value="<?php echo htmlspecialchars($reorder_data['receiver_name'] ?? ''); ?>" /></div>
-                    <div><input type="tel" name="receiver_phone" placeholder="SĐT người nhận" required
-                            value="<?php echo htmlspecialchars($reorder_data['receiver_phone'] ?? ''); ?>" /></div>
-                </div>
-            </div>
-            <div class="form-section">
-                <h4><i class="icon">📍</i> Địa chỉ giao nhận</h4>
-                <div class="form-group"><input type="text" id="pickup-addr" name="pickup" placeholder="Địa chỉ lấy hàng"
-                        required value="<?php echo htmlspecialchars($reorder_data['pickup_address'] ?? ''); ?>" /></div>
-                <div class="form-group"><input type="text" id="delivery-addr" name="delivery"
-                        placeholder="Địa chỉ giao hàng" required
-                        value="<?php echo htmlspecialchars($reorder_data['delivery_address'] ?? ''); ?>" /></div>
-            </div>
-            <div class="form-section">
-                <h4><i class="icon">📦</i> Thông tin hàng hóa</h4>
-                <div class="form-row">
-                    <div>
-                        <select id="package-type" name="package_type">
-                            <option value="document"
-                                <?php if(($reorder_data['package_type']??'')=='document') echo 'selected'; ?>>Tài
-                                liệu/Hồ sơ</option>
-                            <option value="food"
-                                <?php if(($reorder_data['package_type']??'')=='food') echo 'selected'; ?>>Đồ ăn/Thức
-                                uống</option>
-                            <option value="clothes"
-                                <?php if(($reorder_data['package_type']??'')=='clothes') echo 'selected'; ?>>Quần áo/Mỹ
-                                phẩm</option>
-                            <option value="electronic"
-                                <?php if(($reorder_data['package_type']??'')=='electronic') echo 'selected'; ?>>Đồ điện
-                                tử</option>
-                            <option value="other"
-                                <?php if(($reorder_data['package_type']??'')=='other') echo 'selected'; ?>>Khác...
-                            </option>
-                        </select>
-                    </div>
-                    <div><input type="number" id="weight" name="weight" placeholder="Khối lượng (kg)"
-                            value="<?php echo htmlspecialchars($reorder_data['weight'] ?? ''); ?>" /></div>
-                </div>
-                <div class="form-group">
-                    <input type="number" name="cod_amount" placeholder="Tiền thu hộ (VNĐ) - Nếu có"
-                        value="<?php echo htmlspecialchars($reorder_data['cod_amount'] ?? ''); ?>" />
-                </div>
-
-                <!-- Thêm chọn dịch vụ để tính giá -->
-                <div class="form-group">
-                    <select id="order-service-type" name="service_type">
-                        <?php foreach($services_list as $svc): ?>
-                        <option value="<?php echo $svc['type_key']; ?>"
-                            <?php if(($reorder_data['service_type']??'') == $svc['type_key']) echo 'selected'; ?>>
-                            <?php echo $svc['name']; ?>
-                            (<?php echo ($svc['base_price'] > 0) ? number_format($svc['base_price']).'đ' : 'Liên hệ'; ?>)
-                        </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <textarea id="note" name="note"
-                    placeholder="Ghi chú cho shipper..."><?php echo htmlspecialchars($reorder_data['note'] ?? ''); ?></textarea>
-            </div>
-
-            <!-- Hiển thị giá tạm tính -->
-            <div id="price-preview"
-                style="margin-bottom: 15px; padding: 10px; background: #e8f4f8; border-radius: 8px; color: #0a2a66; font-weight: bold; display: none;">
-                💰 Phí ship dự kiến: <span id="shipping-fee-display">0</span>đ
-            </div>
-            <input type="hidden" name="shipping_fee" id="shipping-fee-input" value="0">
-
-            <button type="submit" class="btn-primary">Xác nhận đặt đơn</button>
-            <div id="form-message"></div>
-        </form>
+            <!-- Nút điều hướng & Phân trang -->
+            <div class="swiper-pagination"></div>
+        </div>
+        <?php else: ?>
+        <p class="no-content-msg">Chưa có đánh giá nào.</p>
+        <?php endif; ?>
     </section>
 
     <!-- FAQ -->
@@ -346,6 +312,37 @@ $pricing_config = ['weight_free'=>2, 'weight_price'=>5000, 'cod_min'=>5000];
                 <h3 class="faq-question">FastGo có thu hộ COD không?</h3>
                 <p class="faq-answer">Có, chúng tôi hỗ trợ dịch vụ thu hộ tiền mặt minh bạch.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- INQUIRY FORM (MỚI) -->
+    <section id="inquiry">
+        <div class="container inquiry-container">
+            <h2 class="section-title">Gửi thắc mắc cho chúng tôi</h2>
+            <p class="section-desc">Bạn cần hỗ trợ thêm? Hãy để lại lời nhắn.</p>
+
+            <form id="inquiry-form">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Họ và tên của bạn" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email liên hệ" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" name="phone" placeholder="Số điện thoại" required>
+                </div>
+                <div class="form-group">
+                    <select name="subject">
+                        <option value="Tuvan">Tư vấn dịch vụ</option>
+                        <option value="KhieuNai">Khiếu nại đơn hàng</option>
+                        <option value="HopTac">Liên hệ hợp tác</option>
+                        <option value="Khac">Khác</option>
+                    </select>
+                </div>
+                <textarea name="message" placeholder="Nội dung thắc mắc..." required></textarea>
+                <button type="submit" class="btn-primary">Gửi tin nhắn</button>
+                <div id="inquiry-message"></div>
+            </form>
         </div>
     </section>
 
@@ -452,6 +449,9 @@ $pricing_config = ['weight_free'=>2, 'weight_price'=>5000, 'cod_min'=>5000];
     window.pricingConfig =
         <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
     </script>
+    <!-- Thêm SwiperJS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
 </body>
 
