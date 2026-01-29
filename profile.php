@@ -17,13 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_info'])) {
         $fullname = trim($_POST['fullname']);
         $phone = trim($_POST['phone']);
+        // Nhận thông tin công ty
+        $company_name = trim($_POST['company_name'] ?? '');
+        $tax_code = trim($_POST['tax_code'] ?? '');
+        $company_address = trim($_POST['company_address'] ?? '');
 
         if (empty($fullname) || empty($phone)) {
             $msg = "Vui lòng nhập đầy đủ họ tên và SĐT.";
             $msg_class = "error";
         } else {
-            $stmt = $conn->prepare("UPDATE users SET fullname = ?, phone = ? WHERE id = ?");
-            $stmt->bind_param("ssi", $fullname, $phone, $user_id);
+            $stmt = $conn->prepare("UPDATE users SET fullname = ?, phone = ?, company_name = ?, tax_code = ?, company_address = ? WHERE id = ?");
+            $stmt->bind_param("sssssi", $fullname, $phone, $company_name, $tax_code, $company_address, $user_id);
             if ($stmt->execute()) {
                 $msg = "Cập nhật thông tin thành công!";
                 $msg_class = "success";
@@ -69,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Lấy thông tin hiển thị
-$stmt = $conn->prepare("SELECT username, email, fullname, phone FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT username, email, fullname, phone, company_name, tax_code, company_address FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $user_info = $stmt->get_result()->fetch_assoc();
@@ -82,39 +86,6 @@ $user_info = $stmt->get_result()->fetch_assoc();
     <title>Thông tin tài khoản | FastGo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
-    <style>
-    .profile-card {
-        background: #fff;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-    }
-
-    .form-group label {
-        font-weight: 600;
-        color: #0a2a66;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    .msg-box {
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-
-    .msg-box.success {
-        background: #d4edda;
-        color: #155724;
-    }
-
-    .msg-box.error {
-        background: #f8d7da;
-        color: #721c24;
-    }
-    </style>
 </head>
 
 <body>
@@ -146,6 +117,19 @@ $user_info = $stmt->get_result()->fetch_assoc();
                         value="<?php echo htmlspecialchars($user_info['fullname']); ?>" required></div>
                 <div class="form-group"><label>Số điện thoại</label><input type="text" name="phone"
                         value="<?php echo htmlspecialchars($user_info['phone']); ?>" required></div>
+
+                <hr style="margin: 20px 0; border: 0; border-top: 1px dashed #eee;">
+                <h4 style="color:#0a2a66; margin-bottom:15px;">Thông tin xuất hóa đơn (Mặc định)</h4>
+                <div class="form-group"><label>Tên công ty</label><input type="text" name="company_name"
+                        value="<?php echo htmlspecialchars($user_info['company_name'] ?? ''); ?>"
+                        placeholder="Nhập tên công ty"></div>
+                <div class="form-group"><label>Mã số thuế</label><input type="text" name="tax_code"
+                        value="<?php echo htmlspecialchars($user_info['tax_code'] ?? ''); ?>"
+                        placeholder="Nhập mã số thuế"></div>
+                <div class="form-group"><label>Địa chỉ công ty</label><input type="text" name="company_address"
+                        value="<?php echo htmlspecialchars($user_info['company_address'] ?? ''); ?>"
+                        placeholder="Nhập địa chỉ công ty"></div>
+
                 <button type="submit" name="update_info" class="btn-primary" style="margin-top:15px;">Cập nhật thông
                     tin</button>
             </form>

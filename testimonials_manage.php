@@ -56,7 +56,6 @@ if ($res) {
     while ($row = $res->fetch_assoc())
         $testimonials[] = $row;
 }
-$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -67,43 +66,6 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
-    <style>
-    /* Tùy chỉnh Modal cho trang này */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-content {
-        background-color: #fff;
-        margin: 5% auto;
-        padding: 30px;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 500px;
-        position: relative;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .close {
-        position: absolute;
-        right: 20px;
-        top: 15px;
-        font-size: 28px;
-        cursor: pointer;
-        color: #aaa;
-    }
-
-    .close:hover {
-        color: #000;
-    }
-    </style>
 </head>
 
 <body>
@@ -116,10 +78,10 @@ $conn->close();
         </div>
 
         <?php if ($msg): ?>
-        <div
-            style="padding: 15px; background: #d4edda; color: #155724; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
-            <?php echo $msg; ?>
-        </div>
+            <div
+                style="padding: 15px; background: #d4edda; color: #155724; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                <?php echo $msg; ?>
+            </div>
         <?php endif; ?>
 
         <div class="table-section">
@@ -137,34 +99,34 @@ $conn->close();
                 </thead>
                 <tbody>
                     <?php foreach ($testimonials as $t): ?>
-                    <tr>
-                        <td>#<?php echo $t['id']; ?></td>
-                        <td><strong><?php echo htmlspecialchars($t['customer_name']); ?></strong></td>
-                        <td><?php echo htmlspecialchars($t['customer_role']); ?></td>
-                        <td style="color: #ffc107; letter-spacing: 2px;"><?php echo str_repeat('★', $t['rating']); ?>
-                        </td>
-                        <td><?php echo htmlspecialchars(mb_strimwidth($t['content'], 0, 60, "...")); ?></td>
-                        <td>
-                            <?php if ($t['is_visible']): ?>
-                            <span class="status-badge status-completed">Hiển thị</span>
-                            <?php else: ?>
-                            <span class="status-badge status-cancelled">Đang ẩn</span>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <button class="btn-action" onclick='openModal("edit", <?php echo json_encode($t); ?>)'>✏️
-                                Sửa</button>
+                        <tr>
+                            <td>#<?php echo $t['id']; ?></td>
+                            <td><strong><?php echo htmlspecialchars($t['customer_name']); ?></strong></td>
+                            <td><?php echo htmlspecialchars($t['customer_role']); ?></td>
+                            <td style="color: #ffc107; letter-spacing: 2px;"><?php echo str_repeat('★', $t['rating']); ?>
+                            </td>
+                            <td><?php echo htmlspecialchars(mb_strimwidth($t['content'], 0, 60, "...")); ?></td>
+                            <td>
+                                <?php if ($t['is_visible']): ?>
+                                    <span class="status-badge status-completed">Hiển thị</span>
+                                <?php else: ?>
+                                    <span class="status-badge status-cancelled">Đang ẩn</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <button class="btn-action" onclick='openModal("edit", <?php echo json_encode($t); ?>)'>✏️
+                                    Sửa</button>
 
-                            <!-- Form Xóa có xác nhận -->
-                            <form method="POST" style="display:inline-block;"
-                                onsubmit="return confirm('CẢNH BÁO: Bạn có chắc chắn muốn xóa đánh giá này không? Hành động này không thể hoàn tác.');">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="<?php echo $t['id']; ?>">
-                                <button type="submit" class="btn-action"
-                                    style="color: #dc3545; border-color: #dc3545; margin-left: 5px;">🗑️ Xóa</button>
-                            </form>
-                        </td>
-                    </tr>
+                                <!-- Form Xóa có xác nhận -->
+                                <form method="POST" style="display:inline-block;"
+                                    onsubmit="return confirm('CẢNH BÁO: Bạn có chắc chắn muốn xóa đánh giá này không? Hành động này không thể hoàn tác.');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<?php echo $t['id']; ?>">
+                                    <button type="submit" class="btn-action"
+                                        style="color: #dc3545; border-color: #dc3545; margin-left: 5px;">🗑️ Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -221,58 +183,58 @@ $conn->close();
     </div>
 
     <script>
-    const modal = document.getElementById('testimonialModal');
-    const form = document.getElementById('testimonialForm');
-    const modalTitle = document.getElementById('modalTitle');
-    const formAction = document.getElementById('formAction');
-    const testimonialId = document.getElementById('testimonialId');
+        const modal = document.getElementById('testimonialModal');
+        const form = document.getElementById('testimonialForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const formAction = document.getElementById('formAction');
+        const testimonialId = document.getElementById('testimonialId');
 
-    // Các input
-    const inpName = document.getElementById('customer_name');
-    const inpRole = document.getElementById('customer_role');
-    const inpRating = document.getElementById('rating');
-    const inpContent = document.getElementById('content');
-    const inpVisible = document.getElementById('is_visible');
+        // Các input
+        const inpName = document.getElementById('customer_name');
+        const inpRole = document.getElementById('customer_role');
+        const inpRating = document.getElementById('rating');
+        const inpContent = document.getElementById('content');
+        const inpVisible = document.getElementById('is_visible');
 
-    // Hàm mở modal (dùng chung cho Thêm và Sửa)
-    function openModal(mode, data = null) {
-        modal.style.display = 'block';
-        if (mode === 'edit' && data) {
-            modalTitle.innerText = 'Cập nhật đánh giá';
-            formAction.value = 'edit';
-            testimonialId.value = data.id;
+        // Hàm mở modal (dùng chung cho Thêm và Sửa)
+        function openModal(mode, data = null) {
+            modal.style.display = 'block';
+            if (mode === 'edit' && data) {
+                modalTitle.innerText = 'Cập nhật đánh giá';
+                formAction.value = 'edit';
+                testimonialId.value = data.id;
 
-            // Điền dữ liệu cũ
-            inpName.value = data.customer_name;
-            inpRole.value = data.customer_role;
-            inpRating.value = data.rating;
-            inpContent.value = data.content;
-            inpVisible.checked = data.is_visible == 1;
-        } else {
-            modalTitle.innerText = 'Thêm đánh giá mới';
-            formAction.value = 'add';
-            testimonialId.value = '';
-            form.reset();
-            inpVisible.checked = true;
+                // Điền dữ liệu cũ
+                inpName.value = data.customer_name;
+                inpRole.value = data.customer_role;
+                inpRating.value = data.rating;
+                inpContent.value = data.content;
+                inpVisible.checked = data.is_visible == 1;
+            } else {
+                modalTitle.innerText = 'Thêm đánh giá mới';
+                formAction.value = 'add';
+                testimonialId.value = '';
+                form.reset();
+                inpVisible.checked = true;
+            }
         }
-    }
 
-    function closeModal() {
-        modal.style.display = 'none';
-    }
-
-    // Hàm xác nhận trước khi lưu (Sửa/Thêm)
-    function confirmSave() {
-        const actionText = formAction.value === 'edit' ? 'cập nhật thay đổi' : 'thêm đánh giá mới';
-        return confirm('Bạn có chắc chắn muốn ' + actionText + ' không?');
-    }
-
-    // Đóng modal khi click ra ngoài
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            closeModal();
+        function closeModal() {
+            modal.style.display = 'none';
         }
-    }
+
+        // Hàm xác nhận trước khi lưu (Sửa/Thêm)
+        function confirmSave() {
+            const actionText = formAction.value === 'edit' ? 'cập nhật thay đổi' : 'thêm đánh giá mới';
+            return confirm('Bạn có chắc chắn muốn ' + actionText + ' không?');
+        }
+
+        // Đóng modal khi click ra ngoài
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
     </script>
 </body>
 

@@ -26,6 +26,7 @@ if ($stat_result) {
 // Xử lý tìm kiếm & lọc
 $search = $_GET['search'] ?? '';
 $status = $_GET['status'] ?? '';
+$issue = $_GET['issue'] ?? '';
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $limit = 10; // Số đơn hàng trên mỗi trang
 $offset = ($page - 1) * $limit;
@@ -55,6 +56,12 @@ if (!empty($status)) {
     $count_sql .= $condition;
     $params[] = $status;
     $types .= "s";
+}
+
+if ($issue === 'has_admin_note') {
+    $condition = " AND (admin_note IS NOT NULL AND admin_note != '')";
+    $sql .= $condition;
+    $count_sql .= $condition;
 }
 
 // Thực hiện đếm trước
@@ -151,24 +158,29 @@ $result = $stmt->get_result();
                     </thead>
                     <tbody>
                         <?php if ($result->num_rows > 0): ?>
-                            <?php while ($row = $result->fetch_assoc()): ?>
-                                <tr>
-                                    <td><strong
-                                            style="color:#0a2a66;"><?php echo htmlspecialchars($row['order_code']); ?></strong>
-                                    </td>
-                                    <td>
-                                        <strong>Gửi:</strong> <?php echo htmlspecialchars($row['name']); ?><br>
-                                        <strong>Nhận:</strong>
-                                        <?php echo htmlspecialchars($row['receiver_name'] ?? '---'); ?><br>
-                                        <span
-                                            style="font-size:12px; color:#666;"><?php echo htmlspecialchars($row['pickup_address']); ?></span>
-                                    </td>
-                                    <td>
-                                        Gửi: <?php echo htmlspecialchars($row['phone']); ?><br>
-                                        Nhận: <?php echo htmlspecialchars($row['receiver_phone'] ?? '---'); ?>
-                                    </td>
-                                    <td>
-                                        <?php
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr <?php echo ($row['status'] === 'cancelled') ? 'style="background-color: #ffe6e6;"' : ''; ?>>
+                            <td><strong
+                                    style="color:#0a2a66;"><?php echo htmlspecialchars($row['order_code']); ?></strong>
+                                <?php if (!empty($row['admin_note'])): ?>
+                                <div style="margin-top:4px;"><span
+                                        style="background:#fff3cd; color:#856404; padding:2px 5px; border-radius:3px; font-size:11px; border:1px solid #ffeeba;">⚠️
+                                        Có Note</span></div>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <strong>Gửi:</strong> <?php echo htmlspecialchars($row['name']); ?><br>
+                                <strong>Nhận:</strong>
+                                <?php echo htmlspecialchars($row['receiver_name'] ?? '---'); ?><br>
+                                <span
+                                    style="font-size:12px; color:#666;"><?php echo htmlspecialchars($row['pickup_address']); ?></span>
+                            </td>
+                            <td>
+                                Gửi: <?php echo htmlspecialchars($row['phone']); ?><br>
+                                Nhận: <?php echo htmlspecialchars($row['receiver_phone'] ?? '---'); ?>
+                            </td>
+                            <td>
+                                <?php
                                         $pkg_map = [
                                             'document' => 'Tài liệu',
                                             'food' => 'Đồ ăn',
@@ -178,9 +190,9 @@ $result = $stmt->get_result();
                                         ];
                                         echo $pkg_map[$row['package_type']] ?? $row['package_type'];
                                         ?>
-                                    </td>
-                                    <td>
-                                        <?php
+                            </td>
+                            <td>
+                                <?php
                                         $svc_map = [
                                             'standard' => 'Tiêu chuẩn',
                                             'express' => '<span style="color:#d9534f; font-weight:bold;">Hỏa tốc</span>',
@@ -188,13 +200,13 @@ $result = $stmt->get_result();
                                         ];
                                         echo $svc_map[$row['service_type'] ?? 'standard'] ?? ($row['service_type'] ?? 'standard');
                                         ?>
-                                    </td>
-                                    <td style="color:#d9534f; font-weight:bold;">
-                                        <?php echo number_format($row['shipping_fee'] ?? 0); ?>đ
-                                    </td>
-                                    <td><?php echo number_format($row['cod_amount']); ?>đ</td>
-                                    <td>
-                                        <?php
+                            </td>
+                            <td style="color:#d9534f; font-weight:bold;">
+                                <?php echo number_format($row['shipping_fee'] ?? 0); ?>đ
+                            </td>
+                            <td><?php echo number_format($row['cod_amount']); ?>đ</td>
+                            <td>
+                                <?php
                                         $st = $row['status'] ?? 'pending';
                                         $class = 'status-' . $st;
                                         $label = match ($st) {
@@ -205,25 +217,25 @@ $result = $stmt->get_result();
                                             default => $st
                                         };
                                         ?>
-                                        <span class="status-badge <?php echo $class; ?>"><?php echo $label; ?></span>
-                                    </td>
-                                    <td><?php echo isset($row['created_at']) ? date('d/m/Y H:i', strtotime($row['created_at'])) : 'N/A'; ?>
-                                    </td>
-                                    <td>
-                                        <a href="order_detail.php?id=<?php echo $row['id']; ?>" class="btn-action">Chi tiết</a>
-                                        <?php if ($row['status'] !== 'cancelled' && $row['status'] !== 'completed'): ?>
-                                            <a href="cancel_order.php?id=<?php echo $row['id']; ?>" class="btn-action"
-                                                style="color: #d9534f; border-color: #d9534f; margin-left: 5px;"
-                                                onclick="return confirm('Bạn chắc chắn muốn hủy đơn này?');">Hủy</a>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
+                                <span class="status-badge <?php echo $class; ?>"><?php echo $label; ?></span>
+                            </td>
+                            <td><?php echo isset($row['created_at']) ? date('d/m/Y H:i', strtotime($row['created_at'])) : 'N/A'; ?>
+                            </td>
+                            <td>
+                                <a href="order_detail.php?id=<?php echo $row['id']; ?>" class="btn-action">Chi tiết</a>
+                                <?php if ($row['status'] !== 'cancelled' && $row['status'] !== 'completed'): ?>
+                                <a href="cancel_order.php?id=<?php echo $row['id']; ?>" class="btn-action"
+                                    style="color: #d9534f; border-color: #d9534f; margin-left: 5px;"
+                                    onclick="return confirm('Bạn chắc chắn muốn hủy đơn này?');">Hủy</a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
                         <?php else: ?>
-                            <tr>
-                                <td colspan="10" style="text-align:center; padding: 30px;">Không tìm thấy đơn hàng nào phù
-                                    hợp.</td>
-                            </tr>
+                        <tr>
+                            <td colspan="10" style="text-align:center; padding: 30px;">Không tìm thấy đơn hàng nào phù
+                                hợp.</td>
+                        </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -231,31 +243,31 @@ $result = $stmt->get_result();
 
             <!-- Phân trang -->
             <?php if ($total_pages > 1): ?>
-                <div style="margin-top: 20px; display: flex; justify-content: center; gap: 5px;">
-                    <!-- Nút Previous -->
-                    <?php if ($page > 1): ?>
-                        <a href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>"
-                            class="btn-action" style="text-decoration: none;">&laquo; Trước</a>
-                    <?php endif; ?>
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 5px;">
+                <!-- Nút Previous -->
+                <?php if ($page > 1): ?>
+                <a href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>&issue=<?php echo urlencode($issue); ?>"
+                    class="btn-action" style="text-decoration: none;">&laquo; Trước</a>
+                <?php endif; ?>
 
-                    <!-- Các trang số -->
-                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                        <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>"
-                            class="btn-action"
-                            style="text-decoration: none; <?php echo ($i == $page) ? 'background-color: #0a2a66; color: white;' : ''; ?>">
-                            <?php echo $i; ?>
-                        </a>
-                    <?php endfor; ?>
+                <!-- Các trang số -->
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>&issue=<?php echo urlencode($issue); ?>"
+                    class="btn-action"
+                    style="text-decoration: none; <?php echo ($i == $page) ? 'background-color: #0a2a66; color: white;' : ''; ?>">
+                    <?php echo $i; ?>
+                </a>
+                <?php endfor; ?>
 
-                    <!-- Nút Next -->
-                    <?php if ($page < $total_pages): ?>
-                        <a href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>"
-                            class="btn-action" style="text-decoration: none;">Sau &raquo;</a>
-                    <?php endif; ?>
-                </div>
-                <p style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">Hiển thị trang
-                    <?php echo $page; ?> / <?php echo $total_pages; ?> (Tổng <?php echo $total_records; ?> đơn)
-                </p>
+                <!-- Nút Next -->
+                <?php if ($page < $total_pages): ?>
+                <a href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>&issue=<?php echo urlencode($issue); ?>"
+                    class="btn-action" style="text-decoration: none;">Sau &raquo;</a>
+                <?php endif; ?>
+            </div>
+            <p style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">Hiển thị trang
+                <?php echo $page; ?> / <?php echo $total_pages; ?> (Tổng <?php echo $total_records; ?> đơn)
+            </p>
             <?php endif; ?>
 
             <!-- Cột phải: Sidebar bộ lọc -->
@@ -283,6 +295,16 @@ $result = $stmt->get_result();
                             <option value="cancelled" <?php if ($status == 'cancelled')
                                 echo 'selected'; ?>>Đã hủy
                             </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Vấn đề / Ghi chú</label>
+                        <select name="issue">
+                            <option value="">-- Tất cả --</option>
+                            <option value="has_admin_note" <?php if ($issue == 'has_admin_note')
+                                echo 'selected'; ?>>⚠️
+                                Đơn có ghi chú Admin</option>
                         </select>
                     </div>
 

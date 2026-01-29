@@ -64,6 +64,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_payment_status
     }
 }
 
+// --- TÍNH NĂNG MỚI: HOÀN TIỀN (REFUND) ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['refund_order'])) {
+    // Chỉ cho phép hoàn tiền nếu trạng thái hiện tại là 'paid'
+    $stmt_check = $conn->prepare("SELECT payment_status FROM orders WHERE id = ?");
+    $stmt_check->bind_param("i", $id);
+    $stmt_check->execute();
+    $curr_pay = $stmt_check->get_result()->fetch_assoc();
+
+    if ($curr_pay['payment_status'] === 'paid') {
+        $stmt = $conn->prepare("UPDATE orders SET payment_status = 'refunded' WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        if ($stmt->execute()) {
+            $msg = "Đã hoàn tiền đơn hàng thành công!";
+            // Ghi log
+            $admin_id = $_SESSION['user_id'];
+            $conn->query("INSERT INTO order_logs (order_id, user_id, old_status, new_status) VALUES ($id, $admin_id, 'Paid', 'Refunded')");
+            header("Refresh:0"); // Refresh để cập nhật UI
+        } else {
+            $msg = "Lỗi: " . $conn->error;
+        }
+    } else {
+        $msg = "Chỉ có thể hoàn tiền cho đơn hàng đã thanh toán.";
+    }
+}
+
+// --- TÍNH NĂNG MỚI: GHI CHÚ NỘI BỘ (ADMIN NOTE) ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_admin_note'])) {
+    $admin_note = trim($_POST['admin_note']);
+    $stmt = $conn->prepare("UPDATE orders SET admin_note = ? WHERE id = ?");
+    $stmt->bind_param("si", $admin_note, $id);
+    if ($stmt->execute()) {
+        $msg = "Đã lưu ghi chú nội bộ.";
+        header("Refresh:0");
+    } else {
+        $msg = "Lỗi: " . $conn->error;
+    }
+}
+
 // Xử lý Cập nhật trạng thái
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $new_status = $_POST['status'];
@@ -180,95 +218,6 @@ $svc_map = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
-    <style>
-    .detail-container {
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-top: 20px;
-    }
-
-    .detail-row {
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 20px;
-    }
-
-    .detail-col {
-        flex: 1;
-        min-width: 300px;
-        padding-right: 20px;
-    }
-
-    .detail-col h3 {
-        color: #0a2a66;
-        margin-bottom: 15px;
-        font-size: 18px;
-        border-bottom: 2px solid #ff7a00;
-        display: inline-block;
-        padding-bottom: 5px;
-    }
-
-    .info-group {
-        margin-bottom: 10px;
-        font-size: 15px;
-    }
-
-    .info-label {
-        font-weight: 600;
-        color: #555;
-        width: 130px;
-        display: inline-block;
-    }
-
-    .status-form {
-        background: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-        margin-top: 10px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .log-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-        font-size: 14px;
-    }
-
-    .log-table th,
-    .log-table td {
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-        text-align: left;
-    }
-
-    .log-table th {
-        background: #f5f7fb;
-        color: #0a2a66;
-    }
-
-    .log-section {
-        margin-top: 30px;
-        border-top: 1px solid #eee;
-        padding-top: 20px;
-    }
-
-    .checkbox-override {
-        font-size: 13px;
-        color: #d9534f;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        margin-top: 8px;
-    }
-    </style>
 </head>
 
 <body>
@@ -284,10 +233,10 @@ $svc_map = [
         </div>
 
         <?php if ($msg): ?>
-        <div
-            style="padding: 15px; background: #d4edda; color: #155724; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
-            <?php echo $msg; ?>
-        </div>
+            <div
+                style="padding: 15px; background: #d4edda; color: #155724; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                <?php echo $msg; ?>
+            </div>
         <?php endif; ?>
 
         <div class="detail-container">
@@ -313,10 +262,9 @@ $svc_map = [
                                 style="padding: 6px; border-radius: 4px; border: 1px solid #ccc; flex:1;">
                                 <option value="0">-- Chưa phân công --</option>
                                 <?php foreach ($shippers as $s): ?>
-                                <option value="<?php echo $s['id']; ?>"
-                                    <?php echo $order['shipper_id'] == $s['id'] ? 'selected' : ''; ?>>
-                                    <?php echo $s['fullname']; ?> (<?php echo $s['phone']; ?>)
-                                </option>
+                                    <option value="<?php echo $s['id']; ?>" <?php echo $order['shipper_id'] == $s['id'] ? 'selected' : ''; ?>>
+                                        <?php echo $s['fullname']; ?> (<?php echo $s['phone']; ?>)
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                             <button type="submit" name="assign_shipper" class="btn-primary"
@@ -392,11 +340,11 @@ $svc_map = [
                         <?php echo nl2br(htmlspecialchars($order['note'])); ?>
                     </div>
                     <?php if ($order['shipper_note']): ?>
-                    <div class="info-group"
-                        style="margin-top:10px; padding:10px; background:#fff3cd; border-radius:4px;"><span
-                            class="info-label">💬 Shipper Note:</span>
-                        <strong><?php echo nl2br(htmlspecialchars($order['shipper_note'])); ?></strong>
-                    </div>
+                        <div class="info-group"
+                            style="margin-top:10px; padding:10px; background:#fff3cd; border-radius:4px;"><span
+                                class="info-label">💬 Shipper Note:</span>
+                            <strong><?php echo nl2br(htmlspecialchars($order['shipper_note'])); ?></strong>
+                        </div>
                     <?php endif; ?>
                 </div>
                 <div class="detail-col">
@@ -412,25 +360,40 @@ $svc_map = [
                     </div>
 
                     <!-- Form cập nhật trạng thái thanh toán -->
-                    <?php if ($order['payment_method'] == 'bank_transfer'): ?>
-                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
-                        <form method="POST" style="display:flex; gap:10px; align-items:center;"
-                            onsubmit="return confirm('Xác nhận thay đổi trạng thái thanh toán?')">
-                            <span class="info-label">Trạng thái TT:</span>
-                            <select name="payment_status"
-                                style="padding: 6px; border-radius: 4px; border: 1px solid #ccc; flex:1;">
-                                <option value="unpaid"
-                                    <?php echo $order['payment_status'] == 'unpaid' ? 'selected' : ''; ?>>Chưa thanh
-                                    toán</option>
-                                <option value="paid"
-                                    <?php echo $order['payment_status'] == 'paid' ? 'selected' : ''; ?>>
-                                    Đã thanh toán
-                                </option>
-                            </select>
-                            <button type="submit" name="update_payment_status" class="btn-primary"
-                                style="padding: 6px 12px; font-size: 13px; background-color: #28a745;">Lưu</button>
+                    <?php if ($order['payment_method'] == 'bank_transfer' && $order['payment_status'] != 'refunded'): ?>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                            <form method="POST" style="display:flex; gap:10px; align-items:center;"
+                                onsubmit="return confirm('Xác nhận thay đổi trạng thái thanh toán?')">
+                                <span class="info-label">Trạng thái TT:</span>
+                                <select name="payment_status"
+                                    style="padding: 6px; border-radius: 4px; border: 1px solid #ccc; flex:1;">
+                                    <option value="unpaid" <?php echo $order['payment_status'] == 'unpaid' ? 'selected' : ''; ?>>Chưa thanh
+                                        toán</option>
+                                    <option value="paid" <?php echo $order['payment_status'] == 'paid' ? 'selected' : ''; ?>>
+                                        Đã thanh toán
+                                    </option>
+                                </select>
+                                <button type="submit" name="update_payment_status" class="btn-primary"
+                                    style="padding: 6px 12px; font-size: 13px; background-color: #28a745;">Lưu</button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Nút Hoàn tiền (Chỉ hiện khi đã thanh toán) -->
+                    <?php if ($order['payment_status'] == 'paid'): ?>
+                        <form method="POST"
+                            onsubmit="return confirm('⚠️ CẢNH BÁO: Bạn có chắc chắn muốn hoàn tiền cho đơn hàng này? Hành động này sẽ được ghi lại.')"
+                            style="margin-top:10px;">
+                            <button type="submit" name="refund_order" class="btn-action"
+                                style="width:100%; background-color:#6f42c1; border-color:#6f42c1; color:white;">
+                                💸 Hoàn tiền
+                            </button>
                         </form>
-                    </div>
+                    <?php elseif ($order['payment_status'] == 'refunded'): ?>
+                        <div
+                            style="margin-top:10px; padding:10px; background:#e2e3e5; color:#383d41; border-radius:4px; text-align:center; font-weight:bold;">
+                            ↩️ Đã hoàn tiền
+                        </div>
                     <?php endif; ?>
 
                     <div class="info-group"><span class="info-label">Tổng thu:</span> <strong
@@ -440,82 +403,101 @@ $svc_map = [
                 </div>
             </div>
 
-            <!-- Row 4: Hóa đơn công ty -->
-            <?php if ($order['is_corporate']): ?>
-            <div class="detail-row">
-                <div class="detail-col" style="flex: 0 0 100%;">
-                    <h3>Thông tin xuất hóa đơn</h3>
-                    <div class="info-group"><span class="info-label">Tên công ty:</span>
-                        <strong><?php echo htmlspecialchars($order['company_name']); ?></strong>
-                    </div>
-                    <div class="info-group"><span class="info-label">Mã số thuế:</span>
-                        <?php echo htmlspecialchars($order['company_tax_code']); ?>
-                    </div>
-                    <div class="info-group"><span class="info-label">Địa chỉ công ty:</span>
-                        <?php echo htmlspecialchars($order['company_address']); ?>
-                    </div>
-                    <?php if (!empty($order['company_bank_info'])): ?>
-                    <div class="info-group"><span class="info-label">Thông tin TK:</span>
-                        <?php echo nl2br(htmlspecialchars($order['company_bank_info'])); ?>
-                    </div>
-                    <?php endif; ?>
+            <!-- Row MỚI: Xử lý sự cố & Ghi chú nội bộ -->
+            <div class="detail-row"
+                style="background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 15px;">
+                <div class="detail-col" style="flex: 0 0 100%; padding-right: 0;">
+                    <h3 style="color:#856404; border-bottom-color:#856404;">🛡️ Xử lý & Ghi chú nội bộ (Admin Only)</h3>
+                    <p style="font-size:13px; color:#666; margin-bottom:10px;">Ghi lại các vấn đề phát sinh, lý do hoàn
+                        tiền hoặc thông tin xử lý khiếu nại. Khách hàng và Shipper sẽ <strong>không</strong> thấy nội
+                        dung này.</p>
+                    <form method="POST">
+                        <textarea name="admin_note" rows="3"
+                            style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px; font-family:inherit;"
+                            placeholder="Nhập ghi chú xử lý..."><?php echo htmlspecialchars($order['admin_note'] ?? ''); ?></textarea>
+                        <button type="submit" name="save_admin_note" class="btn-primary"
+                            style="margin-top:10px; background-color:#856404; border-color:#856404;">Lưu ghi
+                            chú</button>
+                    </form>
                 </div>
             </div>
+
+            <!-- Row 4: Hóa đơn công ty -->
+            <?php if ($order['is_corporate']): ?>
+                <div class="detail-row">
+                    <div class="detail-col" style="flex: 0 0 100%;">
+                        <h3>Thông tin xuất hóa đơn</h3>
+                        <div class="info-group"><span class="info-label">Tên công ty:</span>
+                            <strong><?php echo htmlspecialchars($order['company_name']); ?></strong>
+                        </div>
+                        <div class="info-group"><span class="info-label">Mã số thuế:</span>
+                            <?php echo htmlspecialchars($order['company_tax_code']); ?>
+                        </div>
+                        <div class="info-group"><span class="info-label">Địa chỉ công ty:</span>
+                            <?php echo htmlspecialchars($order['company_address']); ?>
+                        </div>
+                        <?php if (!empty($order['company_bank_info'])): ?>
+                            <div class="info-group"><span class="info-label">Thông tin TK:</span>
+                                <?php echo nl2br(htmlspecialchars($order['company_bank_info'])); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
             <?php endif; ?>
 
             <!-- Row 4: Đánh giá từ khách hàng -->
             <?php if ($order['rating'] > 0): ?>
-            <div class="detail-row">
-                <div class="detail-col">
-                    <h3>⭐ Đánh giá từ khách hàng</h3>
-                    <div class="info-group"><span class="info-label">Điểm:</span> <strong
-                            style="color:#ffc107; font-size:18px;"><?php echo str_repeat('★', $order['rating']) . str_repeat('☆', 5 - $order['rating']); ?></strong>
-                    </div>
-                    <div class="info-group"><span class="info-label">Nhận xét:</span> <em
-                            style="background:#f9f9f9; padding:5px; border-radius:4px; display:inline-block;">"<?php echo htmlspecialchars($order['feedback']); ?>"</em>
-                    </div>
+                <div class="detail-row">
+                    <div class="detail-col">
+                        <h3>⭐ Đánh giá từ khách hàng</h3>
+                        <div class="info-group"><span class="info-label">Điểm:</span> <strong
+                                style="color:#ffc107; font-size:18px;"><?php echo str_repeat('★', $order['rating']) . str_repeat('☆', 5 - $order['rating']); ?></strong>
+                        </div>
+                        <div class="info-group"><span class="info-label">Nhận xét:</span> <em
+                                style="background:#f9f9f9; padding:5px; border-radius:4px; display:inline-block;">"<?php echo htmlspecialchars($order['feedback']); ?>"</em>
+                        </div>
 
-                    <form method="POST"
-                        onsubmit="return confirm('Bạn có chắc muốn đưa đánh giá này lên trang chủ không?');"
-                        style="margin-top: 15px;">
-                        <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
-                        <button type="submit" name="promote_testimonial" class="btn-primary"
-                            style="background-color: #28a745; border-color:#28a745;">🌟 Đưa lên trang chủ</button>
-                    </form>
+                        <form method="POST"
+                            onsubmit="return confirm('Bạn có chắc muốn đưa đánh giá này lên trang chủ không?');"
+                            style="margin-top: 15px;">
+                            <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
+                            <button type="submit" name="promote_testimonial" class="btn-primary"
+                                style="background-color: #28a745; border-color:#28a745;">🌟 Đưa lên trang chủ</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
             <?php endif; ?>
 
             <!-- Row 4: Lịch sử thay đổi -->
             <div class="log-section">
                 <h3>📜 Lịch sử thay đổi trạng thái</h3>
                 <?php if (!empty($logs)): ?>
-                <table class="log-table">
-                    <thead>
-                        <tr>
-                            <th>Thời gian</th>
-                            <th>Người thực hiện</th>
-                            <th>Thay đổi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($logs as $log): ?>
-                        <tr>
-                            <td><?php echo date('d/m/Y H:i', strtotime($log['changed_at'])); ?></td>
-                            <td><?php echo htmlspecialchars($log['fullname']); ?></td>
-                            <td>
-                                <span
-                                    class="status-badge status-<?php echo $log['old_status']; ?>"><?php echo $log['old_status']; ?></span>
-                                ➔
-                                <span
-                                    class="status-badge status-<?php echo $log['new_status']; ?>"><?php echo $log['new_status']; ?></span>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                    <table class="log-table">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Người thực hiện</th>
+                                <th>Thay đổi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($logs as $log): ?>
+                                <tr>
+                                    <td><?php echo date('d/m/Y H:i', strtotime($log['changed_at'])); ?></td>
+                                    <td><?php echo htmlspecialchars($log['fullname']); ?></td>
+                                    <td>
+                                        <span
+                                            class="status-badge status-<?php echo $log['old_status']; ?>"><?php echo $log['old_status']; ?></span>
+                                        ➔
+                                        <span
+                                            class="status-badge status-<?php echo $log['new_status']; ?>"><?php echo $log['new_status']; ?></span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 <?php else: ?>
-                <p style="color:#999; font-style:italic;">Chưa có lịch sử thay đổi nào.</p>
+                    <p style="color:#999; font-style:italic;">Chưa có lịch sử thay đổi nào.</p>
                 <?php endif; ?>
             </div>
         </div>

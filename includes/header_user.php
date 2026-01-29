@@ -8,6 +8,19 @@ $unread_notifications_count = 0;
 
 // Nếu đã đăng nhập và có kết nối DB, thực hiện đếm
 if (isset($_SESSION['user_id']) && isset($conn)) {
+    // --- FIX: Kiểm tra tài khoản bị khóa (Force Logout) ---
+    $stmt_lock = $conn->prepare("SELECT is_locked FROM users WHERE id = ?");
+    $stmt_lock->bind_param("i", $_SESSION['user_id']);
+    $stmt_lock->execute();
+    $res_lock = $stmt_lock->get_result();
+    if ($res_lock && $row_lock = $res_lock->fetch_assoc()) {
+        if ($row_lock['is_locked'] == 1) {
+            echo '<script>alert("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin."); window.location.href="logout.php";</script>';
+            exit;
+        }
+    }
+    $stmt_lock->close();
+
     $stmt_notify = $conn->prepare("SELECT COUNT(*) as count FROM notifications WHERE user_id = ? AND is_read = 0");
     if ($stmt_notify) {
         $stmt_notify->bind_param("i", $_SESSION['user_id']);
@@ -36,8 +49,8 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                 <a href="#" style="font-size: 20px; color: white; padding: 0 10px; position: relative;">
                     🔔
                     <?php if ($unread_notifications_count > 0): ?>
-                    <span id="notification-count"
-                        style="position: absolute; top: -5px; right: 0; background: #d9534f; color: white; font-size: 10px; padding: 2px 5px; border-radius: 10px; min-width: 18px; text-align: center;"><?php echo $unread_notifications_count; ?></span>
+                        <span id="notification-count"
+                            style="position: absolute; top: -5px; right: 0; background: #d9534f; color: white; font-size: 10px; padding: 2px 5px; border-radius: 10px; min-width: 18px; text-align: center;"><?php echo $unread_notifications_count; ?></span>
                     <?php endif; ?>
                 </a>
                 <div class="dropdown-menu" id="notification-dropdown" style="min-width: 300px; right: 0; left: auto;">
@@ -67,27 +80,27 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
 </header>
 
 <script>
-// Script cho chuông thông báo
-document.addEventListener('DOMContentLoaded', function() {
-    const bell = document.getElementById('notification-bell');
-    const dropdown = document.getElementById('notification-dropdown');
-    const notifList = document.getElementById('notification-list');
+    // Script cho chuông thông báo
+    document.addEventListener('DOMContentLoaded', function () {
+        const bell = document.getElementById('notification-bell');
+        const dropdown = document.getElementById('notification-dropdown');
+        const notifList = document.getElementById('notification-list');
 
-    if (bell) {
-        bell.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        if (bell) {
+            bell.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
 
-            if (dropdown.style.display === 'block') {
-                // Fetch notifications
-                fetch('get_notifications_ajax.php')
-                    .then(res => res.text())
-                    .then(html => {
-                        notifList.innerHTML = html;
-                    });
-            }
-        });
-    }
-});
+                if (dropdown.style.display === 'block') {
+                    // Fetch notifications
+                    fetch('get_notifications_ajax.php')
+                        .then(res => res.text())
+                        .then(html => {
+                            notifList.innerHTML = html;
+                        });
+                }
+            });
+        }
+    });
 </script>

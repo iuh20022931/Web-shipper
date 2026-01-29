@@ -9,6 +9,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'shipper') {
 }
 
 $shipper_id = $_SESSION['user_id'];
+
+// --- FIX: Kiểm tra tài khoản bị khóa ---
+$check_lock = $conn->query("SELECT is_locked FROM users WHERE id = $shipper_id");
+if ($check_lock && $check_lock->fetch_assoc()['is_locked'] == 1) {
+    header("Location: logout.php");
+    exit;
+}
+
 $msg = "";
 
 // Xử lý cập nhật trạng thái
@@ -164,88 +172,6 @@ $pkg_map = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
-    <style>
-        .shipper-card {
-            background: #fff;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid #ccc;
-        }
-
-        .shipper-card.pending {
-            border-left-color: #ffc107;
-        }
-
-        .shipper-card.shipping {
-            border-left-color: #17a2b8;
-        }
-
-        .shipper-card.completed {
-            border-left-color: #28a745;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .card-body p {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .card-actions {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed #eee;
-        }
-
-        .btn-action-sm {
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            color: white;
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
-        .filter-tab {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: #eee;
-            color: #555;
-            text-decoration: none;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-
-        .filter-tab.active {
-            background: #0a2a66;
-            color: white;
-        }
-
-        .shipper-note-input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 13px;
-        }
-    </style>
 </head>
 
 <body>

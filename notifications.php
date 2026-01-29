@@ -42,30 +42,6 @@ $conn->query("UPDATE notifications SET is_read = 1 WHERE user_id = $user_id");
     <title>Tất cả thông báo | FastGo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
-    <style>
-        .notification-page-item {
-            display: block;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            text-decoration: none;
-            color: #333;
-            transition: background-color 0.2s;
-        }
-
-        .notification-page-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .notification-page-item .message {
-            font-weight: 500;
-        }
-
-        .notification-page-item .time {
-            font-size: 12px;
-            color: #888;
-            margin-top: 5px;
-        }
-    </style>
 </head>
 
 <body>

@@ -9,6 +9,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'shipper') {
 }
 
 $shipper_id = $_SESSION['user_id'];
+
+// --- FIX: Kiểm tra tài khoản bị khóa ---
+$check_lock = $conn->query("SELECT is_locked FROM users WHERE id = $shipper_id");
+if ($check_lock && $check_lock->fetch_assoc()['is_locked'] == 1) {
+    header("Location: logout.php");
+    exit;
+}
+
 $msg = "";
 $msg_class = "";
 
@@ -105,56 +113,6 @@ $user_info = $stmt->get_result()->fetch_assoc();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
-    <style>
-        .profile-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .stat-box {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .stat-num {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .form-box {
-            background: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .msg-box {
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .msg-box.success {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .msg-box.error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-    </style>
 </head>
 
 <body>

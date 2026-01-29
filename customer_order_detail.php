@@ -56,60 +56,6 @@ $status_map = [
     <title>Chi tiết đơn hàng #<?php echo $order['order_code']; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
-    <style>
-        .detail-box {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            border-bottom: 1px dashed #eee;
-            padding-bottom: 10px;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            color: #666;
-            font-weight: 500;
-        }
-
-        .info-val {
-            font-weight: 600;
-            color: #333;
-            text-align: right;
-        }
-
-        .rating-stars {
-            font-size: 24px;
-            color: #ddd;
-            cursor: pointer;
-        }
-
-        .rating-stars span:hover,
-        .rating-stars span.active {
-            color: #ffcc00;
-        }
-
-        .btn-print {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-    </style>
 </head>
 
 <body>

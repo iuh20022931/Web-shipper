@@ -51,90 +51,6 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
-    <style>
-    .order-form-container {
-        background: #fff;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-top: 20px;
-    }
-
-    .form-section {
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .form-section:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-    }
-
-    .form-section h3 {
-        color: #0a2a66;
-        margin-bottom: 20px;
-        font-size: 18px;
-        border-bottom: 2px solid #ff7a00;
-        display: inline-block;
-        padding-bottom: 5px;
-    }
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-group label {
-        font-weight: 600;
-        color: #555;
-        margin-bottom: 8px;
-        font-size: 14px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 15px;
-    }
-
-    .form-group textarea {
-        min-height: 80px;
-        resize: vertical;
-    }
-
-    #corporate_info_fields {
-        margin-top: 15px;
-        padding: 15px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        border: 1px solid #eee;
-        display: none;
-    }
-
-    #corporate_info_fields .form-group {
-        margin-bottom: 10px;
-    }
-
-    #price-preview {
-        margin-top: 20px;
-        padding: 15px;
-        background: #e8f4f8;
-        border-left: 4px solid #0a2a66;
-        border-radius: 4px;
-        font-size: 16px;
-    }
-    </style>
 </head>
 
 <body>
@@ -166,8 +82,8 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                             style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                             <label for="pickup-addr" style="margin-bottom:0;">Địa chỉ lấy hàng</label>
                             <?php if (!empty($saved_addresses)): ?>
-                            <a href="#" onclick="openAddrModal('pickup'); return false;"
-                                style="font-size:13px; color:#ff7a00; text-decoration:none;">📍 Chọn từ sổ địa chỉ</a>
+                                <a href="#" onclick="openAddrModal('pickup'); return false;"
+                                    style="font-size:13px; color:#ff7a00; text-decoration:none;">📍 Chọn từ sổ địa chỉ</a>
                             <?php endif; ?>
                         </div>
                         <label for="pickup-addr">Địa chỉ lấy hàng</label>
@@ -194,8 +110,8 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                             style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                             <label for="delivery-addr" style="margin-bottom:0;">Địa chỉ giao hàng</label>
                             <?php if (!empty($saved_addresses)): ?>
-                            <a href="#" onclick="openAddrModal('delivery'); return false;"
-                                style="font-size:13px; color:#ff7a00; text-decoration:none;">📍 Chọn từ sổ địa chỉ</a>
+                                <a href="#" onclick="openAddrModal('delivery'); return false;"
+                                    style="font-size:13px; color:#ff7a00; text-decoration:none;">📍 Chọn từ sổ địa chỉ</a>
                             <?php endif; ?>
                         </div>
                         <label for="delivery-addr">Địa chỉ giao hàng</label>
@@ -213,9 +129,9 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                         <label for="order-service-type">Loại dịch vụ</label>
                         <select id="order-service-type" name="service_type">
                             <?php foreach ($services_list as $svc): ?>
-                            <option value="<?php echo $svc['type_key']; ?>">
-                                <?php echo $svc['name']; ?>
-                            </option>
+                                <option value="<?php echo $svc['type_key']; ?>">
+                                    <?php echo $svc['name']; ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -308,13 +224,13 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
             <h3 style="color:#0a2a66; margin-bottom:15px;">Chọn địa chỉ</h3>
             <div style="max-height:300px; overflow-y:auto;">
                 <?php foreach ($saved_addresses as $addr): ?>
-                <div class="addr-item"
-                    onclick="selectAddr('<?php echo htmlspecialchars(addslashes($addr['address'])); ?>', '<?php echo htmlspecialchars(addslashes($addr['phone'])); ?>')"
-                    style="padding:10px; border-bottom:1px solid #eee; cursor:pointer; transition:background 0.2s;">
-                    <strong style="color:#0a2a66;"><?php echo htmlspecialchars($addr['name']); ?></strong>
-                    <div style="font-size:14px; color:#555;"><?php echo htmlspecialchars($addr['address']); ?></div>
-                    <div style="font-size:12px; color:#888;">SĐT: <?php echo htmlspecialchars($addr['phone']); ?></div>
-                </div>
+                    <div class="addr-item"
+                        onclick="selectAddr('<?php echo htmlspecialchars(addslashes($addr['address'])); ?>', '<?php echo htmlspecialchars(addslashes($addr['phone'])); ?>')"
+                        style="padding:10px; border-bottom:1px solid #eee; cursor:pointer; transition:background 0.2s;">
+                        <strong style="color:#0a2a66;"><?php echo htmlspecialchars($addr['name']); ?></strong>
+                        <div style="font-size:14px; color:#555;"><?php echo htmlspecialchars($addr['address']); ?></div>
+                        <div style="font-size:12px; color:#888;">SĐT: <?php echo htmlspecialchars($addr['phone']); ?></div>
+                    </div>
                 <?php endforeach; ?>
             </div>
             <div style="margin-top:15px; text-align:center;">
@@ -327,65 +243,65 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
     <?php include 'includes/footer.php'; ?>
 
     <script>
-    // Biến JS để script `main.js` có thể truy cập
-    window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
-    window.servicesData =
-        <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-    window.pricingConfig =
-        <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        // Biến JS để script `main.js` có thể truy cập
+        window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+        window.servicesData =
+            <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        window.pricingConfig =
+            <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
     </script>
     <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Toggle corporate fields
-        const corporateCheckbox = document.getElementById('is_corporate_checkbox');
-        if (corporateCheckbox) {
-            corporateCheckbox.addEventListener('change', function() {
-                const corporateFields = document.getElementById('corporate_info_fields');
-                const companyNameInput = corporateFields.querySelector('[name="company_name"]');
-                const companyTaxInput = corporateFields.querySelector('[name="company_tax_code"]');
-                const companyAddressInput = corporateFields.querySelector('[name="company_address"]');
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toggle corporate fields
+            const corporateCheckbox = document.getElementById('is_corporate_checkbox');
+            if (corporateCheckbox) {
+                corporateCheckbox.addEventListener('change', function () {
+                    const corporateFields = document.getElementById('corporate_info_fields');
+                    const companyNameInput = corporateFields.querySelector('[name="company_name"]');
+                    const companyTaxInput = corporateFields.querySelector('[name="company_tax_code"]');
+                    const companyAddressInput = corporateFields.querySelector('[name="company_address"]');
 
-                if (this.checked) {
-                    corporateFields.style.display = 'block';
-                    companyNameInput.required = true;
-                    companyTaxInput.required = true;
-                    companyAddressInput.required = true;
-                } else {
-                    corporateFields.style.display = 'none';
-                    companyNameInput.required = false;
-                    companyTaxInput.required = false;
-                    companyAddressInput.required = false;
-                }
-            });
+                    if (this.checked) {
+                        corporateFields.style.display = 'block';
+                        companyNameInput.required = true;
+                        companyTaxInput.required = true;
+                        companyAddressInput.required = true;
+                    } else {
+                        corporateFields.style.display = 'none';
+                        companyNameInput.required = false;
+                        companyTaxInput.required = false;
+                        companyAddressInput.required = false;
+                    }
+                });
+            }
+
+            // Trigger initial calculation
+            if (typeof calculateOrderShipping === 'function') {
+                calculateOrderShipping();
+            }
+        });
+
+        // Logic Modal Địa chỉ
+        let currentAddrField = '';
+
+        function openAddrModal(type) {
+            currentAddrField = type; // 'pickup' hoặc 'delivery'
+            document.getElementById('addr-modal').style.display = 'block';
         }
 
-        // Trigger initial calculation
-        if (typeof calculateOrderShipping === 'function') {
-            calculateOrderShipping();
+        function selectAddr(address, phone) {
+            if (currentAddrField === 'pickup') {
+                document.getElementById('pickup-addr').value = address;
+                // Có thể tự điền SĐT người gửi nếu muốn, nhưng thường SĐT người gửi là cố định từ profile
+            } else if (currentAddrField === 'delivery') {
+                document.getElementById('delivery-addr').value = address;
+                document.getElementById('receiver_phone').value = phone; // Điền luôn SĐT người nhận
+            }
+            document.getElementById('addr-modal').style.display = 'none';
+            // Gọi lại hàm tính phí
+            if (typeof calculateOrderShipping === 'function') calculateOrderShipping();
         }
-    });
-
-    // Logic Modal Địa chỉ
-    let currentAddrField = '';
-
-    function openAddrModal(type) {
-        currentAddrField = type; // 'pickup' hoặc 'delivery'
-        document.getElementById('addr-modal').style.display = 'block';
-    }
-
-    function selectAddr(address, phone) {
-        if (currentAddrField === 'pickup') {
-            document.getElementById('pickup-addr').value = address;
-            // Có thể tự điền SĐT người gửi nếu muốn, nhưng thường SĐT người gửi là cố định từ profile
-        } else if (currentAddrField === 'delivery') {
-            document.getElementById('delivery-addr').value = address;
-            document.getElementById('receiver_phone').value = phone; // Điền luôn SĐT người nhận
-        }
-        document.getElementById('addr-modal').style.display = 'none';
-        // Gọi lại hàm tính phí
-        if (typeof calculateOrderShipping === 'function') calculateOrderShipping();
-    }
     </script>
     <?php
     if (isset($conn) && $conn instanceof mysqli)

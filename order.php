@@ -119,8 +119,6 @@ $payment_status = 'unpaid'; // Trạng thái ban đầu
 $stmt->bind_param("sssssssssdddssississss", $order_code, $name, $phone, $receiver_name, $receiver_phone, $pickup, $delivery, $package_type, $service_type, $weight, $cod_amount, $shipping_fee, $pickup_time, $note, $user_id, $payment_method, $payment_status, $is_corporate, $company_name, $company_tax_code, $company_address, $company_bank_info);
 
 if ($stmt->execute()) {
-    echo "SUCCESS";
-
     // --- TÍNH NĂNG MỚI: Cập nhật thông tin công ty vào bảng users để ghi nhớ ---
     if ($is_corporate && $user_id) {
         $stmt_user = $conn->prepare("UPDATE users SET company_name = ?, tax_code = ?, company_address = ? WHERE id = ?");
@@ -128,9 +126,23 @@ if ($stmt->execute()) {
         $stmt_user->execute();
         $stmt_user->close();
     }
+
+    // Trả về JSON thay vì text thuần để Frontend xử lý hiển thị QR
+    echo json_encode([
+        'status' => 'success',
+        'order_code' => $order_code,
+        'payment_method' => $payment_method,
+        'amount' => $shipping_fee, // Số tiền cần thanh toán (Phí ship)
+        'bank_info' => [
+            'bank_id' => 'MB', // Mã ngân hàng (Ví dụ: MB, VCB, ACB...)
+            'account_no' => '0333666999', // Số tài khoản (Thay bằng số thực tế của bạn)
+            'account_name' => 'FASTGO LOGISTICS', // Tên chủ tài khoản
+            'template' => 'compact' // Mẫu QR
+        ]
+    ]);
 } else {
     error_log("Order Execute Failed: " . $stmt->error);
-    echo "ERROR: Có lỗi xảy ra khi lưu đơn hàng.";
+    echo json_encode(['status' => 'error', 'message' => 'Có lỗi xảy ra khi lưu đơn hàng.']);
 }
 
 // 4. Đóng kết nối

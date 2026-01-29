@@ -15,10 +15,11 @@ $search = $_GET['search'] ?? '';
 $status = $_GET['status'] ?? '';
 $date_from = $_GET['date_from'] ?? '';
 $date_to = $_GET['date_to'] ?? '';
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $limit = 10;
 $offset = ($page - 1) * $limit;
-if ($page < 1) $page = 1;
+if ($page < 1)
+    $page = 1;
 
 // 1. Đếm tổng số bản ghi
 $count_sql = "SELECT COUNT(*) as total FROM orders WHERE user_id = ?";
@@ -76,53 +77,6 @@ $result = $stmt->get_result();
     <title>Lịch sử đơn hàng | FastGo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
-    <style>
-    .filter-bar {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .filter-bar input,
-    .filter-bar select {
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        flex: 1;
-    }
-
-    .btn-filter {
-        background: #0a2a66;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .btn-sm {
-        padding: 4px 8px;
-        font-size: 12px;
-        border-radius: 4px;
-        text-decoration: none;
-        display: inline-block;
-        margin-top: 2px;
-    }
-
-    .btn-outline {
-        border: 1px solid #0a2a66;
-        color: #0a2a66;
-    }
-
-    .btn-outline:hover {
-        background: #0a2a66;
-        color: white;
-    }
-    </style>
 </head>
 
 <body>
@@ -173,25 +127,25 @@ $result = $stmt->get_result();
                 </thead>
                 <tbody>
                     <?php if ($result->num_rows > 0): ?>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><strong style="color:#0a2a66;"><?php echo htmlspecialchars($row['order_code']); ?></strong>
-                        </td>
-                        <td>
-                            <strong><?php echo htmlspecialchars($row['receiver_name']); ?></strong><br>
-                            <small style="color:#666;"><?php echo htmlspecialchars($row['receiver_phone']); ?></small>
-                        </td>
-                        <td>
-                            <div style="font-size:13px; margin-bottom:4px;">🚩 <strong>Lấy:</strong>
-                                <?php echo htmlspecialchars($row['pickup_address']); ?></div>
-                            <div style="font-size:13px;">🏁 <strong>Giao:</strong>
-                                <?php echo htmlspecialchars($row['delivery_address']); ?></div>
-                        </td>
-                        <td style="color:#d9534f; font-weight:bold;"><?php echo number_format($row['shipping_fee']); ?>đ
-                        </td>
-                        <td><?php echo number_format($row['cod_amount']); ?>đ</td>
-                        <td>
-                            <?php
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><strong style="color:#0a2a66;"><?php echo htmlspecialchars($row['order_code']); ?></strong>
+                                </td>
+                                <td>
+                                    <strong><?php echo htmlspecialchars($row['receiver_name']); ?></strong><br>
+                                    <small style="color:#666;"><?php echo htmlspecialchars($row['receiver_phone']); ?></small>
+                                </td>
+                                <td>
+                                    <div style="font-size:13px; margin-bottom:4px;">🚩 <strong>Lấy:</strong>
+                                        <?php echo htmlspecialchars($row['pickup_address']); ?></div>
+                                    <div style="font-size:13px;">🏁 <strong>Giao:</strong>
+                                        <?php echo htmlspecialchars($row['delivery_address']); ?></div>
+                                </td>
+                                <td style="color:#d9534f; font-weight:bold;"><?php echo number_format($row['shipping_fee']); ?>đ
+                                </td>
+                                <td><?php echo number_format($row['cod_amount']); ?>đ</td>
+                                <td>
+                                    <?php
                                     $st = $row['status'];
                                     $class = 'status-' . $st;
                                     $label = match ($st) {
@@ -202,24 +156,24 @@ $result = $stmt->get_result();
                                         default => $st
                                     };
                                     ?>
-                            <span class="status-badge <?php echo $class; ?>"><?php echo $label; ?></span>
-                        </td>
-                        <td><?php echo date('d/m/Y H:i', strtotime($row['created_at'])); ?></td>
-                        <td>
-                            <a href="customer_order_detail.php?id=<?php echo $row['id']; ?>"
-                                class="btn-sm btn-outline">Chi tiết</a>
-                            <a href="index.php?reorder_id=<?php echo $row['id']; ?>#contact" class="btn-sm btn-outline"
-                                style="border-color:#ff7a00; color:#ff7a00;">Đặt lại</a>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
+                                    <span class="status-badge <?php echo $class; ?>"><?php echo $label; ?></span>
+                                </td>
+                                <td><?php echo date('d/m/Y H:i', strtotime($row['created_at'])); ?></td>
+                                <td>
+                                    <a href="customer_order_detail.php?id=<?php echo $row['id']; ?>"
+                                        class="btn-sm btn-outline">Chi tiết</a>
+                                    <a href="index.php?reorder_id=<?php echo $row['id']; ?>#contact" class="btn-sm btn-outline"
+                                        style="border-color:#ff7a00; color:#ff7a00;">Đặt lại</a>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
                     <?php else: ?>
-                    <tr>
-                        <td colspan="8" style="text-align:center; padding:40px; color:#666;">Không tìm thấy đơn hàng
-                            nào.
-                            <a href="index.php#contact" style="color:#ff7a00;">Tạo đơn ngay</a>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="8" style="text-align:center; padding:40px; color:#666;">Không tìm thấy đơn hàng
+                                nào.
+                                <a href="index.php#contact" style="color:#ff7a00;">Tạo đơn ngay</a>
+                            </td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -227,27 +181,28 @@ $result = $stmt->get_result();
 
         <!-- Phân trang -->
         <?php if ($total_pages > 1): ?>
-        <div style="margin-top: 20px; display: flex; justify-content: center; gap: 5px;">
-            <?php 
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 5px;">
+                <?php
                 $qs = "&search=" . urlencode($search) . "&status=" . urlencode($status) . "&date_from=" . urlencode($date_from) . "&date_to=" . urlencode($date_to);
-            ?>
-            <?php if ($page > 1): ?>
-            <a href="?page=<?php echo $page - 1; ?><?php echo $qs; ?>" class="btn-sm btn-outline"
-                style="font-size:14px;">&laquo; Trước</a>
-            <?php endif; ?>
+                ?>
+                <?php if ($page > 1): ?>
+                    <a href="?page=<?php echo $page - 1; ?><?php echo $qs; ?>" class="btn-sm btn-outline"
+                        style="font-size:14px;">&laquo; Trước</a>
+                <?php endif; ?>
 
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <a href="?page=<?php echo $i; ?><?php echo $qs; ?>" class="btn-sm btn-outline"
-                style="font-size:14px; <?php echo ($i == $page) ? 'background:#0a2a66; color:white;' : ''; ?>"><?php echo $i; ?></a>
-            <?php endfor; ?>
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?php echo $i; ?><?php echo $qs; ?>" class="btn-sm btn-outline"
+                        style="font-size:14px; <?php echo ($i == $page) ? 'background:#0a2a66; color:white;' : ''; ?>"><?php echo $i; ?></a>
+                <?php endfor; ?>
 
-            <?php if ($page < $total_pages): ?>
-            <a href="?page=<?php echo $page + 1; ?><?php echo $qs; ?>" class="btn-sm btn-outline"
-                style="font-size:14px;">Sau &raquo;</a>
-            <?php endif; ?>
-        </div>
-        <p style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">Trang
-            <?php echo $page; ?>/<?php echo $total_pages; ?></p>
+                <?php if ($page < $total_pages): ?>
+                    <a href="?page=<?php echo $page + 1; ?><?php echo $qs; ?>" class="btn-sm btn-outline"
+                        style="font-size:14px;">Sau &raquo;</a>
+                <?php endif; ?>
+            </div>
+            <p style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">Trang
+                <?php echo $page; ?>/<?php echo $total_pages; ?>
+            </p>
         <?php endif; ?>
     </main>
 

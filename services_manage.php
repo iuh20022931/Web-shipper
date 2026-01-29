@@ -64,32 +64,6 @@ if ($res)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
-    <style>
-        .form-inline {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-inline input {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .form-inline button {
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>

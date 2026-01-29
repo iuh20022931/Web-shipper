@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
+<link rel="stylesheet" href="assets/css/admin_styles.css?v=<?php echo time(); ?>">
 <header id="header" style="background-color: #0a2a66; border-bottom: 3px solid #ff7a00;">
     <nav class="navbar">
         <div class="logo">

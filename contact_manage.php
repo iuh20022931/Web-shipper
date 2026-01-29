@@ -54,35 +54,6 @@ $status_map = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
-    <style>
-        .message-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid #ccc;
-        }
-
-        .message-card.status-0 {
-            border-left-color: #ffc107;
-        }
-
-        .message-card.status-1 {
-            border-left-color: #17a2b8;
-        }
-
-        .message-card.status-2 {
-            border-left-color: #28a745;
-        }
-
-        .details {
-            display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed #eee;
-        }
-    </style>
 </head>
 
 <body>

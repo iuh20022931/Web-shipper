@@ -352,13 +352,13 @@ if (form) {
       method: "POST",
       body: formData,
     })
-      .then((res) => res.text())
-      .then((result) => {
+      .then((res) => res.json())
+      .then((data) => {
         // reset class và hiển thị
         msgDiv.style.display = "block";
         msgDiv.className = "";
 
-        if (result.trim() === "SUCCESS") {
+        if (data.status === "success") {
           msgDiv.classList.add("success");
           // Escape dữ liệu trước khi hiển thị để chống XSS
           const name = escapeHtml(form.querySelector("[name=name]").value);
@@ -375,27 +375,55 @@ if (form) {
           const codAmount = codInpEl ? codInpEl.value : "";
           const shipFee = document.getElementById("shipping-fee-input").value;
 
+          // --- TÍNH NĂNG MỚI: Xử lý hiển thị thanh toán ---
+          let paymentContent = "";
+          if (data.payment_method === "bank_transfer") {
+            // Tạo link QR VietQR tự động
+            const qrUrl = `https://img.vietqr.io/image/${data.bank_info.bank_id}-${data.bank_info.account_no}-${data.bank_info.template}.png?amount=${data.amount}&addInfo=${data.order_code}&accountName=${encodeURIComponent(data.bank_info.account_name)}`;
+
+            paymentContent = `
+                <div style="margin-top:20px; border-top:1px dashed #ccc; padding-top:15px; background:#f9f9f9; border-radius:8px; padding:15px;">
+                    <h4 style="color:#0a2a66; margin-bottom:15px; text-align:center;">💳 THÔNG TIN CHUYỂN KHOẢN</h4>
+                    <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center; align-items:center;">
+                        <div style="text-align:center;">
+                            <img src="${qrUrl}" alt="QR Code" style="max-width:180px; border:2px solid #0a2a66; border-radius:8px;">
+                            <p style="font-size:12px; color:#666; margin-top:5px;">Quét mã để thanh toán nhanh</p>
+                        </div>
+                        <div style="flex:1; min-width:250px; font-size:14px;">
+                            <p style="margin-bottom:8px;"><strong>🏦 Ngân hàng:</strong> MB Bank (Quân Đội)</p>
+                            <p style="margin-bottom:8px;"><strong>🔢 Số tài khoản:</strong> <span style="font-size:16px; font-weight:bold;">${data.bank_info.account_no}</span></p>
+                            <p style="margin-bottom:8px;"><strong>👤 Chủ tài khoản:</strong> ${data.bank_info.account_name}</p>
+                            <p style="margin-bottom:8px;"><strong>💰 Số tiền:</strong> <span style="color:#d9534f; font-weight:bold; font-size:16px;">${parseInt(data.amount).toLocaleString()}đ</span></p>
+                            <p style="margin-bottom:8px;"><strong>📝 Nội dung:</strong> <span style="background:#ffeb3b; padding:2px 6px; font-weight:bold; border:1px solid #e0a800;">${data.order_code}</span></p>
+                        </div>
+                    </div>
+                    <p style="text-align:center; margin-top:15px; font-size:13px; color:#28a745;"><em>Hệ thống sẽ tự động xử lý đơn hàng sau khi nhận được thanh toán.</em></p>
+                </div>
+              `;
+          } else {
+            paymentContent = `<p style="margin-top:15px;">Chúng tôi sẽ liên hệ xác nhận sớm nhất.</p>`;
+          }
+
           msgDiv.innerHTML = `
             <div class="success-message">
               <div class="check-icon">✓</div>
               <h3>Đã tạo đơn thành công!</h3>
-              <p>Chào <strong>${name}</strong>, đơn hàng <strong>${packageType}</strong> của bạn đang được xử lý.</p>
-              <div style="text-align:left; font-size:14px; background:#fff; padding:10px; border-radius:5px;">
+              <p>Mã đơn hàng: <strong style="font-size:18px; color:#0a2a66;">${data.order_code}</strong></p>
+              <div style="text-align:left; font-size:14px; background:#fff; padding:10px; border-radius:5px; margin-top:10px; border:1px solid #eee;">
                 <p>🚩 <strong>Lấy tại:</strong> ${pickup}</p>
                 <p>🏁 <strong>Giao đến:</strong> ${delivery}</p>
-                <p>👤 <strong>Người nhận:</strong> ${receiverName}</p>
                 <p>💵 <strong>Phí ship:</strong> ${parseInt(shipFee).toLocaleString()}đ</p>
                 ${codAmount ? `<p>💰 <strong>Thu hộ:</strong> ${parseInt(codAmount).toLocaleString()}đ</p>` : ""}
               </div>
-              <p style="margin-top:15px;">Chúng tôi sẽ liên hệ xác nhận sớm nhất.</p>
-              <button onclick="location.reload()" class="btn-secondary">Quay lại</button>
+              ${paymentContent}
+              <button onclick="location.reload()" class="btn-secondary" style="margin-top:20px;">Quay lại / Tạo đơn mới</button>
             </div>
           `;
 
           form.reset(); // xóa dữ liệu form sau khi submit thành công
         } else {
           msgDiv.classList.add("error");
-          msgDiv.innerHTML = `<strong>Có lỗi xảy ra:</strong><br>${result}`;
+          msgDiv.innerHTML = `<strong>Có lỗi xảy ra:</strong><br>${data.message}`;
         }
 
         btn.innerText = "Xác nhận đặt đơn";
