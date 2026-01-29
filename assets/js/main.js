@@ -953,3 +953,32 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+// ===== BACK TO TOP BUTTON =====
+const backToTopButton = document.getElementById("back-to-top-btn");
+
+if (backToTopButton) {
+  // Khi người dùng cuộn xuống 200px, hiện nút
+  window.onscroll = function () {
+    scrollFunction();
+  };
+
+  function scrollFunction() {
+    if (
+      document.body.scrollTop > 200 ||
+      document.documentElement.scrollTop > 200
+    ) {
+      backToTopButton.classList.add("show");
+    } else {
+      backToTopButton.classList.remove("show");
+    }
+  }
+
+  // Khi người dùng click, cuộn lên đầu trang
+  backToTopButton.addEventListener("click", function () {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
+}

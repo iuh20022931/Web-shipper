@@ -507,7 +507,23 @@ CREATE TABLE `users` (
     `tax_code` varchar(50) DEFAULT NULL,
     `company_address` text DEFAULT NULL,
     `is_locked` tinyint(1) NOT NULL DEFAULT 0,
-    `lock_reason` varchar(255) DEFAULT NULL
+    `lock_reason` varchar(255) DEFAULT NULL,
+    `is_approved` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `faqs`
+--
+
+CREATE TABLE `faqs` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `question` varchar(255) NOT NULL,
+    `answer` text NOT NULL,
+    `display_order` int(11) DEFAULT 0,
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -527,7 +543,8 @@ INSERT INTO
         `company_name`,
         `tax_code`,
         `company_address`,
-        `is_locked`
+        `is_locked`,
+        `is_approved`
     )
 VALUES (
         1,
@@ -541,7 +558,8 @@ VALUES (
         NULL,
         NULL,
         NULL,
-        0
+        0,
+        1
     ),
     (
         2,
@@ -555,7 +573,8 @@ VALUES (
         NULL,
         NULL,
         NULL,
-        0
+        0,
+        1
     ),
     (
         3,
@@ -569,7 +588,33 @@ VALUES (
         NULL,
         NULL,
         NULL,
-        0
+        0,
+        1
+    );
+
+--
+-- Đang đổ dữ liệu cho bảng `faqs`
+--
+INSERT INTO
+    `faqs` (
+        `question`,
+        `answer`,
+        `display_order`
+    )
+VALUES (
+        'FastGo giao hàng trong bao lâu?',
+        'Thời gian giao hàng nội thành: 30–60 phút, liên tỉnh: 1–3 ngày.',
+        1
+    ),
+    (
+        'Có thể hủy hoặc thay đổi đơn không?',
+        'Vui lòng liên hệ hotline trước khi đơn được shipper nhận.',
+        2
+    ),
+    (
+        'FastGo có thu hộ COD không?',
+        'Có, chúng tôi hỗ trợ dịch vụ thu hộ tiền mặt minh bạch.',
+        3
     );
 
 --

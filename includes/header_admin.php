@@ -42,6 +42,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
             <li><a href="admin_stats.php" style="color: #fff;">Thống kê</a></li>
             <li><a href="admin_refund_report.php" style="color: #fff;">Báo cáo hoàn tiền</a></li>
             <li><a href="contact_manage.php" style="color: #fff;">Khiếu nại</a></li>
+            <li><a href="faq_manage.php" style="color: #fff;">FAQ & Hướng dẫn</a></li>
             <li><a href="testimonials_manage.php" style="color: #fff;">Đánh giá</a></li>
             <li><a href="index.php" target="_blank" style="color: #ff7a00;">Xem trang chủ ↗</a></li>
             <li style="margin-left: 15px;">

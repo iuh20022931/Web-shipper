@@ -23,6 +23,14 @@ if ($test_res) {
         $testimonials[] = $row;
 }
 
+// --- LẤY FAQ TỪ DB (MỚI) ---
+$faqs = [];
+$faq_res = $conn->query("SELECT * FROM faqs ORDER BY display_order ASC");
+if ($faq_res) {
+    while ($row = $faq_res->fetch_assoc())
+        $faqs[] = $row;
+}
+
 // --- LOGIC CHO LINK "ĐẶT HÀNG" ---
 // Mục tiêu: Bỏ qua bước trung gian, điều hướng thẳng tới trang phù hợp
 $order_now_link = "login.php?redirect=" . urlencode('create_order.php'); // Mặc định cho khách
@@ -184,10 +192,10 @@ if (isset($_SESSION['user_id'])) {
                 </thead>
                 <tbody>
                     <?php foreach ($services_list as $service): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($service['name']); ?></td>
-                        <td>
-                            <?php
+                        <tr>
+                            <td><?php echo htmlspecialchars($service['name']); ?></td>
+                            <td>
+                                <?php
                                 // Giả định phương tiện dựa trên loại dịch vụ
                                 if ($service['type_key'] == 'bulk') {
                                     echo 'Ô tô';
@@ -195,18 +203,18 @@ if (isset($_SESSION['user_id'])) {
                                     echo 'Xe máy';
                                 }
                                 ?>
-                        </td>
-                        <td>Nội thành</td>
-                        <td>
-                            <?php
+                            </td>
+                            <td>Nội thành</td>
+                            <td>
+                                <?php
                                 if ($service['base_price'] > 0) {
                                     echo number_format($service['base_price']) . 'đ';
                                 } else {
                                     echo 'Liên hệ'; // Hiển thị 'Liên hệ' nếu giá là 0 hoặc không xác định
                                 }
                                 ?>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                     <!-- Dòng phụ phí COD có thể giữ lại để cung cấp thông tin -->
                     <tr>
@@ -229,10 +237,10 @@ if (isset($_SESSION['user_id'])) {
             <select id="service-type" required>
                 <option value="">-- Chọn loại dịch vụ --</option>
                 <?php foreach ($services_list as $svc): ?>
-                <option value="<?php echo $svc['type_key']; ?>">
-                    <?php echo $svc['name']; ?>
-                    (<?php echo ($svc['base_price'] > 0) ? number_format($svc['base_price']) . 'đ' : 'Liên hệ'; ?>)
-                </option>
+                    <option value="<?php echo $svc['type_key']; ?>">
+                        <?php echo $svc['name']; ?>
+                        (<?php echo ($svc['base_price'] > 0) ? number_format($svc['base_price']) . 'đ' : 'Liên hệ'; ?>)
+                    </option>
                 <?php endforeach; ?>
             </select>
             <label class="checkbox-label"><input type="checkbox" id="is-cod" /> Có thu hộ COD (+5k)</label>
@@ -258,11 +266,11 @@ if (isset($_SESSION['user_id'])) {
         <p class="section-desc">Tạo tài khoản hoặc đăng nhập để bắt đầu gửi hàng cùng FastGo ngay hôm nay!</p>
         <div class="hero-btns centered-btns">
             <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="create_order.php" class="btn-primary">Tạo đơn hàng ngay</a>
-            <a href="dashboard.php" class="btn-secondary">Vào trang quản lý</a>
+                <a href="create_order.php" class="btn-primary">Tạo đơn hàng ngay</a>
+                <a href="dashboard.php" class="btn-secondary">Vào trang quản lý</a>
             <?php else: ?>
-            <a href="login.php" class="btn-primary">Đăng nhập & Đặt đơn</a>
-            <a href="register.php" class="btn-secondary">Đăng ký tài khoản mới</a>
+                <a href="login.php" class="btn-primary">Đăng nhập & Đặt đơn</a>
+                <a href="register.php" class="btn-secondary">Đăng ký tài khoản mới</a>
             <?php endif; ?>
         </div>
     </section>
@@ -273,26 +281,26 @@ if (isset($_SESSION['user_id'])) {
         <p class="section-desc">Sự hài lòng của khách hàng là động lực phát triển của chúng tôi.</p>
         <!-- Cấu trúc Slider -->
         <?php if (!empty($testimonials)): ?>
-        <div class="swiper testimonial-slider">
-            <div class="swiper-wrapper">
-                <?php foreach ($testimonials as $t): ?>
-                <div class="swiper-slide">
-                    <div class="testimonial-item">
-                        <div class="stars"><?php echo str_repeat('⭐', intval($t['rating'])); ?></div>
-                        <p class="feedback">"<?php echo htmlspecialchars($t['content']); ?>"</p>
-                        <div class="customer-info">
-                            <strong><?php echo htmlspecialchars($t['customer_name']); ?></strong>
-                            <span>- <?php echo htmlspecialchars($t['customer_role']); ?></span>
+            <div class="swiper testimonial-slider">
+                <div class="swiper-wrapper">
+                    <?php foreach ($testimonials as $t): ?>
+                        <div class="swiper-slide">
+                            <div class="testimonial-item">
+                                <div class="stars"><?php echo str_repeat('⭐', intval($t['rating'])); ?></div>
+                                <p class="feedback">"<?php echo htmlspecialchars($t['content']); ?>"</p>
+                                <div class="customer-info">
+                                    <strong><?php echo htmlspecialchars($t['customer_name']); ?></strong>
+                                    <span>- <?php echo htmlspecialchars($t['customer_role']); ?></span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
+                <!-- Nút điều hướng & Phân trang -->
+                <div class="swiper-pagination"></div>
             </div>
-            <!-- Nút điều hướng & Phân trang -->
-            <div class="swiper-pagination"></div>
-        </div>
         <?php else: ?>
-        <p class="no-content-msg">Chưa có đánh giá nào.</p>
+            <p class="no-content-msg">Chưa có đánh giá nào.</p>
         <?php endif; ?>
     </section>
 
@@ -300,18 +308,16 @@ if (isset($_SESSION['user_id'])) {
     <section id="faq">
         <h2 class="section-title">FAQs / Hỗ trợ</h2>
         <div class="faq-list">
-            <div class="faq-item">
-                <h3 class="faq-question">FastGo giao hàng trong bao lâu?</h3>
-                <p class="faq-answer">Thời gian giao hàng nội thành: 30–60 phút, liên tỉnh: 1–3 ngày.</p>
-            </div>
-            <div class="faq-item">
-                <h3 class="faq-question">Có thể hủy hoặc thay đổi đơn không?</h3>
-                <p class="faq-answer">Vui lòng liên hệ hotline trước khi đơn được shipper nhận.</p>
-            </div>
-            <div class="faq-item">
-                <h3 class="faq-question">FastGo có thu hộ COD không?</h3>
-                <p class="faq-answer">Có, chúng tôi hỗ trợ dịch vụ thu hộ tiền mặt minh bạch.</p>
-            </div>
+            <?php if (!empty($faqs)): ?>
+                <?php foreach ($faqs as $faq): ?>
+                    <div class="faq-item">
+                        <h3 class="faq-question"><?php echo htmlspecialchars($faq['question']); ?></h3>
+                        <p class="faq-answer"><?php echo nl2br(htmlspecialchars($faq['answer'])); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Chưa có câu hỏi thường gặp nào.</p>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -443,11 +449,11 @@ if (isset($_SESSION['user_id'])) {
 
     <!-- Biến JS để kiểm tra trạng thái login -->
     <script>
-    window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
-    window.servicesData =
-        <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-    window.pricingConfig =
-        <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+        window.servicesData =
+            <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        window.pricingConfig =
+            <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
     </script>
     <!-- Thêm SwiperJS JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

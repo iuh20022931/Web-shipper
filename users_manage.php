@@ -19,6 +19,10 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
     if ($uid == $_SESSION['user_id']) {
         $msg = "Không thể khóa tài khoản đang đăng nhập.";
     } else {
+        if ($action === 'approve') {
+            $conn->query("UPDATE users SET is_approved = 1 WHERE id = $uid AND role = 'shipper'");
+            $msg = "Đã duyệt tài khoản shipper ID $uid.";
+        }
         if ($action === 'lock') {
             $reason = isset($_GET['reason']) ? trim($_GET['reason']) : 'Vi phạm chính sách';
             $stmt = $conn->prepare("UPDATE users SET is_locked = 1, lock_reason = ? WHERE id = ?");
@@ -45,6 +49,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 // Bộ lọc & Phân trang
 $search = trim($_GET['search'] ?? '');
 $role = $_GET['role'] ?? '';
+$approval_status = $_GET['approval_status'] ?? '';
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $limit = 10;
 $offset = ($page - 1) * $limit;
@@ -56,6 +61,8 @@ if ($search)
     $where .= " AND (username LIKE '%$search%' OR fullname LIKE '%$search%' OR email LIKE '%$search%' OR phone LIKE '%$search%')";
 if ($role)
     $where .= " AND role = '$role'";
+if ($approval_status === 'pending')
+    $where .= " AND is_approved = 0 AND role = 'shipper'";
 
 // Đếm tổng
 $total_res = $conn->query("SELECT COUNT(*) as total FROM users $where");
@@ -107,6 +114,11 @@ $result = $conn->query($sql);
                 <option value="admin" <?php if ($role == 'admin')
                     echo 'selected'; ?>>Admin</option>
             </select>
+            <select name="approval_status" style="padding:8px; border:1px solid #ddd; border-radius:4px;">
+                <option value="">-- Trạng thái duyệt --</option>
+                <option value="pending" <?php if ($approval_status == 'pending')
+                    echo 'selected'; ?>>Chờ duyệt</option>
+            </select>
             <button type="submit" class="btn-primary" style="padding:8px 15px;">Lọc</button>
             <a href="users_manage.php" class="btn-secondary"
                 style="padding:8px 15px; color:#333; border-color:#ccc;">Đặt lại</a>
@@ -142,7 +154,9 @@ $result = $conn->query($sql);
                                 class="role-badge role-<?php echo $row['role']; ?>"><?php echo ucfirst($row['role']); ?></span>
                         </td>
                         <td>
-                            <?php if ($row['is_locked']): ?>
+                            <?php if ($row['role'] === 'shipper' && !$row['is_approved']): ?>
+                            <span class="status-pending-approval">Chờ duyệt</span>
+                            <?php elseif ($row['is_locked']): ?>
                             <span class="status-locked">Đã khóa</span>
                             <?php else: ?>
                             <span class="status-active">Hoạt động</span>
@@ -154,6 +168,14 @@ $result = $conn->query($sql);
                                 title="Lịch sử hoạt động">🕒</a>
                             <a href="user_form.php?id=<?php echo $row['id']; ?>" class="btn-sm btn-edit"
                                 title="Sửa">✏️</a>
+                            <?php if ($row['role'] === 'shipper'): ?>
+                            <a href="admin_shipper_detail.php?id=<?php echo $row['id']; ?>" class="btn-sm"
+                                style="background:#6610f2; color:#fff;" title="Hồ sơ hiệu suất">📊</a>
+                            <?php endif; ?>
+                            <?php if ($row['role'] === 'shipper' && !$row['is_approved']): ?>
+                            <a href="?action=approve&id=<?php echo $row['id']; ?>" class="btn-sm btn-approve"
+                                onclick="return confirm('Duyệt tài khoản shipper này?')" title="Duyệt">✔️</a>
+                            <?php endif; ?>
                             <?php if ($row['id'] != $_SESSION['user_id']): ?>
                             <?php if ($row['is_locked']): ?>
                             <a href="?action=unlock&id=<?php echo $row['id']; ?>" class="btn-sm btn-unlock"
@@ -182,9 +204,9 @@ $result = $conn->query($sql);
         <!-- Pagination -->
         <?php if ($total_pages > 1): ?>
         <div style="margin-top:20px; text-align:center;">
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&role=<?php echo $role; ?>"
-                class="btn-sm"
+            <?php for ($i = 1; $i <= $total_pages; $i++):
+                    $page_query = http_build_query(array_merge($_GET, ['page' => $i])); ?>
+            <a href="?<?php echo $page_query; ?>" class="btn-sm"
                 style="padding:8px 12px; font-size:14px; <?php echo ($i == $page) ? 'background:#0a2a66; color:#fff;' : 'background:#eee; color:#333;'; ?>">
                 <?php echo $i; ?>
             </a>

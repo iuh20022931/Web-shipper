@@ -14,6 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = trim($_POST['fullname'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
+    $role = $_POST['role'] ?? 'customer'; // Lấy vai trò từ form
 
     // Validate cơ bản
     if (empty($username) || empty($password) || empty($email) || empty($phone) || empty($fullname)) {
@@ -37,11 +38,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             // Hash password
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $role = 'customer'; // Mặc định là khách hàng
+
+            // --- TÍNH NĂNG MỚI: DUYỆT SHIPPER ---
+            // Nếu đăng ký là shipper, tài khoản cần được admin duyệt
+            $is_approved = ($role === 'shipper') ? 0 : 1;
 
             // Insert vào DB
-            $insert_stmt = $conn->prepare("INSERT INTO users (username, email, phone, fullname, password, role) VALUES (?, ?, ?, ?, ?, ?)");
-            $insert_stmt->bind_param("ssssss", $username, $email, $phone, $fullname, $hashed_password, $role);
+            $insert_stmt = $conn->prepare("INSERT INTO users (username, email, phone, fullname, password, role, is_approved) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $insert_stmt->bind_param("ssssssi", $username, $email, $phone, $fullname, $hashed_password, $role, $is_approved);
 
             if ($insert_stmt->execute()) {
                 // BẢO MẬT: Chống Session Fixation
@@ -227,6 +231,15 @@ $conn->close();
         <?php endif; ?>
 
         <form method="POST" action="">
+            <!-- Thêm lựa chọn vai trò -->
+            <div class="form-group">
+                <label>Bạn muốn đăng ký với vai trò</label>
+                <select name="role"
+                    style="width:100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                    <option value="customer">Khách hàng (Gửi hàng)</option>
+                    <option value="shipper">Tài xế (Nhận đơn)</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label>Tên đăng nhập</label>
                 <input type="text" name="username" required placeholder="Nhập username"
@@ -259,6 +272,9 @@ $conn->close();
         </form>
         <div class="auth-link">Đã có tài khoản? <a href="login.php">Đăng nhập ngay</a></div>
     </div>
+
+    <!-- Nút Back to Top -->
+    <button id="back-to-top-btn" title="Lên đầu trang">↑</button>
 </body>
 <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
 

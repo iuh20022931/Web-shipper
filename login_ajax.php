@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    $stmt = $conn->prepare("SELECT id, username, password, role, fullname, phone, is_locked, lock_reason FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, username, password, role, fullname, phone, is_locked, lock_reason, is_approved FROM users WHERE username = ?");
     if (!$stmt) {
         error_log('Login Prepare Error: ' . $conn->error); // Ghi log lỗi server
         echo json_encode(['status' => 'error', 'message' => 'Lỗi hệ thống. Vui lòng thử lại sau.']);
@@ -30,6 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($user['is_locked'] == 1) {
             $reason = $user['lock_reason'] ? $user['lock_reason'] : "Vi phạm chính sách";
             echo json_encode(['status' => 'error', 'message' => 'Tài khoản bị khóa. Lý do: ' . $reason]);
+            exit;
+        } elseif ($user['role'] === 'shipper' && $user['is_approved'] == 0) {
+            echo json_encode(['status' => 'error', 'message' => 'Tài khoản shipper của bạn đang chờ quản trị viên duyệt.']);
             exit;
         }
 
