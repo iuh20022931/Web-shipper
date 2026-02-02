@@ -19,27 +19,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif ($password !== $confirm_password) {
         echo json_encode(['status' => 'error', 'message' => 'Mật khẩu xác nhận không khớp.']);
         exit;
+    } elseif (strlen($password) < 8 || !preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[\W_]/', $password)) {
+        echo json_encode(['status' => 'error', 'message' => 'Mật khẩu yếu. Yêu cầu: tối thiểu 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.']);
+        exit;
+    } elseif (!preg_match('/^[a-zA-Z0-9_.]{3,20}$/', $username)) {
+        echo json_encode(['status' => 'error', 'message' => 'Tên đăng nhập không hợp lệ (3-20 ký tự, không dấu, không khoảng trắng).']);
+        exit;
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo json_encode(['status' => 'error', 'message' => 'Email không hợp lệ.']);
         exit;
     } elseif (!preg_match('/^0[0-9]{9,10}$/', $phone)) {
         echo json_encode(['status' => 'error', 'message' => 'Số điện thoại không hợp lệ.']);
         exit;
+    } elseif (strlen($fullname) < 2) {
+        echo json_encode(['status' => 'error', 'message' => 'Họ và tên quá ngắn.']);
+        exit;
     }
 
-    // Kiểm tra trùng lặp
-    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+    // Kiểm tra trùng lặp (Username, Email hoặc Số điện thoại)
+    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ? OR phone = ?");
     if (!$stmt) {
         error_log('Register Check Error: ' . $conn->error);
         echo json_encode(['status' => 'error', 'message' => 'Lỗi hệ thống. Vui lòng thử lại sau.']);
         exit;
     }
-    $stmt->bind_param("ss", $username, $email);
+    $stmt->bind_param("sss", $username, $email, $phone);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        echo json_encode(['status' => 'error', 'message' => 'Tên đăng nhập hoặc Email đã tồn tại.']);
+        echo json_encode(['status' => 'error', 'message' => 'Tên đăng nhập, Email hoặc Số điện thoại đã được sử dụng.']);
     } else {
         // Tạo tài khoản
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);

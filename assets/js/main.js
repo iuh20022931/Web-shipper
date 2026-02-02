@@ -753,13 +753,84 @@ function saveToHistory(code) {
   }
 }
 
-// ===== HỦY ĐƠN HÀNG (AJAX) =====
-function cancelOrder(code) {
-  if (!confirm("Bạn có chắc chắn muốn hủy đơn hàng " + code + " không?"))
+// ===== HỦY ĐƠN HÀNG (AJAX & UI) =====
+/* 
+   Logic mới: 
+   1. Kiểm tra nếu có modal hủy thì hiển thị
+   2. Nếu không có modal (trang tracking cũ), dùng confirm như cũ (fallback)
+   3. Gửi AJAX kèm lý do 
+*/
+
+let currentCancelCode = ""; // Biến tạm lưu mã đơn đang chọn hủy
+
+function openCancelModal(code) {
+  currentCancelCode = code;
+  const modal = document.getElementById("cancel-modal");
+  if (modal) {
+    modal.style.display = "block";
+    // Reset form
+    document.getElementById("cancel-reason").value = "";
+    document.getElementById("other-reason-input").style.display = "none";
+  } else {
+    // Fallback cho trang tracking nếu chưa có modal
+    const reason = prompt(
+      "Vui lòng nhập lý do hủy đơn hàng " + code + ":",
+      "Thay đổi kế hoạch",
+    );
+    if (reason !== null) {
+      submitCancelOrder(code, reason);
+    }
+  }
+}
+
+function closeCancelModal() {
+  const modal = document.getElementById("cancel-modal");
+  if (modal) modal.style.display = "none";
+}
+
+// Xử lý khi chọn "Khác" trong select lý do
+function handleReasonChange(select) {
+  const otherInput = document.getElementById("other-reason-input");
+  if (select.value === "other") {
+    otherInput.style.display = "block";
+    otherInput.focus();
+  } else {
+    otherInput.style.display = "none";
+  }
+}
+
+// Hàm gửi AJAX chính thức
+function confirmCancelOrder() {
+  const select = document.getElementById("cancel-reason");
+  let reason = select.value;
+
+  if (reason === "other") {
+    const otherVal = document.getElementById("other-reason-input").value.trim();
+    if (!otherVal) {
+      alert("Vui lòng nhập lý do cụ thể.");
+      return;
+    }
+    reason = otherVal;
+  }
+
+  if (!reason) {
+    alert("Vui lòng chọn lý do hủy đơn.");
     return;
+  }
+
+  submitCancelOrder(currentCancelCode, reason);
+}
+
+function submitCancelOrder(code, reason) {
+  const btn = document.getElementById("confirm-cancel-btn");
+  if (btn) {
+    btn.innerText = "Đang xử lý...";
+    btn.disabled = true;
+  }
 
   const formData = new FormData();
   formData.append("code", code);
+  formData.append("reason", reason);
 
   fetch("cancel_order_ajax.php", {
     method: "POST",
@@ -767,13 +838,35 @@ function cancelOrder(code) {
   })
     .then((res) => res.json())
     .then((data) => {
-      alert(data.message);
       if (data.status === "success") {
-        location.reload(); // Tải lại trang để cập nhật trạng thái mới
+        alert("Đã hủy đơn hàng thành công!");
+        location.reload(); // Reload để cập nhật trạng thái
+      } else {
+        alert("Lỗi: " + data.message);
+        if (btn) {
+          btn.innerText = "Xác nhận hủy đơn";
+          btn.disabled = false;
+        }
       }
+      closeCancelModal();
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+      alert("Lỗi kết nối server.");
+      if (btn) {
+        btn.innerText = "Xác nhận hủy đơn";
+        btn.disabled = false;
+      }
+    });
 }
+
+// Gắn sự kiện đóng modal khi click ra ngoài
+window.addEventListener("click", function (event) {
+  const modal = document.getElementById("cancel-modal");
+  if (event.target == modal) {
+    closeCancelModal();
+  }
+});
 
 // ===== QUICK QUOTE FORM =====
 // Mảng danh sách các quận hợp lệ của TP.HCM

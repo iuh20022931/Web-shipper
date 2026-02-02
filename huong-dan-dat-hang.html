@@ -10,12 +10,12 @@
     />
     <style>
       :root {
-        --primary: #007bff; /* Xanh dương */
-        --secondary: #ff8800; /* Cam */
+        --primary: #0a2a66; /* Xanh Navy (Main Brand) */
+        --secondary: #ff7a00; /* Cam (Action/Highlight) */
         --dark: #0a2a66;
         --light: #f8f9fa;
         --text: #333;
-        --border-radius: 12px;
+        --border-radius: 8px; /* Bo góc mềm hơn */
       }
 
       * {
@@ -33,12 +33,13 @@
 
       /* HEADER */
       header {
-        background: white;
+        background: var(--primary); /* Dùng màu xanh brand */
         padding: 15px 0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         position: sticky;
         top: 0;
         z-index: 1000;
+        color: white;
       }
 
       .container {
@@ -50,14 +51,15 @@
       .logo {
         font-size: 24px;
         font-weight: 700;
-        color: var(--dark);
+        color: white;
         display: flex;
         align-items: center;
         gap: 10px;
       }
-
-      .logo span {
-        color: var(--secondary);
+      
+      .logo a {
+        color: white; 
+        text-decoration: none;
       }
 
       /* SECTIONS */
@@ -66,7 +68,7 @@
         margin: 30px 0;
         padding: 40px;
         border-radius: var(--border-radius);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); /* Bóng đẹp hơn */
       }
 
       h2.section-title {
@@ -145,7 +147,7 @@
 
       .timeline-content h3 {
         margin-top: -5px;
-        color: var(--dark);
+        color: var(--primary);
         font-size: 18px;
       }
 
@@ -184,11 +186,11 @@
       .step-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-        border-color: var(--primary);
+        border-color: var(--secondary);
       }
 
       .step-number {
-        background: var(--primary);
+        background: var(--secondary);
         color: white;
         width: 35px;
         height: 35px;
@@ -198,6 +200,11 @@
         justify-content: center;
         font-weight: bold;
         margin-bottom: 15px;
+      }
+      
+      .step-card h3 {
+          color: var(--primary);
+          margin-bottom: 10px;
       }
 
       .alert-box {
@@ -226,7 +233,7 @@
       }
 
       .pricing-table th {
-        background-color: var(--dark);
+        background-color: var(--primary);
         color: white;
       }
 
@@ -244,6 +251,23 @@
           font-size: 22px;
         }
       }
+      
+      /* BUTTONS */
+      .btn-primary {
+          background: var(--secondary);
+          color: white;
+          border: none;
+          padding: 12px 30px;
+          border-radius: 6px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          text-decoration: none;
+          display: inline-block;
+      }
+      .btn-primary:hover {
+          background: #e96f00;
+      }
     </style>
   </head>
 
@@ -252,17 +276,7 @@
     <header>
       <div class="container">
         <div class="logo">
-          <a
-            href="index.php"
-            style="
-              text-decoration: none;
-              color: inherit;
-              display: flex;
-              align-items: center;
-              gap: 10px;
-            "
-            >🚚 FastGo <span>Logistics</span></a
-          >
+          <a href="index.html">FastGo</a> <!-- Đổi link về index.html cho GitHub Pages -->
         </div>
       </div>
     </header>
@@ -270,39 +284,31 @@
     <div class="container">
       <!-- INTRO -->
       <div style="margin-top: 40px; text-align: center">
-        <h1 style="color: var(--dark)">Chào mừng bạn đến với FastGo!</h1>
+        <h1 style="color: var(--primary)">Hướng dẫn sử dụng Dịch vụ</h1>
         <p style="color: #666; max-width: 600px; margin: 10px auto">
-          Dưới đây là hướng dẫn chi tiết giúp bạn đăng ký tài khoản và tạo đơn
-          hàng vận chuyển một cách nhanh chóng nhất.
+          Quy trình đơn giản - Giao hàng nhanh chóng
         </p>
       </div>
 
       <!-- PHẦN 1: ĐĂNG KÝ -->
       <section id="register-guide">
-        <h2 class="section-title">1. Hướng dẫn Đăng ký Tài khoản</h2>
+        <h2 class="section-title">1. Đăng ký Tài khoản</h2>
         <p>
-          Để đảm bảo an toàn và quản lý đơn hàng, bạn cần có tài khoản trước khi
-          đặt đơn.
+          Bạn cần có tài khoản thành viên để bắt đầu đặt đơn và quản lý lịch sử vận chuyển.
         </p>
 
         <div class="timeline" style="margin-top: 30px">
           <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-              <h3>Bước 1: Truy cập trang Đăng ký</h3>
+              <h3>Bước 1: Vào trang Đăng ký</h3>
               <p>
-                Nhấn vào nút "Đăng ký" trên thanh menu hoặc truy cập đường dẫn
-                <code>/register.php</code>.
+                Nhấn nút <strong>Đăng ký</strong> trên menu hoặc truy cập <a href="register.php" style="color: var(--secondary)">tại đây</a>.
               </p>
               <div class="screenshot-placeholder">
                 <img
                   src="assets/images/step1-click-register.png"
                   alt="Hướng dẫn click Đăng ký FastGo"
-                  style="
-                    max-width: 100%;
-                    border: 1px solid #ddd;
-                    border-radius: 8px;
-                  "
                 />
               </div>
             </div>
@@ -311,26 +317,11 @@
           <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-              <h3>Bước 2: Điền thông tin cá nhân</h3>
-              <p>Hệ thống yêu cầu các thông tin bắt buộc sau:</p>
+              <h3>Bước 2: Điền thông tin</h3>
               <ul class="field-list">
-                <li>
-                  <strong>Tên đăng nhập (Username):</strong> Viết liền không
-                  dấu, dùng để đăng nhập.
-                </li>
-                <li>
-                  <strong>Họ và tên (Fullname):</strong> Tên thật để shipper
-                  liên hệ.
-                </li>
-                <li>
-                  <strong>Email:</strong> Để nhận thông báo và khôi phục mật
-                  khẩu.
-                </li>
-                <li>
-                  <strong>Số điện thoại:</strong> Bắt buộc phải là số hợp lệ (10
-                  số, bắt đầu bằng số 0).
-                </li>
-                <li><strong>Mật khẩu:</strong> Nhập 2 lần để xác nhận.</li>
+                <li><strong>Tên đăng nhập:</strong> 3-20 ký tự, viết liền không dấu.</li>
+                <li><strong>Mật khẩu:</strong> Tối thiểu 8 ký tự, gồm chữ hoa, thường, số và ký tự đặc biệt.</li>
+                <li><strong>Thông tin:</strong> SĐT và Email phải chưa từng được đăng ký trước đó.</li>
               </ul>
             </div>
           </div>
@@ -340,8 +331,7 @@
             <div class="timeline-content">
               <h3>Bước 3: Hoàn tất</h3>
               <p>
-                Nhấn nút "Đăng ký". Nếu thành công, hệ thống sẽ tự động đăng
-                nhập và chuyển bạn đến trang đặt hàng.
+                Sau khi đăng ký thành công, hệ thống sẽ tự động đăng nhập.
               </p>
             </div>
           </div>
@@ -350,229 +340,137 @@
 
       <!-- PHẦN 2: ĐẶT ĐƠN -->
       <section id="order-guide">
-        <h2 class="section-title">2. Quy trình Tạo đơn hàng mới</h2>
-        <p style="margin-bottom: 20px">
-          Sau khi đăng nhập, bạn hãy điền thông tin vào biểu mẫu đặt hàng theo 3
-          bước sau:
-        </p>
-
+        <h2 class="section-title">2. Quy trình Đặt hàng</h2>
+        
         <div class="step-grid">
           <!-- Bước 1 -->
           <div class="step-card">
             <div class="step-number">1</div>
-            <h3>Thông tin Người gửi & Người nhận</h3>
-            <p>Nhập chính xác tên và số điện thoại của cả hai bên.</p>
-            <ul class="field-list">
-              <li>
-                <strong>Người gửi:</strong> Tên & SĐT của bạn (tự động điền).
-              </li>
-              <li><strong>Người nhận:</strong> Tên & SĐT người nhận hàng.</li>
-            </ul>
+            <h3>Đăng nhập & Thông tin</h3>
+            <p>Bạn phải <strong>đăng nhập</strong> để tạo đơn. Hệ thống sẽ tự động điền thông tin của bạn.</p>
           </div>
 
           <!-- Bước 2 -->
           <div class="step-card">
             <div class="step-number">2</div>
-            <h3>Địa chỉ Lấy & Giao hàng</h3>
-            <p>Đây là bước quan trọng nhất để tính phí ship.</p>
+            <h3>Địa chỉ chi tiết</h3>
+            <p>Nhập địa chỉ chính xác hoặc chọn nhanh từ <strong>Sổ địa chỉ đã lưu</strong> để tiết kiệm thời gian.</p>
             <div class="alert-box">
-              ⚠️ <strong>Lưu ý quan trọng:</strong><br />
-              Địa chỉ bắt buộc phải chứa thông tin
-              <strong>Quận/Huyện</strong> (Ví dụ: "Quận 1", "Thủ Đức", "Huyện Củ
-              Chi").<br />
-              Nếu thiếu, hệ thống sẽ báo lỗi và không thể tạo đơn.
+              ⚠️ <strong>Lưu ý:</strong> Phải ghi rõ Quận/Huyện để hệ thống tính phí tự động.
             </div>
             <div class="screenshot-placeholder">
-              <img
-                src="assets/images/step2-address-input.png"
-                alt="Minh họa nhập địa chỉ có Quận/Huyện"
-                style="
-                  max-width: 100%;
-                  border: 1px solid #ddd;
-                  border-radius: 8px;
-                "
-              />
+               <img src="assets/images/step2-address-input.png" alt="Nhập địa chỉ" />
             </div>
           </div>
 
           <!-- Bước 3 -->
           <div class="step-card">
             <div class="step-number">3</div>
-            <h3>Thông tin Gói hàng</h3>
-            <p>Chọn loại hàng hóa và dịch vụ vận chuyển.</p>
-            <ul class="field-list">
-              <li><strong>Loại hàng:</strong> Tài liệu, Đồ ăn, Quần áo...</li>
-              <li><strong>Khối lượng (kg):</strong> Nhập số thực tế.</li>
-              <li>
-                <strong>Thu hộ (COD):</strong> Nhập số tiền shipper cần thu (nếu
-                có).
-              </li>
-            </ul>
+            <h3>Thông tin gói hàng</h3>
+            <p>Chọn loại hàng, khối lượng và tiền thu hộ (COD).</p>
+            <div class="alert-box" style="background-color: #e2e3ff; color: #0a2a66; border-left-color: #0a2a66;">
+                📝 <strong>Hóa đơn đỏ:</strong> Tích chọn "Yêu cầu xuất hóa đơn" nếu bạn là khách hàng doanh nghiệp.
+            </div>
+          </div>
+
+          <!-- Bước 4 (Mới) -->
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <h3>Nhận hàng & Đánh giá</h3>
+            <p>Kiểm tra ảnh xác nhận giao hàng (POD) và đừng quên <strong>Đánh giá 5 sao</strong> cho shipper nhé!</p>
           </div>
         </div>
 
         <div style="text-align: center; margin-top: 30px">
-          <button
-            style="
-              background: var(--secondary);
-              color: white;
-              border: none;
-              padding: 12px 30px;
-              border-radius: 50px;
-              font-size: 16px;
-              cursor: pointer;
-            "
-          >
-            Xác nhận đặt đơn
-          </button>
-          <p style="font-size: 13px; color: #666; margin-top: 10px">
-            Hệ thống sẽ tự động tính phí ship ngay khi bạn nhập đủ địa chỉ.
-          </p>
+          <a href="create_order.php" class="btn-primary">Đặt hàng ngay</a>
         </div>
       </section>
 
       <!-- PHẦN 3: TRA CỨU & BẢNG GIÁ -->
       <section id="tracking-pricing">
-        <h2 class="section-title">3. Tra cứu & Bảng giá tham khảo</h2>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px">
+        <h2 class="section-title">3. Tra cứu & Bảng giá</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px">
           <!-- Tra cứu -->
           <div>
-            <h3>🔍 Hướng dẫn Tra cứu đơn hàng</h3>
-            <p>
-              Bạn có thể theo dõi hành trình đơn hàng bất cứ lúc nào tại trang
-              <strong>tra cứu đơn</strong>.
-            </p>
-            <ul style="margin: 15px 0 15px 20px">
-              <li>Copy mã đơn hàng (Ví dụ: <strong>FAST-A1B2C3</strong>).</li>
-              <li>Dán vào ô "Tra cứu đơn hàng tiêu chuẩn".</li>
-              <li>Xem chi tiết trạng thái và lịch sử di chuyển.</li>
-            </ul>
+            <h3>🔍 Tra cứu hành trình</h3>
+            <p>Nhập mã đơn hàng (VD: <strong>FAST-XXXXXX</strong>) vào ô tìm kiếm để xem vị trí đơn hàng.</p>
             <div class="screenshot-placeholder">
-              <img
-                src="assets/images/tracking-guide.png"
-                alt="Minh họa tra cứu mã vận đơn"
-                style="
-                  max-width: 100%;
-                  border: 1px solid #ddd;
-                  border-radius: 8px;
-                "
-              />
+              <img src="assets/images/tracking-guide.png" alt="Tra cứu vận đơn" />
             </div>
           </div>
 
           <!-- Bảng giá -->
           <div>
-            <h3>💰 Bảng giá dịch vụ (Tham khảo)</h3>
+            <h3>💰 Bảng giá tham khảo</h3>
             <table class="pricing-table">
               <thead>
                 <tr>
-                  <th>Loại phí</th>
-                  <th>Đơn giá</th>
+                  <th>Dịch vụ</th>
+                  <th>Giá cước (Nội thành)</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Giao Tiêu chuẩn</strong></td>
-                  <td style="color: var(--primary); font-weight: bold">
-                    30.000đ
-                  </td>
+                  <td>Tiêu chuẩn</td>
+                  <td style="color: var(--primary); font-weight: bold">30.000đ</td>
                 </tr>
                 <tr>
-                  <td><strong>Giao Hỏa tốc</strong></td>
-                  <td style="color: var(--secondary); font-weight: bold">
-                    50.000đ
-                  </td>
+                  <td>Hỏa tốc</td>
+                  <td style="color: var(--secondary); font-weight: bold">50.000đ</td>
                 </tr>
                 <tr>
-                  <td>Phí vùng miền (Ngoại thành)</td>
-                  <td>+15.000đ - 20.000đ</td>
-                </tr>
-                <tr>
-                  <td>Phí cân nặng (> 2kg)</td>
+                  <td>Phí quá cân (>2kg)</td>
                   <td>+5.000đ / kg</td>
                 </tr>
                 <tr>
                   <td>Phí thu hộ (COD)</td>
-                  <td>1% giá trị (Min 5k)</td>
+                  <td>+5.000đ / đơn</td>
                 </tr>
               </tbody>
             </table>
-            <p style="font-size: 12px; color: #888; margin-top: 10px">
-              * Giá trên chưa bao gồm các phụ phí đặc biệt khác.
-            </p>
           </div>
         </div>
       </section>
 
       <!-- PHẦN 4: FAQ -->
       <section id="faq">
-        <h2 class="section-title">4. Câu hỏi thường gặp</h2>
+        <h2 class="section-title">4. Hỏi đáp (FAQ)</h2>
         <div style="display: grid; gap: 20px">
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px">
-            <h3
-              style="color: var(--dark); font-size: 18px; margin-bottom: 10px"
-            >
-              ❓ Tôi có thể hủy đơn hàng đã đặt không?
+            <h3 style="color: var(--primary); font-size: 18px; margin-bottom: 10px">
+              Shipper đến lấy hàng trong bao lâu?
             </h3>
-            <p style="color: #555; font-size: 14px">
-              Có. Bạn có thể hủy đơn hàng khi trạng thái là
-              <strong>"Chờ xử lý"</strong>. Hãy truy cập trang
-              <code>Tra cứu đơn</code>, nhập mã đơn và nhấn nút "Hủy đơn hàng".
-            </p>
+            <p>Thường từ 15 - 45 phút đối với đơn nội thành.</p>
           </div>
-
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px">
-            <h3
-              style="color: var(--dark); font-size: 18px; margin-bottom: 10px"
-            >
-              ❓ Shipper sẽ đến lấy hàng trong bao lâu?
+            <h3 style="color: var(--primary); font-size: 18px; margin-bottom: 10px">
+              Tôi có thể hủy đơn không?
             </h3>
-            <p style="color: #555; font-size: 14px">
-              Sau khi đặt đơn thành công, hệ thống sẽ tìm tài xế gần nhất. Thông
-              thường shipper sẽ có mặt trong vòng
-              <strong>15 - 30 phút</strong> (đối với đơn nội thành).
-            </p>
+            <p>Có, bạn có thể hủy khi đơn ở trạng thái "Chờ xử lý".</p>
           </div>
-
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px">
-            <h3
-              style="color: var(--dark); font-size: 18px; margin-bottom: 10px"
-            >
-              ❓ Tôi quên mật khẩu thì phải làm sao?
+            <h3 style="color: var(--primary); font-size: 18px; margin-bottom: 10px">
+              Làm sao để xuất hóa đơn đỏ (VAT)?
             </h3>
-            <p style="color: #555; font-size: 14px">
-              Tại màn hình Đăng nhập, bạn hãy nhấn vào liên kết
-              <strong>"Quên mật khẩu?"</strong> và nhập email đã đăng ký để nhận
-              hướng dẫn khôi phục.
-            </p>
+            <p>Tại bước tạo đơn, hãy tích chọn ô <strong>"Yêu cầu xuất hóa đơn công ty"</strong> và điền mã số thuế.</p>
           </div>
-
-          <div style="text-align: center; margin-top: 10px">
-            <a
-              href="#"
-              style="
-                color: var(--primary);
-                font-weight: 600;
-                text-decoration: none;
-              "
-              >Bạn còn câu hỏi khác? Liên hệ ngay &rarr;</a
-            >
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px">
+            <h3 style="color: var(--primary); font-size: 18px; margin-bottom: 10px">
+              Tôi có thể lưu địa chỉ giao hàng không?
+            </h3>
+            <p>Có. Hệ thống tự động lưu các địa chỉ bạn đã dùng vào <strong>Sổ địa chỉ</strong> để chọn nhanh cho lần sau.</p>
           </div>
         </div>
       </section>
     </div>
 
-    <footer
-      style="
-        background: var(--dark);
-        color: white;
-        text-align: center;
-        padding: 20px;
-        margin-top: 40px;
-      "
-    >
-      <p>&copy; 2026 FastGo Logistics. Hỗ trợ 24/7.</p>
+    <footer style="background: var(--primary); color: white; text-align: center; padding: 30px 20px; margin-top: 40px;">
+        <div class="container">
+            <h3>FastGo Shipper Service</h3>
+            <p style="opacity: 0.8; font-size: 14px; margin: 10px 0;">Dịch vụ giao hàng nhanh chóng - An toàn - Tiện lợi</p>
+            <p style="font-size: 13px;">&copy; 2026 FastGo. All rights reserved.</p>
+        </div>
     </footer>
   </body>
 </html>

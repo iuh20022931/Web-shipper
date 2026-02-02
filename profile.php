@@ -57,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($new_pass !== $confirm_pass) {
             $msg = "Mật khẩu xác nhận không khớp.";
             $msg_class = "error";
-        } elseif (strlen($new_pass) < 6) {
-            $msg = "Mật khẩu mới phải từ 6 ký tự trở lên.";
+        } elseif (strlen($new_pass) < 8 || !preg_match('/[A-Z]/', $new_pass) || !preg_match('/[a-z]/', $new_pass) || !preg_match('/[0-9]/', $new_pass) || !preg_match('/[\W_]/', $new_pass)) {
+            $msg = "Mật khẩu yếu. Yêu cầu: tối thiểu 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.";
             $msg_class = "error";
         } else {
             $hashed = password_hash($new_pass, PASSWORD_DEFAULT);

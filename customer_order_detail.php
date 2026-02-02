@@ -68,6 +68,10 @@ $status_map = [
             <div>
                 <a href="print_invoice.php?id=<?php echo $order['id']; ?>" target="_blank" class="btn-print">🖨️ In hóa
                     đơn</a>
+                <?php if ($order['status'] === 'pending'): ?>
+                    <button onclick="openCancelModal('<?php echo $order['order_code']; ?>')" class="btn-secondary"
+                        style="color:#d9534f; border-color:#d9534f; padding: 8px 16px; margin-right: 5px;">Hủy đơn hàng</button>
+                <?php endif; ?>
                 <a href="order_history.php" class="btn-secondary"
                     style="color:#0a2a66; border-color:#0a2a66; padding: 8px 16px;">Quay lại</a>
             </div>
@@ -218,7 +222,37 @@ $status_map = [
         <?php endif; ?>
 
     </main>
+    
+    <!-- Modal Hủy Đơn Hàng -->
+    <div id="cancel-modal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.5);">
+        <div class="modal-content" style="background-color:#fff; margin:10% auto; padding:20px; border:1px solid #888; width:90%; max-width:400px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.2);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="margin:0; color:#d9534f;">⚠️ Hủy Đơn Hàng</h3>
+                <span class="close" onclick="closeCancelModal()" style="color:#aaa; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+            </div>
+            
+            <p style="margin-bottom:15px;">Bạn có chắc chắn muốn hủy đơn hàng này? Thao tác này không thể hoàn tác.</p>
+            
+            <label for="cancel-reason" style="display:block; margin-bottom:8px; font-weight:600;">Lý do hủy:</label>
+            <select id="cancel-reason" onchange="handleReasonChange(this)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:4px;">
+                <option value="" disabled selected>-- Chọn lý do --</option>
+                <option value="Thay đổi kế hoạch">Thay đổi kế hoạch</option>
+                <option value="Tìm đước đơn vị vận chuyển khác">Tìm được đơn vị vận chuyển khác</option>
+                <option value="Sai thông tin người nhận/địa chỉ">Sai thông tin người nhận/địa chỉ</option>
+                <option value="other">Lý do khác...</option>
+            </select>
+            
+            <input type="text" id="other-reason-input" placeholder="Nhập lý do của bạn..." style="display:none; width:100%; padding:10px; margin-bottom:15px; border:1px solid #ddd; border-radius:4px;">
+            
+            <div style="text-align:right; margin-top:20px;">
+                <button onclick="closeCancelModal()" class="btn-secondary" style="margin-right:10px; padding:8px 16px;">Đóng</button>
+                <button id="confirm-cancel-btn" onclick="confirmCancelOrder()" class="btn-primary" style="background-color:#d9534f; border:none; padding:8px 16px;">Xác nhận hủy đơn</button>
+            </div>
+        </div>
+    </div>
+
     <?php include 'includes/footer.php'; ?>
+    <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
     <script>
         // Script chọn sao đánh giá
         const stars = document.querySelectorAll('#star-container span');

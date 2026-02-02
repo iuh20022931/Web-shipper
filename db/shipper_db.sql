@@ -103,9 +103,12 @@ CREATE TABLE `orders` (
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     `is_corporate` tinyint(1) DEFAULT 0,
     `company_name` varchar(255) DEFAULT NULL,
+    `company_email` varchar(100) DEFAULT NULL,
     `company_tax_code` varchar(50) DEFAULT NULL,
     `company_address` text DEFAULT NULL,
-    `company_bank_info` text DEFAULT NULL
+    `company_address` text DEFAULT NULL,
+    `company_bank_info` text DEFAULT NULL,
+    `cancel_reason` text DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -138,7 +141,14 @@ INSERT INTO
         `status`,
         `rating`,
         `feedback`,
-        `created_at`
+        `created_at`,
+        `is_corporate`,
+        `company_name`,
+        `company_email`,
+        `company_tax_code`,
+        `company_address`,
+        `company_bank_info`,
+        `cancel_reason`
     )
 VALUES (
         1,
@@ -165,7 +175,8 @@ VALUES (
         'cancelled',
         NULL,
         NULL,
-        '2026-01-22 13:44:23'
+        '2026-01-22 13:44:23',
+        0, NULL, NULL, NULL, NULL, NULL, 'Thay đổi kế hoạch'
     ),
     (
         2,
@@ -192,7 +203,8 @@ VALUES (
         'completed',
         NULL,
         NULL,
-        '2026-01-22 16:31:32'
+        '2026-01-22 16:31:32',
+        0, NULL, NULL, NULL, NULL, NULL, NULL
     ),
     (
         3,
@@ -219,7 +231,8 @@ VALUES (
         'cancelled',
         NULL,
         NULL,
-        '2026-01-23 00:42:34'
+        '2026-01-23 00:42:34',
+        0, NULL, NULL, NULL, NULL, NULL, 'Tìm được bên vận chuyển khác'
     ),
     (
         4,
@@ -246,7 +259,8 @@ VALUES (
         'completed',
         NULL,
         NULL,
-        '2026-01-23 01:38:20'
+        '2026-01-23 01:38:20',
+        0, NULL, NULL, NULL, NULL, NULL, NULL
     ),
     (
         5,
@@ -273,7 +287,8 @@ VALUES (
         'completed',
         5,
         'Dịch vụ rất tốt, giao hàng siêu nhanh!',
-        '2026-01-28 07:07:14'
+        '2026-01-28 07:07:14',
+        0, NULL, NULL, NULL, NULL, NULL, NULL
     ),
     (
         6,
@@ -300,7 +315,8 @@ VALUES (
         'completed',
         4,
         'Shipper thân thiện, đồ ăn vẫn còn nóng hổi.',
-        '2026-01-28 07:07:14'
+        '2026-01-28 07:07:14',
+        0, NULL, NULL, NULL, NULL, NULL, NULL
     );
 
 -- --------------------------------------------------------

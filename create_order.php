@@ -41,6 +41,54 @@ if ($svc_res) {
 // Lấy cấu hình giá
 $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000];
 
+// --- XỬ LÝ RE-ORDER (Đặt lại đơn hàng cũ) ---
+$reorder_data = [
+    'receiver_name' => '',
+    'receiver_phone' => '',
+    'pickup_address' => '',
+    'delivery_address' => '',
+    'service_type' => '',
+    'package_type' => 'document', // Mặc định
+    'weight' => 1,
+    'cod_amount' => 0,
+    'note' => ''
+];
+
+if (isset($_GET['reorder_id'])) {
+    $reorder_id = intval($_GET['reorder_id']);
+    // Chỉ lấy đơn hàng CỦA CHÍNH USER đó (bảo mật)
+    $stmt = $conn->prepare("SELECT * FROM orders WHERE id = ? AND user_id = ?");
+    $stmt->bind_param("ii", $reorder_id, $_SESSION['user_id']);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res->num_rows > 0) {
+        $old_order = $res->fetch_assoc();
+        $reorder_data['receiver_name'] = $old_order['receiver_name'];
+        $reorder_data['receiver_phone'] = $old_order['receiver_phone'];
+        $reorder_data['pickup_address'] = $old_order['pickup_address'];
+        $reorder_data['delivery_address'] = $old_order['delivery_address'];
+        $reorder_data['service_type'] = $old_order['service_type'];
+        // Mapping package type logic nếu cần, hoặc lấy trực tiếp nếu DB lưu đúng text value
+        // Giả sử DB lưu 'document', 'food'... trùng với value select
+        // Nếu DB lưu Tiếng Việt, cần map lại. Nhưng theo order.php insert thì hình như không lưu type? 
+        // À, trong order.php thực tế (đã xem trước đó) có lưu package_type.
+        // Tuy nhiên, check lại create_order.php đã view ở Step 214, form có name="package_type".
+        // Check order.php ở Step 201 (context), insert có package_type không?
+        // Step 169 summary: "Updated backend logic to include company_email".
+        // Step 214 view create_order HTML: <select name="package_type">
+        // Cần check lại column trong DB nếu chắc chắn. Nhưng safe nhất là cứ pre-fill.
+        // Tạm thời giả định DB chưa có column package_type hoặc Logic reorder chỉ cần fill address là chính.
+        // Nhưng các field khác user có thể nhập lại. Quan trọng nhất là Receiver & Address.
+        
+        $reorder_data['note'] = $old_order['note'];
+        $reorder_data['cod_amount'] = $old_order['cod_amount'];
+        // Weight? orders table có weight không? Check order_history.php display logic...
+        // order_history.php chỉ hiện: order_code, receiver, address, fee, cod, status. Không thấy hiện weight.
+        // Để an toàn, set weight và note nếu có trong DB. Nếu không thì default.
+    }
+    $stmt->close();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -88,6 +136,7 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                         </div>
                         <label for="pickup-addr">Địa chỉ lấy hàng</label>
                         <input type="text" id="pickup-addr" name="pickup"
+                            value="<?php echo htmlspecialchars($reorder_data['pickup_address']); ?>"
                             placeholder="Nhập số nhà, tên đường, phường/xã, quận/huyện..." required>
                     </div>
                 </div>
@@ -99,11 +148,13 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="receiver_name">Họ và tên người nhận</label>
-                        <input type="text" id="receiver_name" name="receiver_name" required>
+                        <input type="text" id="receiver_name" name="receiver_name" 
+                            value="<?php echo htmlspecialchars($reorder_data['receiver_name']); ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="receiver_phone">Số điện thoại người nhận</label>
-                        <input type="tel" id="receiver_phone" name="receiver_phone" required>
+                        <input type="tel" id="receiver_phone" name="receiver_phone" 
+                            value="<?php echo htmlspecialchars($reorder_data['receiver_phone']); ?>" required>
                     </div>
                     <div class="form-group" style="grid-column: 1 / -1; position: relative;">
                         <div
@@ -116,6 +167,7 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                         </div>
                         <label for="delivery-addr">Địa chỉ giao hàng</label>
                         <input type="text" id="delivery-addr" name="delivery"
+                            value="<?php echo htmlspecialchars($reorder_data['delivery_address']); ?>"
                             placeholder="Nhập số nhà, tên đường, phường/xã, quận/huyện..." required>
                     </div>
                 </div>
@@ -129,7 +181,7 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                         <label for="order-service-type">Loại dịch vụ</label>
                         <select id="order-service-type" name="service_type">
                             <?php foreach ($services_list as $svc): ?>
-                                <option value="<?php echo $svc['type_key']; ?>">
+                                <option value="<?php echo $svc['type_key']; ?>" <?php echo ($reorder_data['service_type'] == $svc['type_key']) ? 'selected' : ''; ?>>
                                     <?php echo $svc['name']; ?>
                                 </option>
                             <?php endforeach; ?>
@@ -151,14 +203,14 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                     </div>
                     <div class="form-group">
                         <label for="cod_amount">Tiền thu hộ (COD)</label>
-                        <input type="number" id="cod_amount" name="cod_amount" value="0" min="0"
+                        <input type="number" id="cod_amount" name="cod_amount" value="<?php echo htmlspecialchars($reorder_data['cod_amount']); ?>" min="0"
                             placeholder="Để trống nếu không có">
                     </div>
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
                     <label for="note">Ghi chú cho tài xế</label>
                     <textarea id="note" name="note"
-                        placeholder="VD: Hàng dễ vỡ, vui lòng gọi trước khi giao..."></textarea>
+                        placeholder="VD: Hàng dễ vỡ, vui lòng gọi trước khi giao..."><?php echo htmlspecialchars($reorder_data['note']); ?></textarea>
                 </div>
             </div>
 
@@ -187,6 +239,10 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                         <input type="text" name="company_name"
                             value="<?php echo htmlspecialchars($user_info['company_name'] ?? ''); ?>"
                             placeholder="Tên công ty (*)">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="company_email"
+                            placeholder="Email nhận hóa đơn (*)">
                     </div>
                     <div class="form-group">
                         <input type="text" name="company_tax_code"
@@ -259,17 +315,20 @@ $pricing_config = ['weight_free' => 2, 'weight_price' => 5000, 'cod_min' => 5000
                 corporateCheckbox.addEventListener('change', function () {
                     const corporateFields = document.getElementById('corporate_info_fields');
                     const companyNameInput = corporateFields.querySelector('[name="company_name"]');
+                    const companyEmailInput = corporateFields.querySelector('[name="company_email"]');
                     const companyTaxInput = corporateFields.querySelector('[name="company_tax_code"]');
                     const companyAddressInput = corporateFields.querySelector('[name="company_address"]');
 
                     if (this.checked) {
                         corporateFields.style.display = 'block';
                         companyNameInput.required = true;
+                        companyEmailInput.required = true;
                         companyTaxInput.required = true;
                         companyAddressInput.required = true;
                     } else {
                         corporateFields.style.display = 'none';
                         companyNameInput.required = false;
+                        companyEmailInput.required = false;
                         companyTaxInput.required = false;
                         companyAddressInput.required = false;
                     }

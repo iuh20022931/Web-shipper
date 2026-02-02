@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Dịch vụ Shipper | FastGo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <!-- Thêm SwiperJS CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header id="header">
+        <nav class="navbar">
+            <div class="logo">
+                <h1><a href="index.html" style="color: white; text-decoration: none;">FastGo</a></h1>
+            </div>
+
+            <button class="hamburger-menu" id="hamburger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#hero">Trang chủ</a></li>
+                <li><a href="#services">Dịch vụ</a></li>
+                <li><a href="#pricing">Bảng giá</a></li>
+                <li><a href="tracking.php">Tra cứu đơn</a></li>
+                <li><a href="login.php">Đặt hàng</a></li>
+                <li><a href="huong-dan-dat-hang.html">Hướng dẫn</a></li>
+                <li><a href="login.php">Đăng nhập</a></li>
+                <li><a href="register.php" class="btn-primary"
+                        style="padding: 8px 20px; background: #ff7a00; border:none; color:white;">Đăng ký</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="hero-section">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <h1 class="animate-top">Giao hàng nhanh – An toàn – Đúng giờ</h1>
+                <p class="animate-bottom">
+                    Dịch vụ giao hàng nội thành & liên tỉnh, hỗ trợ 24/7. Nhận hàng ngay sau 15 phút!
+                </p>
+                <div class="hero-btns animate-bottom">
+                    <a href="#quick-quote" class="btn-primary">Tính giá ngay</a>
+                    <a href="login.php" class="btn-secondary">Đặt hàng ngay</a>
+                    <a href="huong-dan-dat-hang.html" class="btn-secondary btn-blink" target="_blank">📖 Hướng dẫn</a>
+                </div>
+            </div>
+            <div class="hero-image animate-right">
+                <img src="assets/images/hero.png" alt="FastGo Shipper" />
+            </div>
+        </div>
+    </section>
+
+    <!-- TRACKING SECTION -->
+    <section id="home-tracking">
+        <div class="container">
+            <h2 class="section-title">Tra cứu hành trình đơn hàng</h2>
+            <p class="section-desc">Nhập mã vận đơn để theo dõi tình trạng đơn hàng của bạn (VD: FAST-XXXXXX)</p>
+
+            <form class="tracking-form" onsubmit="trackOrder(event, 'standard')">
+                <input type="text" id="standard-code" placeholder="Nhập mã đơn hàng..." required>
+                <button type="submit" class="btn-primary">Tra cứu</button>
+            </form>
+            <div id="loading-spinner-standard" class="spinner" style="display:none;"></div>
+            <div id="result-standard"></div>
+        </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section id="process" class="process-section">
+        <div class="container">
+            <h2 class="section-title">Quy trình giao hàng đơn giản</h2>
+            <p class="section-subtitle">Chỉ với 3 bước, hàng hóa của bạn sẽ được giao đến nơi an toàn</p>
+            <div class="process-container">
+                <div class="process-item animate-up">
+                    <img src="assets/images/order.png" alt="Đặt đơn" class="process-img" />
+                    <h3>Đặt đơn trực tuyến</h3>
+                    <p>Nhập thông tin người gửi, người nhận và loại dịch vụ ngay trên website.</p>
+                </div>
+                <div class="process-arrow">➔</div>
+                <div class="process-item animate-up" style="animation-delay: 0.2s">
+                    <img src="assets/images/hero-shipper.png" alt="Lấy hàng" class="process-img" />
+                    <h3>Lấy hàng trong 15p</h3>
+                    <p>Shipper gần nhất sẽ đến nhận hàng chỉ sau vài phút xác nhận đơn.</p>
+                </div>
+                <div class="process-arrow">➔</div>
+                <div class="process-item animate-up" style="animation-delay: 0.4s">
+                    <img src="assets/images/package.png" alt="Giao hàng" class="process-img" />
+                    <h3>Giao tận tay</h3>
+                    <p>Hàng hóa được vận chuyển siêu tốc và giao tận tay người nhận an toàn.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+        <h2 class="section-title">Dịch vụ của chúng tôi</h2>
+        <p class="section-desc">FastGo cung cấp đa dạng dịch vụ giao hàng, đáp ứng mọi nhu cầu của bạn.</p>
+        <div class="service-list" id="services-list">
+            <div class="service-card" id="standard-delivery">
+                <h3>Giao nội thành</h3>
+                <p>Giao hàng nhanh trong khu vực nội thành chỉ từ 30–60 phút.</p>
+            </div>
+            <div class="service-card" id="express-delivery">
+                <h3>Giao hỏa tốc</h3>
+                <p>Ưu tiên đơn gấp, giao ngay trong thời gian sớm nhất.</p>
+            </div>
+            <div class="service-card" id="cod-delivery">
+                <h3>Giao COD</h3>
+                <p>Thu hộ tiền mặt an toàn, minh bạch và nhanh chóng.</p>
+            </div>
+            <div class="service-card" id="bulk-delivery">
+                <h3>Giao hàng số lượng lớn</h3>
+                <p>Hỗ trợ doanh nghiệp và shop online giao nhiều đơn cùng lúc.</p>
+            </div>
+            <div class="service-card" id="corporate-delivery">
+                <h3>Dịch vụ doanh nghiệp</h3>
+                <p>Giải pháp giao hàng chuyên nghiệp cho doanh nghiệp.</p>
+            </div>
+            <div class="service-card" id="moving-service">
+                <h3>Chuyển nhà / Vận chuyển lớn</h3>
+                <p>Hỗ trợ vận chuyển hàng hóa lớn, chuyển nhà, văn phòng.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features">
+        <h2 class="section-title">Vì sao chọn FastGo?</h2>
+        <div class="feature-list">
+            <div class="feature-item"><span class="feature-icon">🚀</span>
+                <h3>Nhanh & đúng giờ</h3>
+                <p>Thời gian giao hàng được tối ưu, đảm bảo đúng hẹn.</p>
+            </div>
+            <div class="feature-item"><span class="feature-icon">📦</span>
+                <h3>Theo dõi đơn hàng</h3>
+                <p>Khách hàng dễ dàng theo dõi trạng thái đơn hàng.</p>
+            </div>
+            <div class="feature-item"><span class="feature-icon">👨‍✈️</span>
+                <h3>Shipper chuyên nghiệp</h3>
+                <p>Đội ngũ shipper được đào tạo bài bản.</p>
+            </div>
+            <div class="feature-item"><span class="feature-icon">☎️</span>
+                <h3>Hỗ trợ 24/7</h3>
+                <p>Sẵn sàng hỗ trợ khách hàng mọi lúc, mọi nơi.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing">
+        <h2 class="section-title">Bảng giá tham khảo</h2>
+        <div class="pricing-table-wrapper">
+            <table class="pricing-table">
+                <thead>
+                    <tr>
+                        <th>Dịch vụ</th>
+                        <th>Phương tiện</th>
+                        <th>Khu vực</th>
+                        <th>Giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Giao tiêu chuẩn</td>
+                        <td>Xe máy</td>
+                        <td>Nội thành</td>
+                        <td>30.000đ</td>
+                    </tr>
+                    <tr>
+                        <td>Giao hỏa tốc</td>
+                        <td>Xe máy</td>
+                        <td>Nội thành</td>
+                        <td>50.000đ</td>
+                    </tr>
+                    <tr>
+                        <td>Giao số lượng lớn</td>
+                        <td>Ô tô</td>
+                        <td>Toàn quốc</td>
+                        <td>Liên hệ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <h2 class="section-title">Sẵn sàng vận chuyển?</h2>
+        <p class="section-desc">Tạo tài khoản hoặc đăng nhập để bắt đầu gửi hàng cùng FastGo ngay hôm nay!</p>
+        <div class="hero-btns centered-btns">
+            <a href="login.php" class="btn-primary">Đăng nhập & Đặt đơn</a>
+            <a href="register.php" class="btn-secondary">Đăng ký tài khoản mới</a>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS (Static) -->
+    <section id="testimonials">
+        <h2 class="section-title">Khách hàng nói gì về FastGo?</h2>
+        <p class="section-desc">Sự hài lòng của khách hàng là động lực phát triển của chúng tôi.</p>
+        <div class="swiper testimonial-slider">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="testimonial-item">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="feedback">"Giao hàng siêu nhanh, shipper thân thiện. Mình gửi hàng từ Q1 sang Thủ Đức mà chưa đầy 1 tiếng đã nhận được."</p>
+                        <div class="customer-info">
+                            <strong>Nguyễn Thu Hà</strong>
+                            <span>- Shop Online</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="testimonial-item">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="feedback">"Hệ thống tracking rất tiện lợi, mình có thể theo dõi đơn hàng từng phút. Rất yên tâm khi sử dụng dịch vụ."</p>
+                        <div class="customer-info">
+                            <strong>Trần Minh Tuấn</strong>
+                            <span>- Văn phòng phẩm</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="testimonial-item">
+                        <div class="stars">⭐⭐⭐⭐</div>
+                        <p class="feedback">"Giá cước hợp lý, có thu hộ COD nhanh chóng. Sẽ ủng hộ FastGo dài dài."</p>
+                        <div class="customer-info">
+                            <strong>Lê Bảo Ngọc</strong>
+                            <span>- Cửa hàng thời trang</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <!-- FAQ (Static) -->
+    <section id="faq">
+        <h2 class="section-title">FAQs / Hỗ trợ</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <h3 class="faq-question">FastGo giao hàng trong bao lâu?</h3>
+                <p class="faq-answer">Thời gian giao hàng nội thành: 30–60 phút, liên tỉnh: 1–3 ngày.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Có thể hủy hoặc thay đổi đơn không?</h3>
+                <p class="faq-answer">Vui lòng liên hệ hotline trước khi đơn được shipper nhận.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">FastGo có thu hộ COD không?</h3>
+                <p class="faq-answer">Có, chúng tôi hỗ trợ dịch vụ thu hộ tiền mặt minh bạch.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- INQUIRY FORM -->
+    <section id="inquiry">
+        <div class="container inquiry-container">
+            <h2 class="section-title">Gửi thắc mắc cho chúng tôi</h2>
+            <p class="section-desc">Bạn cần hỗ trợ thêm? Hãy để lại lời nhắn.</p>
+
+            <form id="inquiry-form">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Họ và tên của bạn" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email liên hệ" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" name="phone" placeholder="Số điện thoại" required>
+                </div>
+                <div class="form-group">
+                    <select name="subject">
+                        <option value="Tuvan">Tư vấn dịch vụ</option>
+                        <option value="KhieuNai">Khiếu nại đơn hàng</option>
+                        <option value="HopTac">Liên hệ hợp tác</option>
+                        <option value="Khac">Khác</option>
+                    </select>
+                </div>
+                <textarea name="message" placeholder="Nội dung thắc mắc..." required></textarea>
+                <button type="submit" class="btn-primary">Gửi tin nhắn</button>
+                <div id="inquiry-message"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>FastGo</h3>
+                <p>Dịch vụ giao hàng nhanh chóng – an toàn – đúng giờ.</p>
+            </div>
+
+            <div class="footer-info">
+                <p><strong>Email:</strong> contact@fastgo.vn</p>
+                <p><strong>Hotline:</strong> 0123 456 789</p>
+                <p><strong>Địa chỉ:</strong> TP. Hồ Chí Minh</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 FastGo Shipper Service. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Thêm SwiperJS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <!-- AUTH MODAL (Popup Đăng nhập) -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+
+            <!-- VIEW 1: ĐĂNG NHẬP -->
+            <div id="login-view">
+                <h2 style="text-align:center; color:#0a2a66; margin-bottom:20px;">Bạn cần đăng nhập</h2>
+                <p style="text-align:center; margin-bottom:20px; color:#666;">Vui lòng đăng nhập để hoàn tất đơn hàng.
+                </p>
+
+                <form id="ajax-login-form">
+                    <div class="form-group">
+                        <input type="text" name="username" placeholder="Tên đăng nhập" required
+                            style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px;">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="Mật khẩu" required
+                            style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px;">
+                    </div>
+                    <div style="text-align:right; margin-bottom:15px;">
+                        <a href="#" id="show-forgot-btn" style="color:#666; font-size:13px; text-decoration:none;">Quên
+                            mật khẩu?</a>
+                    </div>
+                    <div id="login-error" style="color:red; text-align:center; margin-bottom:10px; display:none;"></div>
+                    <button type="submit" class="btn-primary" style="width:100%;">Đăng Nhập & Gửi Đơn</button>
+                </form>
+
+                <div style="text-align:center; margin-top:15px; font-size:14px;">
+                    Chưa có tài khoản? <a href="#" id="show-register-btn" style="color:#ff7a00; font-weight:bold;">Đăng
+                        ký ngay</a>
+                </div>
+            </div>
+
+            <!-- VIEW 2: ĐĂNG KÝ (Mặc định ẩn) -->
+            <div id="register-view" style="display:none;">
+                <h2 style="text-align:center; color:#0a2a66; margin-bottom:20px;">Đăng Ký Nhanh</h2>
+
+                <form id="ajax-register-form">
+                    <div class="form-group">
+                        <input type="text" name="username" placeholder="Tên đăng nhập" required
+                            style="width:100%; padding:10px; margin-bottom:2px; border:1px solid #ccc; border-radius:6px;">
+                        <small style="display:block; color:#666; font-size:11px; margin-bottom:8px;">* 3-20 ký tự, viết liền không dấu, không ký tự đặc biệt.</small>
+                    </div>
+                    <div class="form-group"><input type="text" name="fullname" placeholder="Họ và tên" required
+                            style="width:100%; padding:10px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
+                    </div>
+                    <div class="form-group"><input type="email" name="email" placeholder="Email" required
+                            style="width:100%; padding:10px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
+                    </div>
+                    <div class="form-group"><input type="tel" name="phone" placeholder="Số điện thoại" required
+                            style="width:100%; padding:10px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
+                    </div>
+                    <div class="form-group" style="display:flex; gap:10px;">
+                        <div style="flex:1;">
+                            <input type="password" name="password" placeholder="Mật khẩu" required
+                                style="width:100%; padding:10px; margin-bottom:2px; border:1px solid #ccc; border-radius:6px;">
+                            <small style="display:block; color:#666; font-size:10px; line-height:1.2;">* Tối thiểu 8 ký tự, có chữ hoa, thường, số, ký tự đặc biệt.</small>
+                        </div>
+                        <div style="flex:1;">
+                            <input type="password" name="confirm_password" placeholder="Nhập lại MK" required
+                                style="width:100%; padding:10px; margin-bottom:2px; border:1px solid #ccc; border-radius:6px;">
+                        </div>
+                    </div>
+
+                    <div id="register-error" style="color:red; text-align:center; margin-bottom:10px; display:none;">
+                    </div>
+                    <button type="submit" class="btn-primary" style="width:100%;">Đăng Ký & Gửi Đơn</button>
+                </form>
+
+                <div style="text-align:center; margin-top:15px; font-size:14px;">
+                    Đã có tài khoản? <a href="#" id="show-login-btn" style="color:#ff7a00; font-weight:bold;">Đăng
+                        nhập</a>
+                </div>
+            </div>
+
+            <!-- VIEW 3: QUÊN MẬT KHẨU (Mặc định ẩn) -->
+            <div id="forgot-view" style="display:none;">
+                <h2 style="text-align:center; color:#0a2a66; margin-bottom:20px;">Khôi phục mật khẩu</h2>
+                <p style="text-align:center; margin-bottom:20px; color:#666;">Nhập email đã đăng ký để nhận hướng dẫn.
+                </p>
+
+                <form id="ajax-forgot-form">
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Nhập email của bạn" required
+                            style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px;">
+                    </div>
+                    <div id="forgot-message" style="text-align:center; margin-bottom:10px; display:none;"></div>
+                    <button type="submit" class="btn-primary" style="width:100%;">Gửi yêu cầu</button>
+                </form>
+
+                <div style="text-align:center; margin-top:15px; font-size:14px;">
+                    <a href="#" id="back-to-login-btn" style="color:#0a2a66; font-weight:bold;">← Quay lại đăng nhập</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- Static Configuration -->
+    <script>
+        window.isLoggedIn = false;
+        window.servicesData = [
+            {"id":1,"name":"Giao tiêu chuẩn","type_key":"standard","base_price":30000.00},
+            {"id":2,"name":"Giao hỏa tốc","type_key":"express","base_price":50000.00},
+            {"id":3,"name":"Giao hàng số lượng lớn","type_key":"bulk","base_price":0.00}
+        ];
+        window.pricingConfig = {"weight_free":2,"weight_price":5000,"cod_min":5000};
+    </script>
+</body>
+
+</html>

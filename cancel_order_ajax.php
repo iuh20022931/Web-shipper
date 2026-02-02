@@ -38,9 +38,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Cập nhật trạng thái thành 'cancelled'
-    $update = $conn->prepare("UPDATE orders SET status = 'cancelled' WHERE id = ?");
-    $update->bind_param("i", $order['id']);
+    // Lấy lý do hủy (nếu có)
+    $reason = trim($_POST['reason'] ?? 'Không có lý do cụ thể');
+
+    // Cập nhật trạng thái thành 'cancelled' và lưu lý do
+    $update = $conn->prepare("UPDATE orders SET status = 'cancelled', cancel_reason = ? WHERE id = ?");
+    $update->bind_param("si", $reason, $order['id']);
 
     if ($update->execute()) {
         echo json_encode(['status' => 'success', 'message' => 'Đã hủy đơn hàng thành công.']);
