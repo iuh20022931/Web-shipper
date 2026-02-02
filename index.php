@@ -192,10 +192,10 @@ if (isset($_SESSION['user_id'])) {
                 </thead>
                 <tbody>
                     <?php foreach ($services_list as $service): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($service['name']); ?></td>
-                            <td>
-                                <?php
+                    <tr>
+                        <td><?php echo htmlspecialchars($service['name']); ?></td>
+                        <td>
+                            <?php
                                 // Giả định phương tiện dựa trên loại dịch vụ
                                 if ($service['type_key'] == 'bulk') {
                                     echo 'Ô tô';
@@ -203,18 +203,18 @@ if (isset($_SESSION['user_id'])) {
                                     echo 'Xe máy';
                                 }
                                 ?>
-                            </td>
-                            <td>Nội thành</td>
-                            <td>
-                                <?php
+                        </td>
+                        <td>Nội thành</td>
+                        <td>
+                            <?php
                                 if ($service['base_price'] > 0) {
                                     echo number_format($service['base_price']) . 'đ';
                                 } else {
                                     echo 'Liên hệ'; // Hiển thị 'Liên hệ' nếu giá là 0 hoặc không xác định
                                 }
                                 ?>
-                            </td>
-                        </tr>
+                        </td>
+                    </tr>
                     <?php endforeach; ?>
                     <!-- Dòng phụ phí COD có thể giữ lại để cung cấp thông tin -->
                     <tr>
@@ -237,10 +237,10 @@ if (isset($_SESSION['user_id'])) {
             <select id="service-type" required>
                 <option value="">-- Chọn loại dịch vụ --</option>
                 <?php foreach ($services_list as $svc): ?>
-                    <option value="<?php echo $svc['type_key']; ?>">
-                        <?php echo $svc['name']; ?>
-                        (<?php echo ($svc['base_price'] > 0) ? number_format($svc['base_price']) . 'đ' : 'Liên hệ'; ?>)
-                    </option>
+                <option value="<?php echo $svc['type_key']; ?>">
+                    <?php echo $svc['name']; ?>
+                    (<?php echo ($svc['base_price'] > 0) ? number_format($svc['base_price']) . 'đ' : 'Liên hệ'; ?>)
+                </option>
                 <?php endforeach; ?>
             </select>
             <label class="checkbox-label"><input type="checkbox" id="is-cod" /> Có thu hộ COD (+5k)</label>
@@ -266,11 +266,11 @@ if (isset($_SESSION['user_id'])) {
         <p class="section-desc">Tạo tài khoản hoặc đăng nhập để bắt đầu gửi hàng cùng FastGo ngay hôm nay!</p>
         <div class="hero-btns centered-btns">
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="create_order.php" class="btn-primary">Tạo đơn hàng ngay</a>
-                <a href="dashboard.php" class="btn-secondary">Vào trang quản lý</a>
+            <a href="create_order.php" class="btn-primary">Tạo đơn hàng ngay</a>
+            <a href="dashboard.php" class="btn-secondary">Vào trang quản lý</a>
             <?php else: ?>
-                <a href="login.php" class="btn-primary">Đăng nhập & Đặt đơn</a>
-                <a href="register.php" class="btn-secondary">Đăng ký tài khoản mới</a>
+            <a href="login.php" class="btn-primary">Đăng nhập & Đặt đơn</a>
+            <a href="register.php" class="btn-secondary">Đăng ký tài khoản mới</a>
             <?php endif; ?>
         </div>
     </section>
@@ -281,26 +281,26 @@ if (isset($_SESSION['user_id'])) {
         <p class="section-desc">Sự hài lòng của khách hàng là động lực phát triển của chúng tôi.</p>
         <!-- Cấu trúc Slider -->
         <?php if (!empty($testimonials)): ?>
-            <div class="swiper testimonial-slider">
-                <div class="swiper-wrapper">
-                    <?php foreach ($testimonials as $t): ?>
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <div class="stars"><?php echo str_repeat('⭐', intval($t['rating'])); ?></div>
-                                <p class="feedback">"<?php echo htmlspecialchars($t['content']); ?>"</p>
-                                <div class="customer-info">
-                                    <strong><?php echo htmlspecialchars($t['customer_name']); ?></strong>
-                                    <span>- <?php echo htmlspecialchars($t['customer_role']); ?></span>
-                                </div>
-                            </div>
+        <div class="swiper testimonial-slider">
+            <div class="swiper-wrapper">
+                <?php foreach ($testimonials as $t): ?>
+                <div class="swiper-slide">
+                    <div class="testimonial-item">
+                        <div class="stars"><?php echo str_repeat('⭐', intval($t['rating'])); ?></div>
+                        <p class="feedback">"<?php echo htmlspecialchars($t['content']); ?>"</p>
+                        <div class="customer-info">
+                            <strong><?php echo htmlspecialchars($t['customer_name']); ?></strong>
+                            <span>- <?php echo htmlspecialchars($t['customer_role']); ?></span>
                         </div>
-                    <?php endforeach; ?>
+                    </div>
                 </div>
-                <!-- Nút điều hướng & Phân trang -->
-                <div class="swiper-pagination"></div>
+                <?php endforeach; ?>
             </div>
+            <!-- Nút điều hướng & Phân trang -->
+            <div class="swiper-pagination"></div>
+        </div>
         <?php else: ?>
-            <p class="no-content-msg">Chưa có đánh giá nào.</p>
+        <p class="no-content-msg">Chưa có đánh giá nào.</p>
         <?php endif; ?>
     </section>
 
@@ -309,14 +309,14 @@ if (isset($_SESSION['user_id'])) {
         <h2 class="section-title">FAQs / Hỗ trợ</h2>
         <div class="faq-list">
             <?php if (!empty($faqs)): ?>
-                <?php foreach ($faqs as $faq): ?>
-                    <div class="faq-item">
-                        <h3 class="faq-question"><?php echo htmlspecialchars($faq['question']); ?></h3>
-                        <p class="faq-answer"><?php echo nl2br(htmlspecialchars($faq['answer'])); ?></p>
-                    </div>
-                <?php endforeach; ?>
+            <?php foreach ($faqs as $faq): ?>
+            <div class="faq-item">
+                <h3 class="faq-question"><?php echo htmlspecialchars($faq['question']); ?></h3>
+                <p class="faq-answer"><?php echo nl2br(htmlspecialchars($faq['answer'])); ?></p>
+            </div>
+            <?php endforeach; ?>
             <?php else: ?>
-                <p>Chưa có câu hỏi thường gặp nào.</p>
+            <p>Chưa có câu hỏi thường gặp nào.</p>
             <?php endif; ?>
         </div>
     </section>
@@ -449,16 +449,97 @@ if (isset($_SESSION['user_id'])) {
 
     <!-- Biến JS để kiểm tra trạng thái login -->
     <script>
-        window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
-        window.servicesData =
-            <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-        window.pricingConfig =
-            <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+    window.servicesData =
+        <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    window.pricingConfig =
+        <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
     </script>
     <!-- Thêm SwiperJS JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
+
+    <script>
+    // Bổ sung hàm trackOrder để xử lý tra cứu đơn hàng
+    async function trackOrder(event, type) {
+        event.preventDefault();
+
+        const codeInput = document.getElementById(type + '-code');
+        const resultDiv = document.getElementById('result-' + type);
+        const spinner = document.getElementById('loading-spinner-' + type);
+
+        if (!codeInput || !resultDiv) return;
+
+        const code = codeInput.value.trim();
+        if (!code) {
+            alert('Vui lòng nhập mã vận đơn');
+            return;
+        }
+
+        // Hiển thị loading
+        if (spinner) spinner.style.display = 'block';
+        resultDiv.innerHTML = '';
+
+        try {
+            // Gọi API vừa tạo
+            const response = await fetch('api_tracking.php?code=' + encodeURIComponent(code));
+            const data = await response.json();
+
+            if (spinner) spinner.style.display = 'none';
+
+            if (data.success) {
+                const order = data.data;
+                let timelineHtml = '';
+
+                // Xây dựng HTML cho timeline
+                if (data.timeline && data.timeline.length > 0) {
+                    timelineHtml =
+                        '<div class="tracking-timeline" style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">';
+                    data.timeline.forEach(item => {
+                        // Map lại text hiển thị cho timeline
+                        const statusMap = {
+                            'created': 'Đơn mới',
+                            'pending': 'Chờ xử lý',
+                            'assigned': 'Đã phân tài xế',
+                            'picked': 'Đã lấy hàng',
+                            'delivering': 'Đang giao',
+                            'delivered': 'Hoàn tất',
+                            'cancelled': 'Đã hủy'
+                        };
+                        const statusText = statusMap[item.status] || item.status;
+
+                        timelineHtml += `
+                            <div class="timeline-item" style="display:flex; gap:15px; margin-bottom:10px;">
+                                <div class="timeline-time" style="font-size:13px; color:#888; min-width:100px;">${item.time}</div>
+                                <div class="timeline-text" style="font-weight:bold; color:#333;">${statusText}</div>
+                            </div>
+                        `;
+                    });
+                    timelineHtml += '</div>';
+                }
+
+                resultDiv.innerHTML = `
+                    <div class="quote-success" style="margin-top:20px; text-align:left; background:#f9f9f9; padding:20px; border-radius:8px; border:1px solid #ddd;">
+                        <h3 style="color:#0a2a66; margin-bottom:10px; font-size:18px;">📦 Đơn hàng: ${order.order_code}</h3>
+                        <p><strong>Trạng thái:</strong> <span style="color:#ff7a00; font-weight:bold;">${order.status_text}</span></p>
+                        <p><strong>Điểm đi:</strong> ${order.pickup_address}</p>
+                        <p><strong>Điểm đến:</strong> ${order.delivery_address}</p>
+                        ${timelineHtml}
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML =
+                    `<div class="error-box" style="color:red; margin-top:10px; text-align:center;">${data.message}</div>`;
+            }
+        } catch (error) {
+            console.error(error);
+            if (spinner) spinner.style.display = 'none';
+            resultDiv.innerHTML =
+                `<div class="error-box" style="color:red; margin-top:10px; text-align:center;">Lỗi kết nối hệ thống.</div>`;
+        }
+    }
+    </script>
 </body>
 
 </html>
