@@ -2837,3 +2837,27 @@ body.auth-page-body {
 #back-to-top-btn:hover {
   background-color: #e96f00;
 }
+
+/* ===== ACTIVE STATE FOR MENU ITEMS ===== */
+.nav-menu li.active > a {
+  background-color: rgba(255, 122, 0, 0.15);
+  border-bottom: 3px solid #ff7a00;
+  font-weight: 600;
+  color: #fff !important;
+}
+
+/* Active state for dropdown parent */
+.nav-menu li.dropdown.active > a {
+  color: #ff7a00 !important;
+  font-weight: 600;
+}
+
+/* Touch-friendly menu items for mobile */
+@media (max-width: 768px) {
+  .nav-menu li a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+  }
+}

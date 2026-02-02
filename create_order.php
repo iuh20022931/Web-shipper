@@ -68,17 +68,9 @@ if (isset($_GET['reorder_id'])) {
         $reorder_data['pickup_address'] = $old_order['pickup_address'];
         $reorder_data['delivery_address'] = $old_order['delivery_address'];
         $reorder_data['service_type'] = $old_order['service_type'];
-        // Mapping package type logic nếu cần, hoặc lấy trực tiếp nếu DB lưu đúng text value
-        // Giả sử DB lưu 'document', 'food'... trùng với value select
-        // Nếu DB lưu Tiếng Việt, cần map lại. Nhưng theo order.php insert thì hình như không lưu type? 
-        // À, trong order.php thực tế (đã xem trước đó) có lưu package_type.
-        // Tuy nhiên, check lại create_order.php đã view ở Step 214, form có name="package_type".
-        // Check order.php ở Step 201 (context), insert có package_type không?
-        // Step 169 summary: "Updated backend logic to include company_email".
-        // Step 214 view create_order HTML: <select name="package_type">
-        // Cần check lại column trong DB nếu chắc chắn. Nhưng safe nhất là cứ pre-fill.
-        // Tạm thời giả định DB chưa có column package_type hoặc Logic reorder chỉ cần fill address là chính.
-        // Nhưng các field khác user có thể nhập lại. Quan trọng nhất là Receiver & Address.
+        
+        // Kiểm tra nếu cột package_type tồn tại trong kết quả trả về, nếu không dùng mặc định
+        $reorder_data['package_type'] = isset($old_order['package_type']) ? $old_order['package_type'] : 'document';
         
         $reorder_data['note'] = $old_order['note'];
         $reorder_data['cod_amount'] = $old_order['cod_amount'];
@@ -130,8 +122,8 @@ if (isset($_GET['reorder_id'])) {
                             style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                             <label for="pickup-addr" style="margin-bottom:0;">Địa chỉ lấy hàng</label>
                             <?php if (!empty($saved_addresses)): ?>
-                                <a href="#" onclick="openAddrModal('pickup'); return false;"
-                                    style="font-size:13px; color:#ff7a00; text-decoration:none;">📍 Chọn từ sổ địa chỉ</a>
+                            <a href="#" onclick="openAddrModal('pickup'); return false;"
+                                style="font-size:13px; color:#ff7a00; text-decoration:none;">📍 Chọn từ sổ địa chỉ</a>
                             <?php endif; ?>
                         </div>
                         <label for="pickup-addr">Địa chỉ lấy hàng</label>
@@ -148,12 +140,12 @@ if (isset($_GET['reorder_id'])) {
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="receiver_name">Họ và tên người nhận</label>
-                        <input type="text" id="receiver_name" name="receiver_name" 
+                        <input type="text" id="receiver_name" name="receiver_name"
                             value="<?php echo htmlspecialchars($reorder_data['receiver_name']); ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="receiver_phone">Số điện thoại người nhận</label>
-                        <input type="tel" id="receiver_phone" name="receiver_phone" 
+                        <input type="tel" id="receiver_phone" name="receiver_phone"
                             value="<?php echo htmlspecialchars($reorder_data['receiver_phone']); ?>" required>
                     </div>
                     <div class="form-group" style="grid-column: 1 / -1; position: relative;">
@@ -161,8 +153,8 @@ if (isset($_GET['reorder_id'])) {
                             style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                             <label for="delivery-addr" style="margin-bottom:0;">Địa chỉ giao hàng</label>
                             <?php if (!empty($saved_addresses)): ?>
-                                <a href="#" onclick="openAddrModal('delivery'); return false;"
-                                    style="font-size:13px; color:#ff7a00; text-decoration:none;">📍 Chọn từ sổ địa chỉ</a>
+                            <a href="#" onclick="openAddrModal('delivery'); return false;"
+                                style="font-size:13px; color:#ff7a00; text-decoration:none;">📍 Chọn từ sổ địa chỉ</a>
                             <?php endif; ?>
                         </div>
                         <label for="delivery-addr">Địa chỉ giao hàng</label>
@@ -181,20 +173,31 @@ if (isset($_GET['reorder_id'])) {
                         <label for="order-service-type">Loại dịch vụ</label>
                         <select id="order-service-type" name="service_type">
                             <?php foreach ($services_list as $svc): ?>
-                                <option value="<?php echo $svc['type_key']; ?>" <?php echo ($reorder_data['service_type'] == $svc['type_key']) ? 'selected' : ''; ?>>
-                                    <?php echo $svc['name']; ?>
-                                </option>
+                            <option value="<?php echo $svc['type_key']; ?>"
+                                <?php echo ($reorder_data['service_type'] == $svc['type_key']) ? 'selected' : ''; ?>>
+                                <?php echo $svc['name']; ?>
+                            </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="package_type">Loại hàng hóa</label>
                         <select id="package_type" name="package_type">
-                            <option value="document">Tài liệu</option>
-                            <option value="food">Thực phẩm</option>
-                            <option value="clothes">Quần áo</option>
-                            <option value="electronic">Đồ điện tử</option>
-                            <option value="other">Khác</option>
+                            <option value="document"
+                                <?php echo ($reorder_data['package_type'] == 'document') ? 'selected' : ''; ?>>Tài liệu
+                            </option>
+                            <option value="food"
+                                <?php echo ($reorder_data['package_type'] == 'food') ? 'selected' : ''; ?>>Thực phẩm
+                            </option>
+                            <option value="clothes"
+                                <?php echo ($reorder_data['package_type'] == 'clothes') ? 'selected' : ''; ?>>Quần áo
+                            </option>
+                            <option value="electronic"
+                                <?php echo ($reorder_data['package_type'] == 'electronic') ? 'selected' : ''; ?>>Đồ điện
+                                tử</option>
+                            <option value="other"
+                                <?php echo ($reorder_data['package_type'] == 'other') ? 'selected' : ''; ?>>Khác
+                            </option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -203,7 +206,8 @@ if (isset($_GET['reorder_id'])) {
                     </div>
                     <div class="form-group">
                         <label for="cod_amount">Tiền thu hộ (COD)</label>
-                        <input type="number" id="cod_amount" name="cod_amount" value="<?php echo htmlspecialchars($reorder_data['cod_amount']); ?>" min="0"
+                        <input type="number" id="cod_amount" name="cod_amount"
+                            value="<?php echo htmlspecialchars($reorder_data['cod_amount']); ?>" min="0"
                             placeholder="Để trống nếu không có">
                     </div>
                 </div>
@@ -241,8 +245,7 @@ if (isset($_GET['reorder_id'])) {
                             placeholder="Tên công ty (*)">
                     </div>
                     <div class="form-group">
-                        <input type="email" name="company_email"
-                            placeholder="Email nhận hóa đơn (*)">
+                        <input type="email" name="company_email" placeholder="Email nhận hóa đơn (*)">
                     </div>
                     <div class="form-group">
                         <input type="text" name="company_tax_code"
@@ -280,13 +283,13 @@ if (isset($_GET['reorder_id'])) {
             <h3 style="color:#0a2a66; margin-bottom:15px;">Chọn địa chỉ</h3>
             <div style="max-height:300px; overflow-y:auto;">
                 <?php foreach ($saved_addresses as $addr): ?>
-                    <div class="addr-item"
-                        onclick="selectAddr('<?php echo htmlspecialchars(addslashes($addr['address'])); ?>', '<?php echo htmlspecialchars(addslashes($addr['phone'])); ?>')"
-                        style="padding:10px; border-bottom:1px solid #eee; cursor:pointer; transition:background 0.2s;">
-                        <strong style="color:#0a2a66;"><?php echo htmlspecialchars($addr['name']); ?></strong>
-                        <div style="font-size:14px; color:#555;"><?php echo htmlspecialchars($addr['address']); ?></div>
-                        <div style="font-size:12px; color:#888;">SĐT: <?php echo htmlspecialchars($addr['phone']); ?></div>
-                    </div>
+                <div class="addr-item"
+                    onclick="selectAddr('<?php echo htmlspecialchars(addslashes($addr['address'])); ?>', '<?php echo htmlspecialchars(addslashes($addr['phone'])); ?>')"
+                    style="padding:10px; border-bottom:1px solid #eee; cursor:pointer; transition:background 0.2s;">
+                    <strong style="color:#0a2a66;"><?php echo htmlspecialchars($addr['name']); ?></strong>
+                    <div style="font-size:14px; color:#555;"><?php echo htmlspecialchars($addr['address']); ?></div>
+                    <div style="font-size:12px; color:#888;">SĐT: <?php echo htmlspecialchars($addr['phone']); ?></div>
+                </div>
                 <?php endforeach; ?>
             </div>
             <div style="margin-top:15px; text-align:center;">
@@ -299,68 +302,68 @@ if (isset($_GET['reorder_id'])) {
     <?php include 'includes/footer.php'; ?>
 
     <script>
-        // Biến JS để script `main.js` có thể truy cập
-        window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
-        window.servicesData =
-            <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-        window.pricingConfig =
-            <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    // Biến JS để script `main.js` có thể truy cập
+    window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+    window.servicesData =
+        <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    window.pricingConfig =
+        <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
     </script>
-    <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Toggle corporate fields
-            const corporateCheckbox = document.getElementById('is_corporate_checkbox');
-            if (corporateCheckbox) {
-                corporateCheckbox.addEventListener('change', function () {
-                    const corporateFields = document.getElementById('corporate_info_fields');
-                    const companyNameInput = corporateFields.querySelector('[name="company_name"]');
-                    const companyEmailInput = corporateFields.querySelector('[name="company_email"]');
-                    const companyTaxInput = corporateFields.querySelector('[name="company_tax_code"]');
-                    const companyAddressInput = corporateFields.querySelector('[name="company_address"]');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle corporate fields
+        const corporateCheckbox = document.getElementById('is_corporate_checkbox');
+        if (corporateCheckbox) {
+            corporateCheckbox.addEventListener('change', function() {
+                const corporateFields = document.getElementById('corporate_info_fields');
+                const companyNameInput = corporateFields.querySelector('[name="company_name"]');
+                const companyEmailInput = corporateFields.querySelector('[name="company_email"]');
+                const companyTaxInput = corporateFields.querySelector('[name="company_tax_code"]');
+                const companyAddressInput = corporateFields.querySelector('[name="company_address"]');
 
-                    if (this.checked) {
-                        corporateFields.style.display = 'block';
-                        companyNameInput.required = true;
-                        companyEmailInput.required = true;
-                        companyTaxInput.required = true;
-                        companyAddressInput.required = true;
-                    } else {
-                        corporateFields.style.display = 'none';
-                        companyNameInput.required = false;
-                        companyEmailInput.required = false;
-                        companyTaxInput.required = false;
-                        companyAddressInput.required = false;
-                    }
-                });
-            }
-
-            // Trigger initial calculation
-            if (typeof calculateOrderShipping === 'function') {
-                calculateOrderShipping();
-            }
-        });
-
-        // Logic Modal Địa chỉ
-        let currentAddrField = '';
-
-        function openAddrModal(type) {
-            currentAddrField = type; // 'pickup' hoặc 'delivery'
-            document.getElementById('addr-modal').style.display = 'block';
+                if (this.checked) {
+                    corporateFields.style.display = 'block';
+                    companyNameInput.required = true;
+                    companyEmailInput.required = true;
+                    companyTaxInput.required = true;
+                    companyAddressInput.required = true;
+                } else {
+                    corporateFields.style.display = 'none';
+                    companyNameInput.required = false;
+                    companyEmailInput.required = false;
+                    companyTaxInput.required = false;
+                    companyAddressInput.required = false;
+                }
+            });
         }
 
-        function selectAddr(address, phone) {
-            if (currentAddrField === 'pickup') {
-                document.getElementById('pickup-addr').value = address;
-                // Có thể tự điền SĐT người gửi nếu muốn, nhưng thường SĐT người gửi là cố định từ profile
-            } else if (currentAddrField === 'delivery') {
-                document.getElementById('delivery-addr').value = address;
-                document.getElementById('receiver_phone').value = phone; // Điền luôn SĐT người nhận
-            }
-            document.getElementById('addr-modal').style.display = 'none';
-            // Gọi lại hàm tính phí
-            if (typeof calculateOrderShipping === 'function') calculateOrderShipping();
+        // Trigger initial calculation
+        if (typeof calculateOrderShipping === 'function') {
+            calculateOrderShipping();
         }
+    });
+
+    // Logic Modal Địa chỉ
+    let currentAddrField = '';
+
+    function openAddrModal(type) {
+        currentAddrField = type; // 'pickup' hoặc 'delivery'
+        document.getElementById('addr-modal').style.display = 'block';
+    }
+
+    function selectAddr(address, phone) {
+        if (currentAddrField === 'pickup') {
+            document.getElementById('pickup-addr').value = address;
+            // Có thể tự điền SĐT người gửi nếu muốn, nhưng thường SĐT người gửi là cố định từ profile
+        } else if (currentAddrField === 'delivery') {
+            document.getElementById('delivery-addr').value = address;
+            document.getElementById('receiver_phone').value = phone; // Điền luôn SĐT người nhận
+        }
+        document.getElementById('addr-modal').style.display = 'none';
+        // Gọi lại hàm tính phí
+        if (typeof calculateOrderShipping === 'function') calculateOrderShipping();
+    }
     </script>
     <?php
     if (isset($conn) && $conn instanceof mysqli)

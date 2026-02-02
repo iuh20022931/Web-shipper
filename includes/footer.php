@@ -19,3 +19,6 @@
 
 <!-- Nút Back to Top (Tự động hiển thị trên mọi trang có Footer) -->
 <button id="back-to-top-btn" title="Lên đầu trang">↑</button>
+
+<!-- Main JavaScript -->
+<script src="assets/js/main.js?v=<?php echo time(); ?>"></script>

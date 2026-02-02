@@ -17,14 +17,20 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
     }
     $stmt_lock->close();
 }
+
+// Detect current page for active state
+$current_page = basename($_SERVER['PHP_SELF']);
+
+// Include breadcrumb helper
+require_once __DIR__ . '/../config/breadcrumb_helper.php';
 ?>
 <link rel="stylesheet" href="assets/css/admin_styles.css?v=<?php echo time(); ?>">
-<header id="header" style="background-color: #1a1a1a; border-bottom: 3px solid #ff7a00;">
+<header id="header" class="header-admin">
     <nav class="navbar">
         <div class="logo">
             <h1>
-                <a href="orders_manage.php" style="color: white; text-decoration: none;">
-                    FastGo <span style="color:#ff7a00;">Admin</span>
+                <a href="admin_stats.php" class="header-logo-link">
+                    FastGo <span class="header-accent">Admin</span>
                 </a>
             </h1>
         </div>
@@ -36,19 +42,59 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
         </button>
 
         <ul class="nav-menu" id="nav-menu">
-            <li><a href="orders_manage.php" style="color: #fff;">Quản lý đơn hàng</a></li>
-            <li><a href="users_manage.php" style="color: #fff;">Quản lý User</a></li>
-            <li><a href="services_manage.php" style="color: #fff;">Dịch vụ & Giá</a></li>
-            <li><a href="admin_stats.php" style="color: #fff;">Thống kê</a></li>
-            <li><a href="admin_refund_report.php" style="color: #fff;">Báo cáo hoàn tiền</a></li>
-            <li><a href="contact_manage.php" style="color: #fff;">Khiếu nại</a></li>
-            <li><a href="faq_manage.php" style="color: #fff;">FAQ & Hướng dẫn</a></li>
-            <li><a href="testimonials_manage.php" style="color: #fff;">Đánh giá</a></li>
-            <li><a href="index.php" target="_blank" style="color: #ff7a00;">Xem trang chủ ↗</a></li>
-            <li style="margin-left: 15px;">
-                <a href="logout.php"
-                    style="color: #fff; background: #d9534f; padding: 6px 12px; border-radius: 4px;">Đăng xuất</a>
+            <li class="<?php echo ($current_page === 'admin_stats.php') ? 'active' : ''; ?>">
+                <a href="admin_stats.php">📊 Dashboard</a>
+            </li>
+            
+            <!-- Submenu: Quản lý -->
+            <li class="has-submenu <?php echo in_array($current_page, ['orders_manage.php', 'users_manage.php', 'services_manage.php']) ? 'active' : ''; ?>">
+                <a href="#" class="submenu-toggle">📦 Quản lý <span class="arrow">▼</span></a>
+                <ul class="submenu">
+                    <li class="<?php echo ($current_page === 'orders_manage.php') ? 'active' : ''; ?>">
+                        <a href="orders_manage.php">Đơn hàng</a>
+                    </li>
+                    <li class="<?php echo ($current_page === 'users_manage.php') ? 'active' : ''; ?>">
+                        <a href="users_manage.php">Người dùng</a>
+                    </li>
+                    <li class="<?php echo ($current_page === 'services_manage.php') ? 'active' : ''; ?>">
+                        <a href="services_manage.php">Dịch vụ</a>
+                    </li>
+                </ul>
+            </li>
+            
+            <!-- Submenu: Nội dung -->
+            <li class="has-submenu <?php echo in_array($current_page, ['testimonials_manage.php', 'faq_manage.php', 'contact_manage.php']) ? 'active' : ''; ?>">
+                <a href="#" class="submenu-toggle">📝 Nội dung <span class="arrow">▼</span></a>
+                <ul class="submenu">
+                    <li class="<?php echo ($current_page === 'testimonials_manage.php') ? 'active' : ''; ?>">
+                        <a href="testimonials_manage.php">Đánh giá</a>
+                    </li>
+                    <li class="<?php echo ($current_page === 'faq_manage.php') ? 'active' : ''; ?>">
+                        <a href="faq_manage.php">FAQ</a>
+                    </li>
+                    <li class="<?php echo ($current_page === 'contact_manage.php') ? 'active' : ''; ?>">
+                        <a href="contact_manage.php">Liên hệ</a>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="<?php echo ($current_page === 'admin_settings.php') ? 'active' : ''; ?>">
+                <a href="admin_settings.php">⚙️ Cài đặt</a>
+            </li>
+            <li class="<?php echo ($current_page === 'profile.php') ? 'active' : ''; ?>">
+                <a href="profile.php">👤 Tài khoản</a>
+            </li>
+            <li><a href="index.php" target="_blank" class="btn-view-site">Xem trang chủ ↗</a></li>
+            <li class="logout-item">
+                <a href="logout.php" class="btn-logout">🚪 Đăng xuất</a>
             </li>
         </ul>
     </nav>
 </header>
+
+<!-- Breadcrumb (Separated from header) -->
+<div class="breadcrumb-wrapper">
+    <div class="container">
+        <?php echo renderBreadcrumb($_SERVER['PHP_SELF']); ?>
+    </div>
+</div>

@@ -243,7 +243,7 @@ $result = $stmt->get_result();
     </div>
 
     <?php include 'includes/footer.php'; ?>
-    <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
+
 </body>
 
 </html>

@@ -276,6 +276,6 @@ $conn->close();
     <!-- Nút Back to Top -->
     <button id="back-to-top-btn" title="Lên đầu trang">↑</button>
 </body>
-<script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
+
 
 </html>

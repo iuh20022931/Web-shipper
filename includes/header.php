@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
             <li><a href="index.php#hero">Trang chủ</a></li>
             <li><a href="index.php#services">Dịch vụ</a></li>
             <li><a href="index.php#pricing">Bảng giá</a></li>
-            <li><a href="tracking.php">Tra cứu đơn</a></li>
+            <li><a href="index.php#home-tracking">Tra cứu đơn</a></li>
             <li><a href="<?php echo $header_order_link; ?>">Đặt hàng</a></li>
             <li><a href="huong-dan-dat-hang.html">Hướng dẫn</a></li>
 

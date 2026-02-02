@@ -40,6 +40,7 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
 - **Trang chủ (Landing Page):** Giới thiệu dịch vụ, bảng giá, quy trình làm việc.
 - **Tính giá cước nhanh (Quick Quote):** Công cụ ước tính phí vận chuyển dựa trên điểm đi/đến và loại dịch vụ (AJAX).
 - **Tra cứu đơn hàng (Tracking):** Xem trạng thái đơn hàng bằng mã vận đơn mà không cần đăng nhập.
+- **Hỏi đáp & Liên hệ:** Xem FAQ và gửi thắc mắc trực tuyến.
 - **Đăng ký / Đăng nhập:** Hệ thống xác thực bảo mật (Popup Modal AJAX).
 
 ### 2. Khách Hàng (Customer)
@@ -48,6 +49,7 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
   - **MỚI:** Hỗ trợ lưu thông tin xuất hóa đơn công ty.
   - **MỚI:** Tích hợp "Sổ địa chỉ" giúp chọn nhanh điểm giao/nhận.
 - **Quản lý đơn hàng:**
+  - **Thanh toán QR:** Tích hợp VietQR tự động tạo mã thanh toán chuyển khoản.
   - Xem lịch sử đơn hàng đã đặt.
   - Bộ lọc tìm kiếm theo trạng thái, ngày tháng.
   - **Đặt lại (Re-order):** Tạo đơn mới nhanh chóng từ thông tin đơn cũ.
@@ -57,6 +59,7 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
   - **In hóa đơn:** Xuất phiếu gửi hàng để dán lên kiện hàng.
   - **Đánh giá & Phản hồi:** Chấm điểm sao và gửi nhận xét về dịch vụ.
 - **Hồ sơ cá nhân:** Cập nhật thông tin, đổi mật khẩu.
+- **Thông báo:** Nhận thông báo thời gian thực về trạng thái đơn hàng.
 - **Sổ địa chỉ (Address Book):** Lưu và quản lý các địa chỉ thường dùng.
 
 ### 3. Tài Xế (Shipper)
@@ -71,6 +74,7 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
   - **Upload POD:** Bắt buộc chụp ảnh giao hàng thành công để hoàn tất đơn.
   - Ghi chú sự cố (Shipper Note).
 - **Thống kê thu nhập:** Xem tổng số đơn đã giao, tổng thu nhập, tỷ lệ hoàn thành.
+- **Quy trình xét duyệt:** Tài khoản Shipper mới cần được Admin phê duyệt trước khi bắt đầu nhận đơn.
 - **Hồ sơ Shipper:** Cập nhật thông tin cá nhân và xem báo cáo hiệu suất chi tiết.
 
 ### 4. Quản Trị Viên (Admin)
@@ -81,11 +85,15 @@ Hệ thống phân chia thành 4 nhóm người dùng chính:
 - **Quản lý đơn hàng:**
   - Xem danh sách toàn bộ đơn hàng.
   - **Phân công Shipper:** Chỉ định tài xế cho từng đơn.
-  - **Can thiệp trạng thái:** Có quyền Override (ghi đè) trạng thái đơn hàng khi cần thiết.
+  - **Xử lý sự cố:** Có quyền Override (ghi đè) trạng thái, hoàn tiền (Refund) và ghi chú nội bộ.
   - Xem Log lịch sử thay đổi của đơn hàng.
-- **Quản lý người dùng:** Thêm/Sửa/Xóa/Phân quyền (Customer <-> Shipper <-> Admin).
+- **Quản lý người dùng:**
+  - Thêm/Sửa/Xóa/Phân quyền.
+  - Duyệt tài khoản Shipper mới đăng ký.
+  - Khóa/Mở khóa tài khoản vi phạm.
 - **Quản lý Dịch vụ:** Thêm/Sửa/Xóa các gói cước và bảng giá.
-- **Quản lý Khiếu nại (Contact):** Tiếp nhận và xử lý thắc mắc/báo cáo từ người dùng.
+- **Cấu hình hệ thống:** Cài đặt thông tin Ngân hàng (QR Code), Thông tin công ty.
+- **Quản lý Nội dung:** Quản lý FAQ, Đánh giá (Testimonials) và Hộp thư liên hệ.
 - **Quản lý Đánh giá (Testimonials):** Duyệt và hiển thị đánh giá tiêu biểu lên trang chủ.
 - **Công cụ tính giá (Pricing Guide):** Trang mô phỏng công thức tính cước phí vận chuyển.
 
@@ -118,6 +126,8 @@ Hệ thống sử dụng các bảng chính:
 6.  **`saved_addresses`**: Lưu sổ địa chỉ của khách hàng.
 7.  **`testimonials`**: Lưu đánh giá và phản hồi hiển thị công khai.
 8.  **`notifications`**: Lưu thông báo hệ thống gửi đến người dùng.
+9.  **`system_settings`**: Lưu cấu hình hệ thống (Ngân hàng, Thông tin công ty).
+10. **`faqs`**: Lưu danh sách câu hỏi thường gặp.
 
 ---
 
@@ -154,7 +164,9 @@ Hệ thống sử dụng các bảng chính:
     - Vào phpMyAdmin, bảng `users`, sửa cột `role` của tài khoản vừa tạo thành `admin`.
 
 5.  **Chạy dự án:**
-    Truy cập `http://localhost/Web%20shipper/` (hoặc đường dẫn tương ứng).
+    - Tạo thư mục `uploads/` tại thư mục gốc để lưu ảnh bằng chứng giao hàng (POD).
+    - Đảm bảo thư mục này có quyền ghi (Write permission).
+      Truy cập `http://localhost/Web%20shipper/` (hoặc đường dẫn tương ứng).
 
 ---
 
@@ -226,6 +238,7 @@ Web shipper/
 ├──  orders_manage.php        # Quản lý toàn bộ đơn hàng (Admin)
 ├──  users_manage.php         # Quản lý người dùng (Admin)
 ├──  services_manage.php      # Quản lý dịch vụ & giá cước (Admin)
+├──  admin_settings.php       # Cấu hình hệ thống (Admin)
 │
 └── ... (các file xử lý AJAX và chi tiết khác)
 ```

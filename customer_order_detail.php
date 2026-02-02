@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/db.php';
+require_once 'config/settings_helper.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -109,13 +110,28 @@ $status_map = [
                 <div class="info-row"><span class="info-label">Loại hàng:</span> <span
                         class="info-val"><?php echo $pkg_map[$order['package_type']] ?? $order['package_type']; ?>
                         (<?php echo $order['weight']; ?>kg)</span></div>
+                <div class="info-row"><span class="info-label">Phương thức:</span> <span class="info-val"><?php echo $order['payment_method'] === 'bank_transfer' ? 'Chuyển khoản' : 'COD'; ?></span></div>
                 <div class="info-row"><span class="info-label">Phí vận chuyển:</span> <span class="info-val"
                         style="color:#d9534f"><?php echo number_format($order['shipping_fee']); ?>đ</span></div>
                 <div class="info-row"><span class="info-label">Thu hộ (COD):</span> <span
                         class="info-val"><?php echo number_format($order['cod_amount']); ?>đ</span></div>
-                <div class="info-row"><span class="info-label">Tổng thanh toán:</span> <span class="info-val"
-                        style="font-size:18px; color:#0a2a66"><?php echo number_format($order['shipping_fee'] + $order['cod_amount']); ?>đ</span>
+                <div class="info-row">
+                    <span class="info-label">Tổng thanh toán:</span> 
+                    <span class="info-val" style="font-size:18px; color:#0a2a66"><?php echo number_format($order['shipping_fee'] + $order['cod_amount']); ?>đ</span>
+                    <?php if ($order['payment_method'] === 'bank_transfer'): ?>
+                        <?php if ($order['payment_status'] === 'paid'): ?>
+                            <span style="display:inline-block; margin-left:10px; padding:4px 12px; background:#28a745; color:white; border-radius:12px; font-size:12px; font-weight:600;">✓ Đã thanh toán</span>
+                        <?php else: ?>
+                            <span style="display:inline-block; margin-left:10px; padding:4px 12px; background:#dc3545; color:white; border-radius:12px; font-size:12px; font-weight:600;">⚠ Chưa thanh toán</span>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
+                <?php if ($order['payment_method'] === 'bank_transfer' && $order['payment_status'] === 'unpaid' && $order['status'] !== 'cancelled'): ?>
+                    <div style="margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
+                        <button onclick="openPaymentModal('<?php echo $order['order_code']; ?>', <?php echo $order['shipping_fee']; ?>)" 
+                            class="btn-primary" style="width:100%; padding:12px; font-size:16px;">💳 Thanh toán ngay</button>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -223,6 +239,31 @@ $status_map = [
 
     </main>
     
+    <!-- Modal Thanh toán QR -->
+    <div id="payment-modal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.5);">
+        <div class="modal-content" style="background-color:#fff; margin:5% auto; padding:30px; border:1px solid #888; width:90%; max-width:500px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0; color:#0a2a66;">💳 Thanh toán đơn hàng</h3>
+                <span class="close" onclick="closePaymentModal()" style="color:#aaa; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+            </div>
+            
+            <div id="payment-content" style="text-align:center;">
+                <p style="margin-bottom:15px; color:#666;">Quét mã QR bên dưới để thanh toán</p>
+                <div id="qr-container" style="margin:20px 0;">
+                    <!-- QR Code will be inserted here -->
+                </div>
+                <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-top:20px;">
+                    <p style="margin:5px 0;"><strong>Ngân hàng:</strong> <?php echo htmlspecialchars(getSetting($conn, 'bank_name', 'MB Bank')); ?></p>
+                    <p style="margin:5px 0;"><strong>Số TK:</strong> <?php echo htmlspecialchars(getSetting($conn, 'bank_account_no', '0333666999')); ?></p>
+                    <p style="margin:5px 0;"><strong>Chủ TK:</strong> <?php echo htmlspecialchars(getSetting($conn, 'bank_account_name', 'FASTGO LOGISTICS')); ?></p>
+                    <p style="margin:5px 0; color:#d9534f; font-weight:600;"><strong>Số tiền:</strong> <span id="payment-amount"></span>đ</p>
+                    <p style="margin:5px 0; font-size:13px; color:#666;"><strong>Nội dung:</strong> <span id="payment-note"></span></p>
+                </div>
+                <p style="margin-top:15px; font-size:13px; color:#999;">Sau khi chuyển khoản, hệ thống sẽ tự động xác nhận trong vòng 1-2 phút.</p>
+            </div>
+        </div>
+    </div>
+    
     <!-- Modal Hủy Đơn Hàng -->
     <div id="cancel-modal" class="modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.5);">
         <div class="modal-content" style="background-color:#fff; margin:10% auto; padding:20px; border:1px solid #888; width:90%; max-width:400px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.2);">
@@ -252,7 +293,17 @@ $status_map = [
     </div>
 
     <?php include 'includes/footer.php'; ?>
-    <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
+    
+    <script>
+        // Bank settings from database
+        window.bankSettings = {
+            bankId: "<?php echo getSetting($conn, 'bank_id', 'MB'); ?>",
+            accountNo: "<?php echo getSetting($conn, 'bank_account_no', '0333666999'); ?>",
+            accountName: "<?php echo getSetting($conn, 'bank_account_name', 'FASTGO LOGISTICS'); ?>",
+            template: "<?php echo getSetting($conn, 'qr_template', 'compact'); ?>"
+        };
+    </script>
+
     <script>
         // Script chọn sao đánh giá
         const stars = document.querySelectorAll('#star-container span');

@@ -40,12 +40,18 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                 <h1>FastGo</h1>
             </a>
         </div>
-        <ul class="nav-menu">
-            <li><a href="dashboard.php">Dashboard</a></li>
-            <li><a href="create_order.php">Tạo đơn hàng</a></li>
-            <li><a href="order_history.php">Lịch sử đơn</a></li>
+        <ul class="nav-menu" id="nav-menu">
+            <li class="<?php echo ($current_page === 'dashboard.php') ? 'active' : ''; ?>">
+                <a href="dashboard.php">Dashboard</a>
+            </li>
+            <li class="<?php echo ($current_page === 'create_order.php') ? 'active' : ''; ?>">
+                <a href="create_order.php">Tạo đơn hàng</a>
+            </li>
+            <li class="<?php echo ($current_page === 'order_history.php') ? 'active' : ''; ?>">
+                <a href="order_history.php">Lịch sử đơn</a>
+            </li>
             <!-- Notification Bell (MỚI) -->
-            <li class="dropdown" id="notification-bell">
+            <li class="dropdown <?php echo ($current_page === 'notifications.php') ? 'active' : ''; ?>" id="notification-bell">
                 <a href="#" style="font-size: 20px; color: white; padding: 0 10px; position: relative;">
                     🔔
                     <?php if ($unread_notifications_count > 0): ?>
@@ -66,7 +72,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                     </div>
                 </div>
             </li>
-            <li class="dropdown">
+            <li class="dropdown <?php echo in_array($current_page, ['address_book.php', 'profile.php']) ? 'active' : ''; ?>">
                 <a href="#"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Tài khoản'); ?> ▾</a>
                 <ul class="dropdown-menu">
                     <li><a href="address_book.php">Sổ địa chỉ</a></li>
@@ -75,32 +81,6 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
                 </ul>
             </li>
         </ul>
-        <button class="hamburger-menu"><span></span><span></span><span></span></button>
+        <button class="hamburger-menu" id="hamburger-btn"><span></span><span></span><span></span></button>
     </nav>
 </header>
-
-<script>
-    // Script cho chuông thông báo
-    document.addEventListener('DOMContentLoaded', function () {
-        const bell = document.getElementById('notification-bell');
-        const dropdown = document.getElementById('notification-dropdown');
-        const notifList = document.getElementById('notification-list');
-
-        if (bell) {
-            bell.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-
-                if (dropdown.style.display === 'block') {
-                    // Fetch notifications
-                    fetch('get_notifications_ajax.php')
-                        .then(res => res.text())
-                        .then(html => {
-                            notifList.innerHTML = html;
-                        });
-                }
-            });
-        }
-    });
-</script>
