@@ -135,17 +135,26 @@ if ($stmt->execute()) {
         $stmt_user->close();
     }
 
+    // --- CẢI THIỆN: Lấy thông tin ngân hàng từ CSDL thay vì hardcode ---
+    $bank_settings = [];
+    $settings_res = $conn->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('bank_id', 'bank_account_no', 'bank_account_name', 'qr_template')");
+    if ($settings_res) {
+        while ($row = $settings_res->fetch_assoc()) {
+            $bank_settings[$row['setting_key']] = $row['setting_value'];
+        }
+    }
+
     // Trả về JSON thay vì text thuần để Frontend xử lý hiển thị QR
     echo json_encode([
         'status' => 'success',
         'order_code' => $order_code,
         'payment_method' => $payment_method,
         'amount' => $shipping_fee, // Số tiền cần thanh toán (Phí ship)
-        'bank_info' => [
-            'bank_id' => 'MB', // Mã ngân hàng (Ví dụ: MB, VCB, ACB...)
-            'account_no' => '0333666999', // Số tài khoản (Thay bằng số thực tế của bạn)
-            'account_name' => 'FASTGO LOGISTICS', // Tên chủ tài khoản
-            'template' => 'compact' // Mẫu QR
+        'bank_info' => [ // Dữ liệu động từ DB
+            'bank_id' => $bank_settings['bank_id'] ?? 'MB',
+            'account_no' => $bank_settings['bank_account_no'] ?? '0333666999',
+            'account_name' => $bank_settings['bank_account_name'] ?? 'FASTGO LOGISTICS',
+            'template' => $bank_settings['qr_template'] ?? 'compact'
         ]
     ]);
 } else {

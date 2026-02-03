@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Phân quyền chuyển hướng
                 if ($user['role'] === 'admin') {
-                    header("Location: orders_manage.php");
+                    header("Location: admin_stats.php");
                 } elseif ($user['role'] === 'shipper') {
                     header("Location: shipper_dashboard.php");
                 } else {

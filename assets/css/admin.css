@@ -492,6 +492,17 @@ body {
   padding: 8px 0;
 }
 
+/* Hover effect for Desktop (Backup if JS fails) */
+@media (min-width: 1025px) {
+  .nav-menu .has-submenu:hover .submenu {
+    max-height: 500px;
+    padding: 8px 0;
+  }
+  .nav-menu .has-submenu:hover .arrow {
+    transform: rotate(180deg);
+  }
+}
+
 .nav-menu .submenu li {
   padding: 0;
 }

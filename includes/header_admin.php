@@ -45,9 +45,10 @@ require_once __DIR__ . '/../config/breadcrumb_helper.php';
             <li class="<?php echo ($current_page === 'admin_stats.php') ? 'active' : ''; ?>">
                 <a href="admin_stats.php">📊 Dashboard</a>
             </li>
-            
+
             <!-- Submenu: Quản lý -->
-            <li class="has-submenu <?php echo in_array($current_page, ['orders_manage.php', 'users_manage.php', 'services_manage.php']) ? 'active' : ''; ?>">
+            <li
+                class="has-submenu <?php echo in_array($current_page, ['orders_manage.php', 'users_manage.php', 'services_manage.php']) ? 'active' : ''; ?>">
                 <a href="#" class="submenu-toggle">📦 Quản lý <span class="arrow">▼</span></a>
                 <ul class="submenu">
                     <li class="<?php echo ($current_page === 'orders_manage.php') ? 'active' : ''; ?>">
@@ -61,9 +62,10 @@ require_once __DIR__ . '/../config/breadcrumb_helper.php';
                     </li>
                 </ul>
             </li>
-            
+
             <!-- Submenu: Nội dung -->
-            <li class="has-submenu <?php echo in_array($current_page, ['testimonials_manage.php', 'faq_manage.php', 'contact_manage.php']) ? 'active' : ''; ?>">
+            <li
+                class="has-submenu <?php echo in_array($current_page, ['testimonials_manage.php', 'faq_manage.php', 'contact_manage.php']) ? 'active' : ''; ?>">
                 <a href="#" class="submenu-toggle">📝 Nội dung <span class="arrow">▼</span></a>
                 <ul class="submenu">
                     <li class="<?php echo ($current_page === 'testimonials_manage.php') ? 'active' : ''; ?>">
@@ -77,12 +79,12 @@ require_once __DIR__ . '/../config/breadcrumb_helper.php';
                     </li>
                 </ul>
             </li>
-            
+
             <li class="<?php echo ($current_page === 'admin_settings.php') ? 'active' : ''; ?>">
                 <a href="admin_settings.php">⚙️ Cài đặt</a>
             </li>
-            <li class="<?php echo ($current_page === 'profile.php') ? 'active' : ''; ?>">
-                <a href="profile.php">👤 Tài khoản</a>
+            <li class="<?php echo ($current_page === 'admin_profile.php') ? 'active' : ''; ?>">
+                <a href="admin_profile.php">👤 Tài khoản</a>
             </li>
             <li><a href="index.php" target="_blank" class="btn-view-site">Xem trang chủ ↗</a></li>
             <li class="logout-item">

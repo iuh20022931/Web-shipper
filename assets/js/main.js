@@ -12,31 +12,33 @@
   }
 
   // ===== SUBMENU TOGGLE (ADMIN MENU) =====
-  document.querySelectorAll(".submenu-toggle").forEach((toggle) => {
-    toggle.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
+  document
+    .querySelectorAll(".submenu-toggle, .has-submenu > a")
+    .forEach((toggle) => {
+      toggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
 
-      const parentLi = this.closest(".has-submenu");
-      if (!parentLi) return; // Null check
+        const parentLi = this.closest(".has-submenu");
+        if (!parentLi) return; // Null check
 
-      const wasOpen = parentLi.classList.contains("open");
+        const wasOpen = parentLi.classList.contains("open");
 
-      // Close all other submenus
-      document.querySelectorAll(".has-submenu").forEach((item) => {
-        if (item !== parentLi) {
-          item.classList.remove("open");
+        // Close all other submenus
+        document.querySelectorAll(".has-submenu").forEach((item) => {
+          if (item !== parentLi) {
+            item.classList.remove("open");
+          }
+        });
+
+        // Toggle current submenu
+        if (wasOpen) {
+          parentLi.classList.remove("open");
+        } else {
+          parentLi.classList.add("open");
         }
       });
-
-      // Toggle current submenu
-      if (wasOpen) {
-        parentLi.classList.remove("open");
-      } else {
-        parentLi.classList.add("open");
-      }
     });
-  });
 
   // ===== DROPDOWN TOGGLE (CUSTOMER/PUBLIC MENU) =====
   document.querySelectorAll(".dropdown > a").forEach((link) => {
@@ -166,8 +168,48 @@
     });
   }
 
-  // ===== CONTACT FORM SUBMIT (REAL DATA) =====
-  const form = document.getElementById("contact-form");
+  // ===== FORM SUBMIT (REAL DATA) =====
+  const form = document.getElementById("create-order-form");
+
+  // ===== CẤU HÌNH KHU VỰC (Dùng chung cho tính phí) =====
+  const districtGroups = {
+    inner: [
+      "Quận 1",
+      "Quận 3",
+      "Quận 4",
+      "Quận 5",
+      "Quận 6",
+      "Quận 10",
+      "Quận 11",
+      "Phú Nhuận",
+      "Bình Thạnh",
+      "Gò Vấp",
+      "Tân Bình",
+      "Tân Phú",
+    ],
+    outer: [
+      "Quận 2",
+      "Quận 7",
+      "Quận 8",
+      "Quận 9",
+      "Quận 12",
+      "Thủ Đức",
+      "Bình Tân",
+      "Hóc Môn",
+      "Bình Chánh",
+      "Nhà Bè",
+      "Củ Chi",
+      "Cần Giờ",
+    ],
+  };
+  // Danh sách tất cả để kiểm tra hợp lệ
+  const allDistricts = [...districtGroups.inner, ...districtGroups.outer];
+
+  // Hàm kiểm tra xem địa chỉ có thuộc nhóm quận nào không
+  function checkDistrict(address, group) {
+    if (!address) return false;
+    return group.some((d) => address.toLowerCase().includes(d.toLowerCase()));
+  }
 
   // ===== HÀM HIỂN THỊ LỖI (Helper) =====
   function showFieldError(input, message) {
@@ -207,7 +249,13 @@
   }
 
   // ===== HÀM TÍNH PHÍ VẬN CHUYỂN TRUNG TÂM =====
-  function getShippingFeeDetails(serviceType, weight, codAmount) {
+  function getShippingFeeDetails(
+    serviceType,
+    weight,
+    codAmount,
+    pickupAddr = "",
+    deliveryAddr = "",
+  ) {
     const config = window.pricingConfig || {
       weight_free: 2,
       weight_price: 5000,
@@ -218,6 +266,7 @@
     let basePrice = 0;
     let weightFee = 0;
     let codFee = 0;
+    let regionFee = 0;
     let isContactPrice = false;
     let vehicle = "Xe máy";
     let serviceName = "Không xác định";
@@ -245,24 +294,35 @@
       return { isContactPrice: true, serviceName: serviceName };
     }
 
-    // 2. Tính phí khối lượng
+    // 2. Tính phí vùng miền (Region Fee)
+    // Logic: Nội-Nội: 0đ | Nội-Ngoại: 15k | Ngoại-Ngoại: 20k
+    if (pickupAddr && deliveryAddr) {
+      const isFromOuter = checkDistrict(pickupAddr, districtGroups.outer);
+      const isToOuter = checkDistrict(deliveryAddr, districtGroups.outer);
+
+      if (isFromOuter && isToOuter) regionFee = 20000;
+      else if (isFromOuter || isToOuter) regionFee = 15000;
+    }
+
+    // 3. Tính phí khối lượng
     const w = parseFloat(weight) || 0;
     if (w > config.weight_free) {
       weightFee = Math.ceil(w - config.weight_free) * config.weight_price;
     }
 
-    // 3. Tính phí COD
+    // 4. Tính phí COD
     const cod = parseFloat(codAmount) || 0;
     if (cod > 0) {
       codFee = Math.max(parseFloat(config.cod_min), cod * 0.01);
     }
 
-    const total = basePrice + weightFee + codFee;
+    const total = basePrice + weightFee + codFee + regionFee;
 
     return {
       basePrice,
       weightFee,
       codFee,
+      regionFee,
       total,
       vehicle,
       serviceName,
@@ -272,22 +332,27 @@
 
   // ===== TÍNH TIỀN SHIP TỰ ĐỘNG CHO FORM ĐẶT HÀNG =====
   function calculateOrderShipping() {
-    const pickupVal = document
-      .getElementById("pickup-addr")
-      .value.toLowerCase();
-    const deliveryVal = document
-      .getElementById("delivery-addr")
-      .value.toLowerCase();
+    const pickupVal = document.getElementById("pickup-addr").value;
+    const deliveryVal = document.getElementById("delivery-addr").value;
     const serviceType = document.getElementById("order-service-type").value;
     const pricePreview = document.getElementById("price-preview");
     const feeDisplay = document.getElementById("shipping-fee-display");
     const feeInput = document.getElementById("shipping-fee-input");
-    const weight = document.getElementById("weight").value;
-    const codAmount = document.getElementById("cod_amount").value;
+
+    // FIX: Thêm || 0 để đảm bảo luôn có giá trị tính toán (tránh lỗi NaN hoặc rỗng)
+    const weight = document.getElementById("weight").value || 0;
+    const codInput = document.getElementById("cod_amount");
+    const codAmount = codInput ? codInput.value || 0 : 0;
 
     // Chỉ tính khi đã nhập cả 2 địa chỉ
     if (pickupVal.length > 5 && deliveryVal.length > 5) {
-      const feeDetails = getShippingFeeDetails(serviceType, weight, codAmount);
+      const feeDetails = getShippingFeeDetails(
+        serviceType,
+        weight,
+        codAmount,
+        pickupVal,
+        deliveryVal,
+      );
 
       if (feeDetails.isContactPrice) {
         pricePreview.style.display = "block";
@@ -338,7 +403,7 @@
       e.preventDefault(); // chặn reload
 
       const btn = form.querySelector("button");
-      btn.innerText = "Đang tạo đơn hàng...";
+      btn.innerText = "Đang xử lý...";
       btn.disabled = true;
 
       // ===== 1. VALIDATE DỮ LIỆU =====
@@ -456,7 +521,15 @@
       }
 
       // ===== 2. GỬI DỮ LIỆU KHI ĐÃ HỢP LỆ =====
+      // FIX: Tính toán lại phí ship ngay lập tức để đảm bảo input hidden có giá trị mới nhất
+      calculateOrderShipping();
+
       const formData = new FormData(form);
+
+      // FIX: Nếu ô COD bị disabled (do chọn Chuyển khoản), FormData sẽ bỏ qua. Cần append thủ công.
+      if (codInp && codInp.disabled) {
+        formData.append("cod_amount", codInp.value);
+      }
 
       fetch("order.php", {
         // lưu ý sửa path chính xác
@@ -465,76 +538,72 @@
       })
         .then((res) => res.json())
         .then((data) => {
-          // reset class và hiển thị
-          msgDiv.style.display = "block";
-          msgDiv.className = "";
-
           if (data.status === "success") {
+            // 1. Ẩn nút submit gốc đi, nhưng giữ lại form
+            const submitBtn = form.querySelector("button[type='submit']");
+            if (submitBtn) submitBtn.style.display = "none";
+
+            // 2. Hiển thị msgDiv
+            msgDiv.style.display = "block";
+            msgDiv.className = ""; // Reset class
             msgDiv.classList.add("success");
-            // Escape dữ liệu trước khi hiển thị để chống XSS
-            const name = escapeHtml(form.querySelector("[name=name]").value);
-            const receiverName = escapeHtml(
-              form.querySelector("[name=receiver_name]").value,
-            );
+
+            // 3. Lấy dữ liệu để hiển thị (Logic cũ)
             const pickup = escapeHtml(
               form.querySelector("[name=pickup]").value,
             );
             const delivery = escapeHtml(
               form.querySelector("[name=delivery]").value,
             );
-            const packageType = form.querySelector("[name=package_type]")
-              .selectedOptions[0].text;
-            const codInpEl = form.querySelector("[name=cod_amount]");
-            const codAmount = codInpEl ? codInpEl.value : "";
             const shipFee = document.getElementById("shipping-fee-input").value;
+            const codInpEl = form.querySelector("[name=cod_amount]");
+            const codAmount = codInpEl ? codInpEl.value : "0";
 
-            // --- TÍNH NĂNG MỚI: Xử lý hiển thị thanh toán ---
+            // 4. Xử lý nội dung thanh toán (QR hoặc Text)
             let paymentContent = "";
             if (data.payment_method === "bank_transfer") {
-              // Tạo link QR VietQR tự động
               const qrUrl = `https://img.vietqr.io/image/${data.bank_info.bank_id}-${data.bank_info.account_no}-${data.bank_info.template}.png?amount=${data.amount}&addInfo=${data.order_code}&accountName=${encodeURIComponent(data.bank_info.account_name)}`;
 
               paymentContent = `
                 <div style="margin-top:20px; border-top:1px dashed #ccc; padding-top:15px; background:#f9f9f9; border-radius:8px; padding:15px;">
                     <h4 style="color:#0a2a66; margin-bottom:15px; text-align:center;">💳 THÔNG TIN CHUYỂN KHOẢN</h4>
-                    <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center; align-items:center;">
-                        <div style="text-align:center;">
-                            <img src="${qrUrl}" alt="QR Code" style="max-width:180px; border:2px solid #0a2a66; border-radius:8px;">
-                            <p style="font-size:12px; color:#666; margin-top:5px;">Quét mã để thanh toán nhanh</p>
-                        </div>
-                        <div style="flex:1; min-width:250px; font-size:14px;">
-                            <p style="margin-bottom:8px;"><strong>🏦 Ngân hàng:</strong> MB Bank (Quân Đội)</p>
-                            <p style="margin-bottom:8px;"><strong>🔢 Số tài khoản:</strong> <span style="font-size:16px; font-weight:bold;">${data.bank_info.account_no}</span></p>
-                            <p style="margin-bottom:8px;"><strong>👤 Chủ tài khoản:</strong> ${data.bank_info.account_name}</p>
-                            <p style="margin-bottom:8px;"><strong>💰 Số tiền:</strong> <span style="color:#d9534f; font-weight:bold; font-size:16px;">${parseInt(data.amount).toLocaleString()}đ</span></p>
-                            <p style="margin-bottom:8px;"><strong>📝 Nội dung:</strong> <span style="background:#ffeb3b; padding:2px 6px; font-weight:bold; border:1px solid #e0a800;">${data.order_code}</span></p>
-                        </div>
+                    <div style="text-align:center;">
+                        <img src="${qrUrl}" alt="QR Code" style="max-width:200px; border:2px solid #0a2a66; border-radius:8px;">
+                        <p style="font-size:13px; color:#666; margin-top:10px;">Quét mã để thanh toán nhanh</p>
                     </div>
-                    <p style="text-align:center; margin-top:15px; font-size:13px; color:#28a745;"><em>Hệ thống sẽ tự động xử lý đơn hàng sau khi nhận được thanh toán.</em></p>
-                </div>
-              `;
+                    <p style="text-align:center; margin-top:10px; font-size:14px;"><strong>Số tiền:</strong> <span style="color:#d9534f; font-weight:bold;">${parseInt(data.amount).toLocaleString()}đ</span></p>
+                </div>`;
             } else {
-              paymentContent = `<p style="margin-top:15px;">Chúng tôi sẽ liên hệ xác nhận sớm nhất.</p>`;
+              paymentContent = `<p style="margin-top:15px; color:#28a745; text-align:center;"><em>Đơn hàng sẽ được thanh toán khi tài xế đến lấy hàng.</em></p>`;
             }
 
+            // 5. Chèn HTML thông báo thành công (Giao diện cũ + Nút Reset mới)
             msgDiv.innerHTML = `
             <div class="success-message">
               <div class="check-icon">✓</div>
               <h3>Đã tạo đơn thành công!</h3>
               <p>Mã đơn hàng: <strong style="font-size:18px; color:#0a2a66;">${data.order_code}</strong></p>
-              <div style="text-align:left; font-size:14px; background:#fff; padding:10px; border-radius:5px; margin-top:10px; border:1px solid #eee;">
-                <p>🚩 <strong>Lấy tại:</strong> ${pickup}</p>
-                <p>🏁 <strong>Giao đến:</strong> ${delivery}</p>
-                <p>💵 <strong>Phí ship:</strong> ${parseInt(shipFee).toLocaleString()}đ</p>
-                ${codAmount ? `<p>💰 <strong>Thu hộ:</strong> ${parseInt(codAmount).toLocaleString()}đ</p>` : ""}
+              
+              <div style="text-align:left; font-size:14px; background:#fff; padding:15px; border-radius:8px; margin-top:15px; border:1px solid #eee;">
+                <p style="margin-bottom:5px;">🚩 <strong>Lấy tại:</strong> ${pickup}</p>
+                <p style="margin-bottom:5px;">🏁 <strong>Giao đến:</strong> ${delivery}</p>
+                <p style="margin-bottom:5px;">💵 <strong>Phí ship:</strong> ${parseInt(shipFee).toLocaleString()}đ</p>
+                ${codAmount > 0 ? `<p>💰 <strong>Thu hộ:</strong> ${parseInt(codAmount).toLocaleString()}đ</p>` : ""}
               </div>
-              ${paymentContent}
-              <button onclick="location.reload()" class="btn-secondary" style="margin-top:20px;">Quay lại / Tạo đơn mới</button>
-            </div>
-          `;
 
-            form.reset(); // xóa dữ liệu form sau khi submit thành công
+              ${paymentContent}
+
+              <div style="margin-top:25px; display:flex; gap:10px; justify-content:center;">
+                  <button type="button" onclick="resetOrderForm()" class="btn-primary">Tạo đơn mới</button>
+                  <a href="order_history.php" class="btn-secondary" style="color:#0a2a66; border-color:#0a2a66; text-decoration:none; display:inline-block; padding:12px 20px;">Xem lịch sử</a>
+              </div>
+            </div>
+            `;
+
+            form.reset(); // Xóa dữ liệu form cũ
           } else {
+            msgDiv.style.display = "block";
+            msgDiv.className = "";
             msgDiv.classList.add("error");
             msgDiv.innerHTML = `<strong>Có lỗi xảy ra:</strong><br>${data.message}`;
           }
@@ -990,6 +1059,13 @@
     }
   });
 
+  // ===== EXPOSE FUNCTIONS TO GLOBAL SCOPE (Fix for onclick in HTML) =====
+  // Các hàm này cần được đưa ra ngoài để HTML có thể gọi qua onclick
+  window.openCancelModal = openCancelModal;
+  window.closeCancelModal = closeCancelModal;
+  window.handleReasonChange = handleReasonChange;
+  window.confirmCancelOrder = confirmCancelOrder;
+
   // ===== THANH TOÁN QR (MODAL) =====
   function openPaymentModal(orderCode, amount) {
     const modal = document.getElementById("payment-modal");
@@ -1030,41 +1106,6 @@
   });
 
   // ===== QUICK QUOTE FORM =====
-  // Mảng danh sách các quận hợp lệ của TP.HCM
-  const districtGroups = {
-    inner: [
-      "Quận 1",
-      "Quận 3",
-      "Quận 4",
-      "Quận 5",
-      "Quận 6",
-      "Quận 10",
-      "Quận 11",
-      "Phú Nhuận",
-      "Bình Thạnh",
-      "Gò Vấp",
-      "Tân Bình",
-      "Tân Phú",
-    ],
-    outer: [
-      "Quận 2",
-      "Quận 7",
-      "Quận 8",
-      "Quận 9",
-      "Quận 12",
-      "Thủ Đức",
-      "Bình Tân",
-      "Hóc Môn",
-      "Bình Chánh",
-      "Nhà Bè",
-      "Củ Chi",
-      "Cần Giờ",
-    ],
-  };
-
-  // Danh sách tất cả để kiểm tra hợp lệ
-  const allDistricts = [...districtGroups.inner, ...districtGroups.outer];
-
   const quickQuoteForm = document.getElementById("quick-quote-form");
 
   if (quickQuoteForm) {
@@ -1100,7 +1141,13 @@
       const config = window.pricingConfig || { cod_min: 5000 };
       const codAmount = isCod ? config.cod_min : 0; // Ước tính phí COD tối thiểu nếu tick
 
-      const feeDetails = getShippingFeeDetails(serviceType, weight, codAmount);
+      const feeDetails = getShippingFeeDetails(
+        serviceType,
+        weight,
+        codAmount,
+        from,
+        to,
+      );
 
       if (feeDetails.isContactPrice) {
         resultDiv.innerHTML = `📞 <strong>${feeDetails.serviceName}:</strong> Vui lòng liên hệ Hotline để có giá tốt nhất.`;
@@ -1117,6 +1164,7 @@
       <hr style="border: 0; border-top: 1px dashed #eee; margin: 10px 0;">
       <div style="font-size: 14px; color: #333;">
           <p>🔹 Phí cơ bản: ${feeDetails.basePrice.toLocaleString()}đ</p>
+          ${feeDetails.regionFee > 0 ? `<p>🔹 Phí vùng miền: ${feeDetails.regionFee.toLocaleString()}đ</p>` : ""}
           ${feeDetails.weightFee > 0 ? `<p>🔹 Phí quá tải (${weight}kg): ${feeDetails.weightFee.toLocaleString()}đ</p>` : ""}
           ${feeDetails.codFee > 0 ? `<p>🔹 Phí COD: ${feeDetails.codFee.toLocaleString()}đ</p>` : ""}
       </div>
@@ -1236,4 +1284,63 @@
       });
     });
   }
+
+  // ===== HÀM RESET FORM (TẠO ĐƠN MỚI) =====
+  window.resetOrderForm = function () {
+    const form = document.getElementById("create-order-form");
+    const msgDiv = document.getElementById("form-message");
+
+    if (form && msgDiv) {
+      // Ẩn thông báo
+      msgDiv.style.display = "none";
+      msgDiv.innerHTML = "";
+
+      // Reset form và các trạng thái
+      form.reset();
+
+      // Reset nút bấm về trạng thái ban đầu
+      const btn = form.querySelector("button[type='submit']");
+      if (btn) {
+        btn.innerText = "Xác nhận đặt đơn";
+        btn.disabled = false;
+        btn.style.display = "block"; // Hiện lại nút submit
+      }
+
+      // Kích hoạt lại sự kiện change để reset các trường phụ thuộc (như COD)
+      const paymentSelect = document.getElementById("payment_method");
+      if (paymentSelect) {
+        paymentSelect.dispatchEvent(new Event("change"));
+      }
+
+      // Cuộn lên đầu
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // ===== SHIPPER: VALIDATE POD UPLOAD (Global Listener) =====
+  // Tự động kiểm tra ảnh POD khi Shipper nhấn cập nhật đơn hàng
+  document.addEventListener("submit", function (e) {
+    const form = e.target;
+    // Tìm input file POD và select status trong form đang submit
+    const podInput = form.querySelector("input[type='file'][name='pod_image']");
+    const statusSelect = form.querySelector("select[name='status']");
+
+    if (podInput && statusSelect) {
+      // Nếu đang chuyển sang trạng thái 'completed' (Hoàn tất)
+      if (statusSelect.value === "completed") {
+        // Kiểm tra xem đã chọn file chưa.
+        // (Logic: Nếu chưa chọn file VÀ không tìm thấy ảnh cũ hiển thị sẵn -> Báo lỗi)
+        const hasExisting = form.querySelector("img[src*='uploads/']");
+
+        if (podInput.files.length === 0 && !hasExisting) {
+          e.preventDefault(); // Chặn gửi form
+          alert(
+            "⚠️ Bắt buộc: Vui lòng chụp/tải lên ảnh bằng chứng giao hàng (POD) để hoàn tất đơn hàng.",
+          );
+          podInput.focus();
+          podInput.classList.add("input-error");
+        }
+      }
+    }
+  });
 })();

@@ -52,10 +52,13 @@ $status_map = [
     'picked' => 'Đã lấy hàng',
     'delivering' => 'Đang giao hàng',
     'delivered' => 'Giao thành công',
-    'cancelled' => 'Đã hủy'
+    'cancelled' => 'Đã hủy',
+    'shipping' => 'Đang giao hàng',
+    'completed' => 'Giao thành công'
 ];
 
 $order['status_text'] = $status_map[$order['status']] ?? $order['status'];
+$order['status_raw'] = $order['status']; // Thêm trường này để JS xử lý màu sắc
 
 echo json_encode([
     'success' => true,

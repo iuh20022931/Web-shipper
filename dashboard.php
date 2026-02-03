@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Nếu là Admin thì chuyển ngay sang trang quản lý, không cho ở lại đây
 if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
-    header("Location: orders_manage.php");
+    header("Location: admin_stats.php");
     exit;
 }
 

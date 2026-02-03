@@ -54,6 +54,176 @@ if (isset($_SESSION['user_id'])) {
     <!-- Thêm SwiperJS CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
+    <style>
+        /* --- TRACKING STYLES (MỚI) --- */
+        .tracking-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-top: 30px;
+            text-align: left;
+            border: 1px solid #eee;
+            animation: slideUp 0.4s ease;
+        }
+
+        .t-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed #eee;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .t-code {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0a2a66;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .t-status {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .t-status.completed {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .t-status.shipping {
+        background: #cce5ff;
+        color: #004085;
+    }
+
+    .t-status.pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .t-status.cancelled {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .t-route {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+    }
+
+    .t-route-item {
+        flex: 1;
+        position: relative;
+        z-index: 1;
+    }
+
+    .t-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #888;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .t-addr {
+        font-size: 15px;
+        font-weight: 600;
+        color: #333;
+        line-height: 1.4;
+    }
+
+    .t-icon {
+        font-size: 20px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    /* Timeline Dọc */
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 9px;
+        top: 5px;
+        bottom: 0;
+        width: 2px;
+        background: #e9ecef;
+    }
+
+    .tl-item {
+        position: relative;
+        padding-bottom: 25px;
+    }
+
+    .tl-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .tl-dot {
+        position: absolute;
+        left: -26px;
+        top: 4px;
+        width: 12px;
+        height: 12px;
+        background: #fff;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    .tl-item.active .tl-dot {
+        border-color: #28a745;
+        background: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+    }
+
+    .tl-time {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 2px;
+    }
+
+    .tl-content {
+        font-size: 15px;
+        font-weight: 500;
+        color: #555;
+    }
+
+    .tl-item.active .tl-content {
+        color: #0a2a66;
+        font-weight: 700;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    </style>
 </head>
 
 <body>
@@ -192,10 +362,10 @@ if (isset($_SESSION['user_id'])) {
                 </thead>
                 <tbody>
                     <?php foreach ($services_list as $service): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($service['name']); ?></td>
-                        <td>
-                            <?php
+                        <tr>
+                            <td><?php echo htmlspecialchars($service['name']); ?></td>
+                            <td>
+                                <?php
                                 // Giả định phương tiện dựa trên loại dịch vụ
                                 if ($service['type_key'] == 'bulk') {
                                     echo 'Ô tô';
@@ -203,18 +373,18 @@ if (isset($_SESSION['user_id'])) {
                                     echo 'Xe máy';
                                 }
                                 ?>
-                        </td>
-                        <td>Nội thành</td>
-                        <td>
-                            <?php
+                            </td>
+                            <td>Nội thành</td>
+                            <td>
+                                <?php
                                 if ($service['base_price'] > 0) {
                                     echo number_format($service['base_price']) . 'đ';
                                 } else {
                                     echo 'Liên hệ'; // Hiển thị 'Liên hệ' nếu giá là 0 hoặc không xác định
                                 }
                                 ?>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                     <!-- Dòng phụ phí COD có thể giữ lại để cung cấp thông tin -->
                     <tr>
@@ -237,10 +407,10 @@ if (isset($_SESSION['user_id'])) {
             <select id="service-type" required>
                 <option value="">-- Chọn loại dịch vụ --</option>
                 <?php foreach ($services_list as $svc): ?>
-                <option value="<?php echo $svc['type_key']; ?>">
-                    <?php echo $svc['name']; ?>
-                    (<?php echo ($svc['base_price'] > 0) ? number_format($svc['base_price']) . 'đ' : 'Liên hệ'; ?>)
-                </option>
+                    <option value="<?php echo $svc['type_key']; ?>">
+                        <?php echo $svc['name']; ?>
+                        (<?php echo ($svc['base_price'] > 0) ? number_format($svc['base_price']) . 'đ' : 'Liên hệ'; ?>)
+                    </option>
                 <?php endforeach; ?>
             </select>
             <label class="checkbox-label"><input type="checkbox" id="is-cod" /> Có thu hộ COD (+5k)</label>
@@ -266,11 +436,11 @@ if (isset($_SESSION['user_id'])) {
         <p class="section-desc">Tạo tài khoản hoặc đăng nhập để bắt đầu gửi hàng cùng FastGo ngay hôm nay!</p>
         <div class="hero-btns centered-btns">
             <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="create_order.php" class="btn-primary">Tạo đơn hàng ngay</a>
-            <a href="dashboard.php" class="btn-secondary">Vào trang quản lý</a>
+                <a href="create_order.php" class="btn-primary">Tạo đơn hàng ngay</a>
+                <a href="dashboard.php" class="btn-secondary">Vào trang quản lý</a>
             <?php else: ?>
-            <a href="login.php" class="btn-primary">Đăng nhập & Đặt đơn</a>
-            <a href="register.php" class="btn-secondary">Đăng ký tài khoản mới</a>
+                <a href="login.php" class="btn-primary">Đăng nhập & Đặt đơn</a>
+                <a href="register.php" class="btn-secondary">Đăng ký tài khoản mới</a>
             <?php endif; ?>
         </div>
     </section>
@@ -281,26 +451,26 @@ if (isset($_SESSION['user_id'])) {
         <p class="section-desc">Sự hài lòng của khách hàng là động lực phát triển của chúng tôi.</p>
         <!-- Cấu trúc Slider -->
         <?php if (!empty($testimonials)): ?>
-        <div class="swiper testimonial-slider">
-            <div class="swiper-wrapper">
-                <?php foreach ($testimonials as $t): ?>
-                <div class="swiper-slide">
-                    <div class="testimonial-item">
-                        <div class="stars"><?php echo str_repeat('⭐', intval($t['rating'])); ?></div>
-                        <p class="feedback">"<?php echo htmlspecialchars($t['content']); ?>"</p>
-                        <div class="customer-info">
-                            <strong><?php echo htmlspecialchars($t['customer_name']); ?></strong>
-                            <span>- <?php echo htmlspecialchars($t['customer_role']); ?></span>
+            <div class="swiper testimonial-slider">
+                <div class="swiper-wrapper">
+                    <?php foreach ($testimonials as $t): ?>
+                        <div class="swiper-slide">
+                            <div class="testimonial-item">
+                                <div class="stars"><?php echo str_repeat('⭐', intval($t['rating'])); ?></div>
+                                <p class="feedback">"<?php echo htmlspecialchars($t['content']); ?>"</p>
+                                <div class="customer-info">
+                                    <strong><?php echo htmlspecialchars($t['customer_name']); ?></strong>
+                                    <span>- <?php echo htmlspecialchars($t['customer_role']); ?></span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
+                <!-- Nút điều hướng & Phân trang -->
+                <div class="swiper-pagination"></div>
             </div>
-            <!-- Nút điều hướng & Phân trang -->
-            <div class="swiper-pagination"></div>
-        </div>
         <?php else: ?>
-        <p class="no-content-msg">Chưa có đánh giá nào.</p>
+            <p class="no-content-msg">Chưa có đánh giá nào.</p>
         <?php endif; ?>
     </section>
 
@@ -309,14 +479,14 @@ if (isset($_SESSION['user_id'])) {
         <h2 class="section-title">FAQs / Hỗ trợ</h2>
         <div class="faq-list">
             <?php if (!empty($faqs)): ?>
-            <?php foreach ($faqs as $faq): ?>
-            <div class="faq-item">
-                <h3 class="faq-question"><?php echo htmlspecialchars($faq['question']); ?></h3>
-                <p class="faq-answer"><?php echo nl2br(htmlspecialchars($faq['answer'])); ?></p>
-            </div>
-            <?php endforeach; ?>
+                <?php foreach ($faqs as $faq): ?>
+                    <div class="faq-item">
+                        <h3 class="faq-question"><?php echo htmlspecialchars($faq['question']); ?></h3>
+                        <p class="faq-answer"><?php echo nl2br(htmlspecialchars($faq['answer'])); ?></p>
+                    </div>
+                <?php endforeach; ?>
             <?php else: ?>
-            <p>Chưa có câu hỏi thường gặp nào.</p>
+                <p>Chưa có câu hỏi thường gặp nào.</p>
             <?php endif; ?>
         </div>
     </section>
@@ -492,27 +662,41 @@ if (isset($_SESSION['user_id'])) {
                 const order = data.data;
                 let timelineHtml = '';
 
+                // Xác định class màu sắc cho trạng thái
+                let statusClass = 'pending';
+                const rawStatus = order.status_raw || order.status; // Fallback nếu thiếu status_raw
+                if (rawStatus === 'completed' || rawStatus === 'delivered') statusClass = 'completed';
+                else if (rawStatus === 'shipping' || rawStatus === 'delivering' || rawStatus === 'picked')
+                    statusClass = 'shipping';
+                else if (rawStatus === 'cancelled') statusClass = 'cancelled';
+
                 // Xây dựng HTML cho timeline
                 if (data.timeline && data.timeline.length > 0) {
-                    timelineHtml =
-                        '<div class="tracking-timeline" style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">';
-                    data.timeline.forEach(item => {
+                    timelineHtml = '<div class="timeline">';
+                    // Đảo ngược mảng để sự kiện mới nhất lên đầu
+                    const reversedTimeline = [...data.timeline].reverse();
+
+                    reversedTimeline.forEach((item, index) => {
                         // Map lại text hiển thị cho timeline
                         const statusMap = {
-                            'created': 'Đơn mới',
-                            'pending': 'Chờ xử lý',
-                            'assigned': 'Đã phân tài xế',
-                            'picked': 'Đã lấy hàng',
-                            'delivering': 'Đang giao',
-                            'delivered': 'Hoàn tất',
-                            'cancelled': 'Đã hủy'
+                            'created': 'Đơn hàng đã được tạo',
+                            'pending': 'Đang chờ xử lý',
+                            'assigned': 'Đã điều phối tài xế',
+                            'picked': 'Tài xế đã lấy hàng',
+                            'delivering': 'Đang trên đường giao',
+                            'delivered': 'Giao hàng thành công',
+                            'cancelled': 'Đơn hàng đã hủy',
+                            'shipping': 'Đang trên đường giao',
+                            'completed': 'Giao hàng thành công'
                         };
                         const statusText = statusMap[item.status] || item.status;
+                        const isActive = index === 0 ? 'active' : ''; // Item đầu tiên (mới nhất) là active
 
                         timelineHtml += `
-                            <div class="timeline-item" style="display:flex; gap:15px; margin-bottom:10px;">
-                                <div class="timeline-time" style="font-size:13px; color:#888; min-width:100px;">${item.time}</div>
-                                <div class="timeline-text" style="font-weight:bold; color:#333;">${statusText}</div>
+                            <div class="tl-item ${isActive}">
+                                <div class="tl-dot"></div>
+                                <div class="tl-time">${item.time}</div>
+                                <div class="tl-content">${statusText}</div>
                             </div>
                         `;
                     });
@@ -520,11 +704,24 @@ if (isset($_SESSION['user_id'])) {
                 }
 
                 resultDiv.innerHTML = `
-                    <div class="quote-success" style="margin-top:20px; text-align:left; background:#f9f9f9; padding:20px; border-radius:8px; border:1px solid #ddd;">
-                        <h3 style="color:#0a2a66; margin-bottom:10px; font-size:18px;">📦 Đơn hàng: ${order.order_code}</h3>
-                        <p><strong>Trạng thái:</strong> <span style="color:#ff7a00; font-weight:bold;">${order.status_text}</span></p>
-                        <p><strong>Điểm đi:</strong> ${order.pickup_address}</p>
-                        <p><strong>Điểm đến:</strong> ${order.delivery_address}</p>
+                    <div class="tracking-card">
+                        <div class="t-header">
+                            <div class="t-code">📦 ${order.order_code}</div>
+                            <div class="t-status ${statusClass}">${order.status_text}</div>
+                        </div>
+                        <div class="t-route">
+                            <div class="t-route-item">
+                                <span class="t-icon">🚩</span>
+                                <span class="t-label">Điểm lấy hàng</span>
+                                <div class="t-addr">${order.pickup_address}</div>
+                            </div>
+                            <div class="t-route-item">
+                                <span class="t-icon">🏁</span>
+                                <span class="t-label">Điểm giao hàng</span>
+                                <div class="t-addr">${order.delivery_address}</div>
+                            </div>
+                        </div>
+                        <h4 style="font-size:16px; color:#0a2a66; margin-bottom:15px;">Hành trình chi tiết</h4>
                         ${timelineHtml}
                     </div>
                 `;

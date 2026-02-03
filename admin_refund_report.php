@@ -136,35 +136,35 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
                 </thead>
                 <tbody>
                     <?php if (empty($refunded_orders)): ?>
-                        <tr>
-                            <td colspan="7" style="text-align:center; padding: 20px;">Không có đơn hàng hoàn tiền nào.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding: 20px;">Không có đơn hàng hoàn tiền nào.</td>
+                    </tr>
                     <?php else: ?>
-                        <?php foreach ($refunded_orders as $order): ?>
-                            <tr>
-                                <td><strong>
-                                        <?php echo htmlspecialchars($order['order_code']); ?>
-                                    </strong></td>
-                                <td>
-                                    <?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars($order['customer_name'] ?? $order['name']); ?>
-                                </td>
-                                <td style="color:#d9534f;">
-                                    <?php echo number_format($order['shipping_fee']); ?>đ
-                                </td>
-                                <td>
-                                    <?php echo number_format($order['cod_amount']); ?>đ
-                                </td>
-                                <td style="max-width: 300px; white-space: pre-wrap;">
-                                    <?php echo htmlspecialchars($order['admin_note']); ?>
-                                </td>
-                                <td>
-                                    <a href="order_detail.php?id=<?php echo $order['id']; ?>" class="btn-action">Xem</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                    <?php foreach ($refunded_orders as $order): ?>
+                    <tr>
+                        <td><strong>
+                                <?php echo htmlspecialchars($order['order_code']); ?>
+                            </strong></td>
+                        <td>
+                            <?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?>
+                        </td>
+                        <td>
+                            <?php echo htmlspecialchars($order['customer_name'] ?? $order['name']); ?>
+                        </td>
+                        <td style="color:#d9534f;">
+                            <?php echo number_format($order['shipping_fee']); ?>đ
+                        </td>
+                        <td>
+                            <?php echo number_format($order['cod_amount']); ?>đ
+                        </td>
+                        <td style="max-width: 300px; white-space: pre-wrap;">
+                            <?php echo htmlspecialchars($order['admin_note']); ?>
+                        </td>
+                        <td>
+                            <a href="order_detail.php?id=<?php echo $order['id']; ?>" class="btn-action">Xem</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
             </table>

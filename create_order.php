@@ -74,9 +74,7 @@ if (isset($_GET['reorder_id'])) {
         
         $reorder_data['note'] = $old_order['note'];
         $reorder_data['cod_amount'] = $old_order['cod_amount'];
-        // Weight? orders table có weight không? Check order_history.php display logic...
-        // order_history.php chỉ hiện: order_code, receiver, address, fee, cod, status. Không thấy hiện weight.
-        // Để an toàn, set weight và note nếu có trong DB. Nếu không thì default.
+        $reorder_data['weight'] = isset($old_order['weight']) ? $old_order['weight'] : 1;
     }
     $stmt->close();
 }
@@ -90,19 +88,20 @@ if (isset($_GET['reorder_id'])) {
     <title>Tạo đơn hàng mới | FastGo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
     <?php include 'includes/header_user.php'; ?>
 
-    <main class="container">
-        <div class="page-header">
-            <h2 class="page-title">Tạo đơn hàng mới</h2>
-            <a href="dashboard.php" class="back-link">← Quay lại Dashboard</a>
+    <main class="container" style="padding-top: 40px; padding-bottom: 40px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 class="section-title" style="margin:0;">Tạo đơn hàng mới</h2>
+            <a href="dashboard.php" class="btn-secondary"
+                style="color:#0a2a66; border-color:#0a2a66; padding:8px 15px; text-decoration:none;">← Quay lại
+                Dashboard</a>
         </div>
 
-        <form id="contact-form" class="order-form-container" method="POST">
+        <form id="create-order-form" class="order-form-container" method="POST">
             <!-- Thông tin người gửi -->
             <div class="form-section">
                 <h3>1. Thông tin người gửi</h3>
@@ -115,7 +114,8 @@ if (isset($_GET['reorder_id'])) {
                     <div class="form-group">
                         <label for="phone">Số điện thoại</label>
                         <input type="tel" id="phone" name="phone"
-                            value="<?php echo htmlspecialchars($user_info['phone']); ?>" required>
+                            value="<?php echo htmlspecialchars($user_info['phone']); ?>" pattern="0[0-9]{9,10}"
+                            title="Số điện thoại phải bắt đầu bằng 0 và có 10-11 chữ số" required>
                     </div>
                     <div class="form-group" style="grid-column: 1 / -1; position: relative;">
                         <div
@@ -146,7 +146,9 @@ if (isset($_GET['reorder_id'])) {
                     <div class="form-group">
                         <label for="receiver_phone">Số điện thoại người nhận</label>
                         <input type="tel" id="receiver_phone" name="receiver_phone"
-                            value="<?php echo htmlspecialchars($reorder_data['receiver_phone']); ?>" required>
+                            value="<?php echo htmlspecialchars($reorder_data['receiver_phone']); ?>"
+                            pattern="0[0-9]{9,10}" title="Số điện thoại phải bắt đầu bằng 0 và có 10-11 chữ số"
+                            required>
                     </div>
                     <div class="form-group" style="grid-column: 1 / -1; position: relative;">
                         <div
@@ -202,7 +204,9 @@ if (isset($_GET['reorder_id'])) {
                     </div>
                     <div class="form-group">
                         <label for="weight">Khối lượng (kg)</label>
-                        <input type="number" id="weight" name="weight" value="1" min="0" step="0.5" required>
+                        <input type="number" id="weight" name="weight"
+                            value="<?php echo htmlspecialchars($reorder_data['weight']); ?>" min="0" step="0.5"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="cod_amount">Tiền thu hộ (COD)</label>
@@ -343,6 +347,36 @@ if (isset($_GET['reorder_id'])) {
             calculateOrderShipping();
         }
     });
+
+    // --- FIX & UX IMPROVEMENT: Link Payment Method with COD input ---
+    const paymentMethodSelect = document.getElementById('payment_method');
+    const codInput = document.getElementById('cod_amount');
+
+    if (paymentMethodSelect && codInput) {
+        const handlePaymentChange = () => {
+            if (paymentMethodSelect.value === 'bank_transfer') {
+                codInput.value = 0; // Reset giá trị về 0
+                codInput.disabled = true; // Vô hiệu hóa ô nhập
+                codInput.style.backgroundColor = '#e9ecef'; // Thêm màu nền để người dùng biết là bị vô hiệu hóa
+            } else {
+                codInput.disabled = false; // Kích hoạt lại ô nhập
+                codInput.style.backgroundColor = '#ffffff'; // Trả lại màu nền trắng
+            }
+            // Tính toán lại phí ship vì phí COD có thể đã thay đổi
+            if (typeof calculateOrderShipping === 'function') {
+                calculateOrderShipping();
+            }
+        };
+
+        // Gắn sự kiện 'change' vào dropdown phương thức thanh toán
+        paymentMethodSelect.addEventListener('change', handlePaymentChange);
+
+        // Tự động chạy hàm này một lần khi tải trang
+        // để đảm bảo trạng thái ban đầu của ô COD là đúng
+        // (quan trọng cho trường hợp "Đặt lại đơn hàng")
+        handlePaymentChange();
+    }
+    // --- END FIX ---
 
     // Logic Modal Địa chỉ
     let currentAddrField = '';
