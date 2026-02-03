@@ -105,6 +105,10 @@
   background: #17a2b8;
   color: #fff;
 }
+.btn-approve {
+  background: #20c997;
+  color: #fff;
+}
 
 /* History Section */
 .history-section {

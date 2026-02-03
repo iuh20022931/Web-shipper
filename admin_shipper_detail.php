@@ -72,80 +72,8 @@ while ($row = $res->fetch_assoc()) {
     <meta charset="UTF-8">
     <title>Hồ sơ hiệu suất Shipper | Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
-    <style>
-        .profile-header {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .avatar-circle {
-            width: 80px;
-            height: 80px;
-            background: #0a2a66;
-            color: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .kpi-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border-top: 4px solid #ccc;
-        }
-
-        .kpi-value {
-            font-size: 28px;
-            font-weight: bold;
-            margin: 10px 0;
-            color: #333;
-        }
-
-        .kpi-label {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .review-card {
-            background: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #eee;
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        .star-rating {
-            color: #ffc107;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/admin-pages.css?v=<?php echo time(); ?>">
 </head>
 
 <body>

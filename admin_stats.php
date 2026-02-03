@@ -111,10 +111,14 @@ while ($row = $res->fetch_assoc()) {
     <meta charset="UTF-8">
     <title>Thống kê hệ thống | Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/admin-pages.css?v=<?php echo time(); ?>">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js DataLabels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+    </style>
 </head>
 
 <body>
@@ -162,20 +166,23 @@ while ($row = $res->fetch_assoc()) {
         <div class="charts-grid">
             <div class="chart-card">
                 <div class="chart-header">Đơn hàng & Doanh thu (7 ngày qua)</div>
-                <canvas id="revenueChart"></canvas>
+                <div style="height: 320px; position: relative;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
             </div>
             <div class="chart-card">
                 <div class="chart-header">Top khách hàng thân thiết</div>
-                <table class="order-table" style="margin-top:10px;">
-                    <thead>
-                        <tr>
-                            <th>Khách hàng</th>
-                            <th>Đơn</th>
-                            <th>Chi tiêu</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($top_users as $u): ?>
+                <div style="overflow-x: auto;">
+                    <table class="order-table" style="margin-top:10px; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Khách hàng</th>
+                                <th>Đơn</th>
+                                <th>Chi tiêu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($top_users as $u): ?>
                             <tr>
                                 <td>
                                     <strong>
@@ -192,9 +199,10 @@ while ($row = $res->fetch_assoc()) {
                                     <?php echo number_format($u['total_spent']); ?>đ
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -202,13 +210,13 @@ while ($row = $res->fetch_assoc()) {
         <div class="charts-grid">
             <div class="chart-card">
                 <div class="chart-header">Phân loại dịch vụ</div>
-                <div style="height: 300px; display:flex; justify-content:center;">
+                <div style="height: 250px; position: relative; width: 100%; display:flex; justify-content:center;">
                     <canvas id="serviceChart"></canvas>
                 </div>
             </div>
             <div class="chart-card">
                 <div class="chart-header">Phân loại hàng hóa</div>
-                <div style="height: 300px; display:flex; justify-content:center;">
+                <div style="height: 250px; position: relative; width: 100%; display:flex; justify-content:center;">
                     <canvas id="packageChart"></canvas>
                 </div>
             </div>
@@ -219,77 +227,126 @@ while ($row = $res->fetch_assoc()) {
     <?php include 'includes/footer.php'; ?>
 
     <script>
-        // 1. Biểu đồ Doanh thu & Đơn hàng (Mixed Chart)
-        const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
-        new Chart(ctxRevenue, {
-            type: 'bar',
-            data: {
-                labels: <?php echo json_encode($chart_labels); ?>,
-            datasets: [
-                {
+    // Register DataLabels plugin globally
+    Chart.register(ChartDataLabels);
+
+    // 1. Biểu đồ Doanh thu & Đơn hàng (Mixed Chart)
+    const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+    new Chart(ctxRevenue, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($chart_labels); ?>,
+            datasets: [{
                     label: 'Doanh thu (VNĐ)',
                     data: <?php echo json_encode($chart_revenue); ?>,
-                backgroundColor: 'rgba(255, 122, 0, 0.2)',
-                borderColor: '#ff7a00',
-                borderWidth: 2,
-                yAxisID: 'y',
-                type: 'line',
-                tension: 0.4
-                    },
-            {
-                label: 'Số đơn hàng',
-                data: <?php echo json_encode($chart_orders); ?>,
-            backgroundColor: '#0a2a66',
-            yAxisID: 'y1'
-                    }
-                ]
+                    backgroundColor: 'rgba(255, 122, 0, 0.2)',
+                    borderColor: '#ff7a00',
+                    borderWidth: 2,
+                    yAxisID: 'y',
+                    type: 'line',
+                    tension: 0.4
+                },
+                {
+                    label: 'Số đơn hàng',
+                    data: <?php echo json_encode($chart_orders); ?>,
+                    backgroundColor: '#0a2a66',
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            plugins: {
+                datalabels: {
+                    display: false
+                } // Tắt label số trên biểu đồ cột/line cho đỡ rối
             },
-            options: {
             responsive: true,
-            interaction: { mode: 'index', intersect: false },
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             scales: {
                 y: {
                     type: 'linear',
                     display: true,
                     position: 'left',
-                    title: { display: true, text: 'Doanh thu' }
+                    title: {
+                        display: true,
+                        text: 'Doanh thu'
+                    }
                 },
                 y1: {
                     type: 'linear',
                     display: true,
                     position: 'right',
-                    grid: { drawOnChartArea: false },
-                    title: { display: true, text: 'Số đơn' }
+                    grid: {
+                        drawOnChartArea: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Số đơn'
+                    }
                 }
             }
         }
-        });
+    });
 
-        // 2. Biểu đồ Dịch vụ (Doughnut)
-        const ctxService = document.getElementById('serviceChart').getContext('2d');
-        new Chart(ctxService, {
-            type: 'doughnut',
-            data: {
-                labels: <?php echo json_encode($svc_labels); ?>,
+    // 2. Biểu đồ Dịch vụ (Doughnut)
+    const ctxService = document.getElementById('serviceChart').getContext('2d');
+    new Chart(ctxService, {
+        type: 'doughnut',
+        data: {
+            labels: <?php echo json_encode($svc_labels); ?>,
             datasets: [{
                 data: <?php echo json_encode($svc_data); ?>,
                 backgroundColor: ['#0a2a66', '#ff7a00', '#28a745', '#17a2b8'],
-                }]
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                datalabels: {
+                    color: '#fff',
+                    font: {
+                        weight: 'bold'
+                    },
+                    formatter: (value, ctx) => {
+                        return value > 0 ? value : '';
+                    }
+                }
             }
-        });
+        }
+    });
 
-        // 3. Biểu đồ Hàng hóa (Pie)
-        const ctxPackage = document.getElementById('packageChart').getContext('2d');
-        new Chart(ctxPackage, {
-            type: 'pie',
-            data: {
-                labels: <?php echo json_encode($pkg_labels); ?>,
+    // 3. Biểu đồ Hàng hóa (Pie)
+    const ctxPackage = document.getElementById('packageChart').getContext('2d');
+    new Chart(ctxPackage, {
+        type: 'pie',
+        data: {
+            labels: <?php echo json_encode($pkg_labels); ?>,
             datasets: [{
                 data: <?php echo json_encode($pkg_data); ?>,
                 backgroundColor: ['#ffc107', '#dc3545', '#007bff', '#6610f2', '#6c757d'],
-                }]
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                datalabels: {
+                    color: '#fff',
+                    font: {
+                        weight: 'bold'
+                    },
+                    formatter: (value, ctx) => {
+                        return value > 0 ? value : '';
+                    }
+                }
             }
-        });
+        }
+    });
     </script>
 </body>
 

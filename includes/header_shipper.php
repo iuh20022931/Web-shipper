@@ -36,55 +36,57 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
     }
 }
 ?>
-<link rel="stylesheet" href="assets/css/admin_styles.css?v=<?php echo time(); ?>">
-<header id="header" class="header-admin">
-    <nav class="navbar">
+<header id="header">
+    <nav class="navbar container">
         <div class="logo">
-            <h1>
-                <a href="shipper_dashboard.php" class="header-logo-link">
-                    FastGo <span class="header-accent">Shipper</span>
-                </a>
-            </h1>
+            <a href="shipper_dashboard.php" style="text-decoration: none;">
+                <h1>FastGo</h1>
+            </a>
         </div>
-
-        <button class="hamburger-menu" id="hamburger-btn">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
 
         <ul class="nav-menu" id="nav-menu">
             <li class="<?php echo ($current_page === 'shipper_dashboard.php') ? 'active' : ''; ?>">
-                <a href="shipper_dashboard.php">📊 Dashboard</a>
+                <a href="shipper_dashboard.php">Dashboard</a>
             </li>
             <li class="<?php echo ($current_page === 'shipper_orders.php') ? 'active' : ''; ?>">
-                <a href="shipper_dashboard.php">📦 Đơn hàng của tôi</a>
+                <a href="shipper_dashboard.php">Đơn hàng của tôi</a>
             </li>
-            
-            <!-- Notification Bell -->
-            <li class="notification-bell <?php echo ($current_page === 'notifications.php') ? 'active' : ''; ?>">
-                <a href="notifications.php" class="notification-link">
+
+            <!-- Notification Bell (giống User) -->
+            <li class="dropdown <?php echo ($current_page === 'notifications.php') ? 'active' : ''; ?>" id="notification-bell">
+                <a href="#" style="font-size: 20px; color: white; padding: 0 10px; position: relative;">
                     🔔
                     <?php if ($unread_notifications_count > 0): ?>
-                        <span class="notification-badge"><?php echo $unread_notifications_count; ?></span>
+                        <span id="notification-count"
+                            style="position: absolute; top: -5px; right: 0; background: #d9534f; color: white; font-size: 10px; padding: 2px 5px; border-radius: 10px; min-width: 18px; text-align: center;"><?php echo $unread_notifications_count; ?></span>
                     <?php endif; ?>
                 </a>
+                <div class="dropdown-menu" id="notification-dropdown" style="min-width: 300px; right: 0; left: auto;">
+                    <div
+                        style="padding: 10px 15px; font-weight: bold; border-bottom: 1px solid #eee; color: #333; display: flex; justify-content: space-between; align-items: center;">
+                        Thông báo
+                        <a href="notifications.php" style="font-size: 12px; color: #0a2a66; font-weight: normal;">Xem
+                            tất cả</a>
+                    </div>
+                    <div id="notification-list">
+                        <div class="notification-item" style="text-align: center; color: #999; padding: 20px;">Đang
+                            tải...</div>
+                    </div>
+                </div>
             </li>
-            
-            <!-- Account Dropdown -->
-            <li class="has-submenu <?php echo in_array($current_page, ['shipper_profile.php', 'profile.php']) ? 'active' : ''; ?>">
-                <a href="#" class="submenu-toggle">
-                    👤 <?php echo htmlspecialchars($_SESSION['username'] ?? 'Tài khoản'); ?> <span class="arrow">▼</span>
-                </a>
-                <ul class="submenu">
+
+            <!-- Account Dropdown (giống User) -->
+            <li class="dropdown <?php echo in_array($current_page, ['shipper_profile.php', 'profile.php']) ? 'active' : ''; ?>">
+                <a href="#">👤 <?php echo htmlspecialchars($_SESSION['username'] ?? 'Tài khoản'); ?> ▾</a>
+                <ul class="dropdown-menu">
                     <li class="<?php echo ($current_page === 'shipper_profile.php' || $current_page === 'profile.php') ? 'active' : ''; ?>">
                         <a href="shipper_profile.php">Hồ sơ</a>
                     </li>
-                    <li>
-                        <a href="logout.php" class="logout-link">Đăng xuất</a>
-                    </li>
+                    <li><a href="logout.php">Đăng xuất</a></li>
                 </ul>
             </li>
         </ul>
+
+        <button class="hamburger-menu" id="hamburger-btn"><span></span><span></span><span></span></button>
     </nav>
 </header>

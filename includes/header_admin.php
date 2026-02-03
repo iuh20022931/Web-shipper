@@ -20,9 +20,6 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
 
 // Detect current page for active state
 $current_page = basename($_SERVER['PHP_SELF']);
-
-// Include breadcrumb helper
-require_once __DIR__ . '/../config/breadcrumb_helper.php';
 ?>
 <link rel="stylesheet" href="assets/css/admin_styles.css?v=<?php echo time(); ?>">
 <header id="header" class="header-admin">
@@ -93,10 +90,3 @@ require_once __DIR__ . '/../config/breadcrumb_helper.php';
         </ul>
     </nav>
 </header>
-
-<!-- Breadcrumb (Separated from header) -->
-<div class="breadcrumb-wrapper">
-    <div class="container">
-        <?php echo renderBreadcrumb($_SERVER['PHP_SELF']); ?>
-    </div>
-</div>

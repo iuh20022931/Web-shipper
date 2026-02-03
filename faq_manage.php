@@ -54,8 +54,8 @@ if ($res)
     <meta charset="UTF-8">
     <title>Quản lý FAQ | Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/admin-pages.css?v=<?php echo time(); ?>">
 </head>
 
 <body>

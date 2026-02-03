@@ -95,8 +95,8 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <title>Quản lý đơn hàng | Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/admin-pages.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
@@ -239,36 +239,35 @@ $result = $stmt->get_result();
                         <?php endif; ?>
                     </tbody>
                 </table>
-            </div>
+                <!-- Phân trang -->
+                <?php if ($total_pages > 1): ?>
+                <div style="margin-top: 20px; display: flex; justify-content: center; gap: 5px;">
+                    <!-- Nút Previous -->
+                    <?php if ($page > 1): ?>
+                    <a href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>&issue=<?php echo urlencode($issue); ?>"
+                        class="btn-action" style="text-decoration: none;">&laquo; Trước</a>
+                    <?php endif; ?>
 
-            <!-- Phân trang -->
-            <?php if ($total_pages > 1): ?>
-            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 5px;">
-                <!-- Nút Previous -->
-                <?php if ($page > 1): ?>
-                <a href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>&issue=<?php echo urlencode($issue); ?>"
-                    class="btn-action" style="text-decoration: none;">&laquo; Trước</a>
+                    <!-- Các trang số -->
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>&issue=<?php echo urlencode($issue); ?>"
+                        class="btn-action"
+                        style="text-decoration: none; <?php echo ($i == $page) ? 'background-color: #0a2a66; color: white;' : ''; ?>">
+                        <?php echo $i; ?>
+                    </a>
+                    <?php endfor; ?>
+
+                    <!-- Nút Next -->
+                    <?php if ($page < $total_pages): ?>
+                    <a href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>&issue=<?php echo urlencode($issue); ?>"
+                        class="btn-action" style="text-decoration: none;">Sau &raquo;</a>
+                    <?php endif; ?>
+                </div>
+                <p style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">Hiển thị trang
+                    <?php echo $page; ?> / <?php echo $total_pages; ?> (Tổng <?php echo $total_records; ?> đơn)
+                </p>
                 <?php endif; ?>
-
-                <!-- Các trang số -->
-                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>&issue=<?php echo urlencode($issue); ?>"
-                    class="btn-action"
-                    style="text-decoration: none; <?php echo ($i == $page) ? 'background-color: #0a2a66; color: white;' : ''; ?>">
-                    <?php echo $i; ?>
-                </a>
-                <?php endfor; ?>
-
-                <!-- Nút Next -->
-                <?php if ($page < $total_pages): ?>
-                <a href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&status=<?php echo urlencode($status); ?>&issue=<?php echo urlencode($issue); ?>"
-                    class="btn-action" style="text-decoration: none;">Sau &raquo;</a>
-                <?php endif; ?>
             </div>
-            <p style="text-align: center; margin-top: 10px; font-size: 14px; color: #666;">Hiển thị trang
-                <?php echo $page; ?> / <?php echo $total_pages; ?> (Tổng <?php echo $total_records; ?> đơn)
-            </p>
-            <?php endif; ?>
 
             <!-- Cột phải: Sidebar bộ lọc -->
             <aside class="filter-sidebar">
@@ -319,3 +318,4 @@ $result = $stmt->get_result();
 </body>
 
 </html>
+

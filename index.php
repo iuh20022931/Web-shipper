@@ -628,7 +628,6 @@ if (isset($_SESSION['user_id'])) {
     <!-- Thêm SwiperJS JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
 
     <script>
     // Bổ sung hàm trackOrder để xử lý tra cứu đơn hàng
