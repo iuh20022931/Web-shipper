@@ -78,6 +78,8 @@ $pkg_map = ['document' => 'Tài liệu', 'food' => 'Đồ ăn', 'clothes' => 'Qu
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/admin-pages.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/admin_styles.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
@@ -129,10 +131,28 @@ $pkg_map = ['document' => 'Tài liệu', 'food' => 'Đồ ăn', 'clothes' => 'Qu
             <div class="info-row"><span class="info-label">Loại hàng:</span>
                 <?php echo $pkg_map[$order['package_type']] ?? $order['package_type']; ?></div>
             <div class="info-row"><span class="info-label">Cân nặng:</span> <?php echo $order['weight']; ?> kg</div>
+            <div class="info-row">
+                <span class="info-label">Phương thức:</span> 
+                <?php if ($order['payment_method'] === 'bank_transfer'): ?>
+                    <span style="color:#0a2a66; font-weight:600;">Chuyển khoản</span>
+                    <?php if ($order['payment_status'] === 'paid'): ?>
+                        <span style="margin-left:10px; color:#28a745; font-weight:bold;">[✓ Đã thanh toán]</span>
+                    <?php else: ?>
+                        <span style="margin-left:10px; color:#dc3545; font-weight:bold;">[⚠ CHƯA THANH TOÁN]</span>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <span style="color:#28a745; font-weight:600;">COD (Tiền mặt)</span>
+                <?php endif; ?>
+            </div>
             <div class="info-row"><span class="info-label">Thu hộ (COD):</span> <strong
                     style="color:#d9534f; font-size:18px;"><?php echo number_format($order['cod_amount']); ?>đ</strong>
             </div>
-            <div class="info-row"><span class="info-label">Ghi chú từ khách:</span>
+            <?php if ($order['payment_method'] === 'bank_transfer' && $order['payment_status'] !== 'paid'): ?>
+                <div style="background:#fff5f5; border:1px solid #ffcccc; color:#d9534f; padding:10px; border-radius:6px; margin-top:10px; font-size:14px;">
+                    <strong>📢 Ghi chú:</strong> Hệ thống chưa ghi nhận tiền chuyển khoản cho đơn này. Vui lòng kiểm tra kỹ trước khi giao hàng!
+                </div>
+            <?php endif; ?>
+            <div class="info-row" style="margin-top:10px;"><span class="info-label">Ghi chú từ khách:</span>
                 <?php echo nl2br(htmlspecialchars($order['note'])); ?></div>
         </div>
 
@@ -158,7 +178,7 @@ $pkg_map = ['document' => 'Tài liệu', 'food' => 'Đồ ăn', 'clothes' => 'Qu
                         </div>
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                             <button type="submit" name="update_status" value="completed" class="btn-primary"
-                                style="background:#28a745;" onclick="return confirm('Xác nhận giao thành công?');">✅ Đã
+                                style="background:#28a745;" onclick="return confirmComplete('<?php echo $order['payment_method']; ?>', '<?php echo $order['payment_status']; ?>');">✅ Đã
                                 giao</button>
                             <button type="submit" name="update_status" value="cancelled" class="btn-primary"
                                 style="background:#dc3545;" onclick="return confirm('Xác nhận hủy đơn?');">❌ Hủy đơn</button>
@@ -183,6 +203,15 @@ $pkg_map = ['document' => 'Tài liệu', 'food' => 'Đồ ăn', 'clothes' => 'Qu
 
     </main>
     <?php include 'includes/footer.php'; ?>
+    <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
+    <script>
+        function confirmComplete(method, status) {
+            if (method === 'bank_transfer' && status !== 'paid') {
+                return confirm('⚠️ CẢNH BÁO: Đơn hàng này thanh toán CHUYỂN KHOẢN nhưng hệ thống ghi nhận CHƯA THANH TOÁN.\n\nBạn có chắc chắn muốn hoàn tất đơn hàng này không? (Hãy đảm bảo khách đã thanh toán hoặc bạn đã thu tiền mặt thay thế)');
+            }
+            return confirm('Xác nhận giao thành công và đã thu đủ tiền?');
+        }
+    </script>
 </body>
 
 </html>

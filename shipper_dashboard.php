@@ -172,6 +172,8 @@ $pkg_map = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/admin.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/admin-pages.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/admin_styles.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
@@ -303,6 +305,21 @@ $pkg_map = [
                                 <?php echo $pkg_map[$row['package_type']] ?? $row['package_type']; ?> -
                                 <strong><?php echo $row['weight']; ?> kg</strong>
                             </p>
+                            <p><strong>💳 Thanh toán:</strong> 
+                                <?php if ($row['payment_method'] === 'bank_transfer'): ?>
+                                    <span style="color:#0a2a66; font-weight:600;">Chuyển khoản</span>
+                                    <?php if ($row['payment_status'] === 'paid'): ?>
+                                        <span style="display:inline-block; margin-left:5px; padding:2px 8px; background:#28a745; color:white; border-radius:10px; font-size:11px;">✓ Đã trả</span>
+                                    <?php else: ?>
+                                        <span style="display:inline-block; margin-left:5px; padding:2px 8px; background:#dc3545; color:white; border-radius:10px; font-size:11px;">⚠ CHƯA TRẢ</span>
+                                        <div style="margin-top:5px; font-size:12px; color:#d9534f; background:#fff5f5; padding:5px; border-radius:4px; border:1px solid #ffcccc;">
+                                            <strong>Ghi chú:</strong> Đơn này khách chọn CK nhưng chưa thấy tiền vào hệ thống. Cẩn thận khi giao!
+                                        </div>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <span style="color:#28a745; font-weight:600;">COD (Thu tiền mặt)</span>
+                                <?php endif; ?>
+                            </p>
                             <p><strong>💰 Thu hộ (COD):</strong> <span
                                     style="color:#d9534f; font-weight:bold;"><?php echo number_format($row['cod_amount']); ?>đ</span>
                             </p>
@@ -335,7 +352,7 @@ $pkg_map = [
                                     <div style="display:flex; gap:10px;">
                                         <button type="submit" name="update_status" value="completed" class="btn-action-sm"
                                             style="background:#28a745; flex:1;"
-                                            onclick="return confirm('Xác nhận đã giao hàng thành công và thu đủ tiền?');">
+                                            onclick="return confirmComplete('<?php echo $row['payment_method']; ?>', '<?php echo $row['payment_status']; ?>');">
                                             ✅ Đã giao thành công
                                         </button>
                                         <button type="submit" name="update_status" value="cancelled" class="btn-action-sm"
@@ -388,6 +405,15 @@ $pkg_map = [
     </main>
 
     <?php include 'includes/footer.php'; ?>
+    <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
+    <script>
+        function confirmComplete(method, status) {
+            if (method === 'bank_transfer' && status !== 'paid') {
+                return confirm('⚠️ CẢNH BÁO: Đơn hàng này thanh toán CHUYỂN KHOẢN nhưng hệ thống ghi nhận CHƯA THANH TOÁN.\n\nBạn có chắc chắn muốn hoàn tất đơn hàng này không? (Hãy đảm bảo khách đã thanh toán hoặc bạn đã thu tiền mặt thay thế)');
+            }
+            return confirm('Xác nhận đã giao hàng thành công và thu đủ tiền?');
+        }
+    </script>
 </body>
 
 </html>
