@@ -633,126 +633,71 @@
     gap: 12px;
   }
 }
+
 /* ===== FOOTER ===== */
 footer {
-  background-color: #0a2a66; /* xanh dương đậm, đồng bộ brand */
-  color: #ffffff;
+  background: #0a2a66;
+  color: #fff;
   padding: 60px 40px 30px;
-  position: relative;
 }
 
-/* Footer Content Flexbox */
+/* ===== layout 5 cột ===== */
 .footer-content {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   gap: 40px;
-  margin-bottom: 24px;
+  margin-bottom: 25px;
 }
 
-/* Footer Brand */
+/* ===== logo ===== */
 .footer-brand h3 {
-  font-size: 28px;
-  margin-bottom: 12px;
+  font-size: 26px;
+  margin-bottom: 10px;
 }
-
 .footer-brand p {
   font-size: 15px;
   color: #d0d8f0;
-  max-width: 320px;
   line-height: 1.6;
 }
 
-/* Footer Info */
+/* ===== tiêu đề ===== */
+footer h4 {
+  font-size: 17px;
+  margin-bottom: 12px;
+}
+
+/* ===== list ===== */
+footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+footer ul li {
+  margin-bottom: 8px;
+}
+
+footer ul li a {
+  color: #d0d8f0;
+  text-decoration: none;
+  font-size: 15px;
+  transition: 0.2s;
+}
+footer ul li a:hover {
+  color: #ffcc66;
+  transform: translateX(5px);
+}
+
+/* ===== liên hệ ===== */
 .footer-info p {
   font-size: 15px;
   margin-bottom: 8px;
   color: #d0d8f0;
 }
-/* Bổ sung thêm cho phần Chính sách */
-.footer-policy ul {
-  list-style: none; /* Xóa dấu chấm tròn đầu dòng */
-  padding: 0;
-  margin: 0;
-}
-
-.footer-policy ul li {
-  margin-bottom: 8px; /* Khoảng cách giữa các dòng chính sách */
-}
-/* Footer services links */
-.footer-services ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.footer-services ul li {
-  margin-bottom: 8px;
-}
-
-.footer-services ul li a,
-.footer-policy ul li a {
-  color: #d0d8f0;
-  text-decoration: none;
-  display: inline-block;
-  padding: 6px 4px;
-  transition:
-    color 0.18s ease,
-    transform 0.18s ease;
-}
-
-.footer-services ul li a:hover,
-.footer-services ul li a:focus,
-.footer-policy ul li a:hover,
-.footer-policy ul li a:focus {
-  color: #ffcc66;
-  transform: translateX(6px);
-  outline: none;
-}
-
-.footer-services ul li a:active,
-.footer-policy ul li a:active {
-  transform: translateX(2px);
-}
-
-/* Thêm hover nhẹ cho email / hotline */
 .footer-info strong {
-  color: #ff7a00; /* cam nổi bật */
-  .footer-policy h4 {
-    font-size: 16px;
-    color: #ffffff;
-    margin-bottom: 12px;
-  }
-
-  .footer-policy ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .footer-policy ul li {
-    margin-bottom: 8px;
-  }
-
-  .footer-policy ul li a {
-    color: #d0d8f0;
-    text-decoration: none;
-    display: inline-block;
-    padding: 6px 4px;
-    transition:
-      color 0.18s ease,
-      transform 0.18s ease;
-  }
-
-  .footer-policy ul li a:hover,
-  .footer-policy ul li a:focus {
-    color: #ffcc66;
-    transform: translateX(6px);
-    outline: none;
-  }
+  color: #ff7a00;
 }
 
-/* Footer Bottom */
+/* ===== bottom ===== */
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   padding-top: 16px;
@@ -760,25 +705,22 @@ footer {
   font-size: 14px;
   color: #d0d8f0;
 }
-/* ===== DESKTOP ONLY (có chuột) ===== */
-@media (hover: hover) and (pointer: fine) {
-  .dropdown:hover > .dropdown-menu {
-    display: block;
+
+/* ===== tablet ===== */
+@media (max-width: 1000px) {
+  .footer-content {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
+
+/* ===== mobile ===== */
+@media (max-width: 500px) {
   .footer-content {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 1fr;
     text-align: center;
   }
-
-  .footer-brand,
-  .footer-info {
-    max-width: 100%;
-  }
 }
+
 /* Navbar dropdown */
 .nav-menu li {
   position: relative;

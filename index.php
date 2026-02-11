@@ -68,161 +68,161 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .t-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 15px;
-        border-bottom: 1px dashed #eee;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .t-code {
-        font-size: 18px;
-        font-weight: 700;
-        color: #0a2a66;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .t-status {
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .t-status.completed {
-        background: #d4edda;
-        color: #155724;
-    }
-
-    .t-status.shipping {
-        background: #cce5ff;
-        color: #004085;
-    }
-
-    .t-status.pending {
-        background: #fff3cd;
-        color: #856404;
-    }
-
-    .t-status.cancelled {
-        background: #f8d7da;
-        color: #721c24;
-    }
-
-    .t-route {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 30px;
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 10px;
-        position: relative;
-    }
-
-    .t-route-item {
-        flex: 1;
-        position: relative;
-        z-index: 1;
-    }
-
-    .t-label {
-        font-size: 11px;
-        text-transform: uppercase;
-        color: #888;
-        letter-spacing: 0.5px;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    .t-addr {
-        font-size: 15px;
-        font-weight: 600;
-        color: #333;
-        line-height: 1.4;
-    }
-
-    .t-icon {
-        font-size: 20px;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    /* Timeline Dọc */
-    .timeline {
-        position: relative;
-        padding-left: 30px;
-    }
-
-    .timeline::before {
-        content: '';
-        position: absolute;
-        left: 9px;
-        top: 5px;
-        bottom: 0;
-        width: 2px;
-        background: #e9ecef;
-    }
-
-    .tl-item {
-        position: relative;
-        padding-bottom: 25px;
-    }
-
-    .tl-item:last-child {
-        padding-bottom: 0;
-    }
-
-    .tl-dot {
-        position: absolute;
-        left: -26px;
-        top: 4px;
-        width: 12px;
-        height: 12px;
-        background: #fff;
-        border: 2px solid #ccc;
-        border-radius: 50%;
-        z-index: 1;
-    }
-
-    .tl-item.active .tl-dot {
-        border-color: #28a745;
-        background: #28a745;
-        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
-    }
-
-    .tl-time {
-        font-size: 12px;
-        color: #999;
-        margin-bottom: 2px;
-    }
-
-    .tl-content {
-        font-size: 15px;
-        font-weight: 500;
-        color: #555;
-    }
-
-    .tl-item.active .tl-content {
-        color: #0a2a66;
-        font-weight: 700;
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        .t-code {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a2a66;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-    }
+
+        .t-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .t-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .t-status.shipping {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .t-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .t-status.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .t-route {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .t-route-item {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .t-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #888;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .t-addr {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .t-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* Timeline Dọc */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 5px;
+            bottom: 0;
+            width: 2px;
+            background: #e9ecef;
+        }
+
+        .tl-item {
+            position: relative;
+            padding-bottom: 25px;
+        }
+
+        .tl-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .tl-dot {
+            position: absolute;
+            left: -26px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .tl-item.active .tl-dot {
+            border-color: #28a745;
+            background: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+        }
+
+        .tl-time {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 2px;
+        }
+
+        .tl-content {
+            font-size: 15px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .tl-item.active .tl-content {
+            color: #0a2a66;
+            font-weight: 700;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -619,90 +619,90 @@ if (isset($_SESSION['user_id'])) {
 
     <!-- Biến JS để kiểm tra trạng thái login -->
     <script>
-    window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
-    window.servicesData =
-        <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-    window.pricingConfig =
-        <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        window.isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+        window.servicesData =
+            <?php echo json_encode($services_list, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        window.pricingConfig =
+            <?php echo json_encode($pricing_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
     </script>
     <!-- Thêm SwiperJS JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 
     <script>
-    // Bổ sung hàm trackOrder để xử lý tra cứu đơn hàng
-    async function trackOrder(event, type) {
-        event.preventDefault();
+        // Bổ sung hàm trackOrder để xử lý tra cứu đơn hàng
+        async function trackOrder(event, type) {
+            event.preventDefault();
 
-        const codeInput = document.getElementById(type + '-code');
-        const resultDiv = document.getElementById('result-' + type);
-        const spinner = document.getElementById('loading-spinner-' + type);
+            const codeInput = document.getElementById(type + '-code');
+            const resultDiv = document.getElementById('result-' + type);
+            const spinner = document.getElementById('loading-spinner-' + type);
 
-        if (!codeInput || !resultDiv) return;
+            if (!codeInput || !resultDiv) return;
 
-        const code = codeInput.value.trim();
-        if (!code) {
-            alert('Vui lòng nhập mã vận đơn');
-            return;
-        }
+            const code = codeInput.value.trim();
+            if (!code) {
+                alert('Vui lòng nhập mã vận đơn');
+                return;
+            }
 
-        // Hiển thị loading
-        if (spinner) spinner.style.display = 'block';
-        resultDiv.innerHTML = '';
+            // Hiển thị loading
+            if (spinner) spinner.style.display = 'block';
+            resultDiv.innerHTML = '';
 
-        try {
-            // Gọi API vừa tạo
-            const response = await fetch('api_tracking.php?code=' + encodeURIComponent(code));
-            const data = await response.json();
+            try {
+                // Gọi API vừa tạo
+                const response = await fetch('tracking_ajax.php?code=' + encodeURIComponent(code));
+                const data = await response.json();
 
-            if (spinner) spinner.style.display = 'none';
+                if (spinner) spinner.style.display = 'none';
 
-            if (data.success) {
-                const order = data.data;
-                let timelineHtml = '';
+                if (data.success) {
+                    const order = data.data;
+                    let timelineHtml = '';
 
-                // Xác định class màu sắc cho trạng thái
-                let statusClass = 'pending';
-                const rawStatus = order.status_raw || order.status; // Fallback nếu thiếu status_raw
-                if (rawStatus === 'completed' || rawStatus === 'delivered') statusClass = 'completed';
-                else if (rawStatus === 'shipping' || rawStatus === 'delivering' || rawStatus === 'picked')
-                    statusClass = 'shipping';
-                else if (rawStatus === 'cancelled') statusClass = 'cancelled';
+                    // Xác định class màu sắc cho trạng thái
+                    let statusClass = 'pending';
+                    const rawStatus = order.status_raw || order.status; // Fallback nếu thiếu status_raw
+                    if (rawStatus === 'completed' || rawStatus === 'delivered') statusClass = 'completed';
+                    else if (rawStatus === 'shipping' || rawStatus === 'delivering' || rawStatus === 'picked')
+                        statusClass = 'shipping';
+                    else if (rawStatus === 'cancelled') statusClass = 'cancelled';
 
-                // Xây dựng HTML cho timeline
-                if (data.timeline && data.timeline.length > 0) {
-                    timelineHtml = '<div class="timeline">';
-                    // Đảo ngược mảng để sự kiện mới nhất lên đầu
-                    const reversedTimeline = [...data.timeline].reverse();
+                    // Xây dựng HTML cho timeline
+                    if (data.timeline && data.timeline.length > 0) {
+                        timelineHtml = '<div class="timeline">';
+                        // Đảo ngược mảng để sự kiện mới nhất lên đầu
+                        const reversedTimeline = [...data.timeline].reverse();
 
-                    reversedTimeline.forEach((item, index) => {
-                        // Map lại text hiển thị cho timeline
-                        const statusMap = {
-                            'created': 'Đơn hàng đã được tạo',
-                            'pending': 'Đang chờ xử lý',
-                            'assigned': 'Đã điều phối tài xế',
-                            'picked': 'Tài xế đã lấy hàng',
-                            'delivering': 'Đang trên đường giao',
-                            'delivered': 'Giao hàng thành công',
-                            'cancelled': 'Đơn hàng đã hủy',
-                            'shipping': 'Đang trên đường giao',
-                            'completed': 'Giao hàng thành công'
-                        };
-                        const statusText = statusMap[item.status] || item.status;
-                        const isActive = index === 0 ? 'active' : ''; // Item đầu tiên (mới nhất) là active
+                        reversedTimeline.forEach((item, index) => {
+                            // Map lại text hiển thị cho timeline
+                            const statusMap = {
+                                'created': 'Đơn hàng đã được tạo',
+                                'pending': 'Đang chờ xử lý',
+                                'assigned': 'Đã điều phối tài xế',
+                                'picked': 'Tài xế đã lấy hàng',
+                                'delivering': 'Đang trên đường giao',
+                                'delivered': 'Giao hàng thành công',
+                                'cancelled': 'Đơn hàng đã hủy',
+                                'shipping': 'Đang trên đường giao',
+                                'completed': 'Giao hàng thành công'
+                            };
+                            const statusText = statusMap[item.status] || item.status;
+                            const isActive = index === 0 ? 'active' : ''; // Item đầu tiên (mới nhất) là active
 
-                        timelineHtml += `
+                            timelineHtml += `
                             <div class="tl-item ${isActive}">
                                 <div class="tl-dot"></div>
                                 <div class="tl-time">${item.time}</div>
                                 <div class="tl-content">${statusText}</div>
                             </div>
                         `;
-                    });
-                    timelineHtml += '</div>';
-                }
+                        });
+                        timelineHtml += '</div>';
+                    }
 
-                resultDiv.innerHTML = `
+                    resultDiv.innerHTML = `
                     <div class="tracking-card">
                         <div class="t-header">
                             <div class="t-code">📦 ${order.order_code}</div>
@@ -724,17 +724,17 @@ if (isset($_SESSION['user_id'])) {
                         ${timelineHtml}
                     </div>
                 `;
-            } else {
+                } else {
+                    resultDiv.innerHTML =
+                        `<div class="error-box" style="color:red; margin-top:10px; text-align:center;">${data.message}</div>`;
+                }
+            } catch (error) {
+                console.error(error);
+                if (spinner) spinner.style.display = 'none';
                 resultDiv.innerHTML =
-                    `<div class="error-box" style="color:red; margin-top:10px; text-align:center;">${data.message}</div>`;
+                    `<div class="error-box" style="color:red; margin-top:10px; text-align:center;">Lỗi kết nối hệ thống.</div>`;
             }
-        } catch (error) {
-            console.error(error);
-            if (spinner) spinner.style.display = 'none';
-            resultDiv.innerHTML =
-                `<div class="error-box" style="color:red; margin-top:10px; text-align:center;">Lỗi kết nối hệ thống.</div>`;
         }
-    }
     </script>
 </body>
 
