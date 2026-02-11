@@ -5,10 +5,38 @@
             <p>Dịch vụ giao hàng nhanh chóng – an toàn – đúng giờ.</p>
         </div>
 
+        <div class="footer-services">
+            <h4>Dịch vụ</h4>
+            <ul>
+                <li><a href="#standard-delivery">Giao nội thành</a></li>
+                <li><a href="#express-delivery">Giao hỏa tốc</a></li>
+                <li><a href="#cod-delivery">Giao COD</a></li>
+                <li><a href="#bulk-delivery">Giao hàng số lượng lớn</a></li>
+                <li><a href="#corporate-delivery">Dịch vụ doanh nghiệp</a></li>
+                <li><a href="#moving-service">Chuyển nhà / Vận chuyển lớn</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-policy">
+            <h4>Chính sách</h4>
+            <ul>
+                <li><a href="#terms">Điều khoản sử dụng</a></li>
+                <li><a href="#privacy">Chính sách bảo mật</a></li>
+                <li><a href="#refund-policy">Chính sách hoàn tiền</a></li>
+                <li><a href="#shipping-policy">Chính sách vận chuyển</a></li>
+            </ul>
+        </div>
+
         <div class="footer-info">
-            <p><strong>Email:</strong> contact@fastgo.vn</p>
-            <p><strong>Hotline:</strong> 0123 456 789</p>
-            <p><strong>Địa chỉ:</strong> TP. Hồ Chí Minh</p>
+            <p>
+                <strong>📧 Email:</strong>
+                <a href="mailto:dichvuquanhta.vn@gmail.com">dichvuquanhta.vn@gmail.com</a>
+            </p>
+            <p>
+                <strong>📞 Hotline:</strong>
+                <a href="tel:0775472347">0775472347</a>
+            </p>
+            <p><strong>📍 Địa chỉ:</strong> TP. Hồ Chí Minh</p>
         </div>
     </div>
 

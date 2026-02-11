@@ -669,10 +669,87 @@ footer {
   margin-bottom: 8px;
   color: #d0d8f0;
 }
+/* Bổ sung thêm cho phần Chính sách */
+.footer-policy ul {
+  list-style: none; /* Xóa dấu chấm tròn đầu dòng */
+  padding: 0;
+  margin: 0;
+}
+
+.footer-policy ul li {
+  margin-bottom: 8px; /* Khoảng cách giữa các dòng chính sách */
+}
+/* Footer services links */
+.footer-services ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-services ul li {
+  margin-bottom: 8px;
+}
+
+.footer-services ul li a,
+.footer-policy ul li a {
+  color: #d0d8f0;
+  text-decoration: none;
+  display: inline-block;
+  padding: 6px 4px;
+  transition:
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.footer-services ul li a:hover,
+.footer-services ul li a:focus,
+.footer-policy ul li a:hover,
+.footer-policy ul li a:focus {
+  color: #ffcc66;
+  transform: translateX(6px);
+  outline: none;
+}
+
+.footer-services ul li a:active,
+.footer-policy ul li a:active {
+  transform: translateX(2px);
+}
 
 /* Thêm hover nhẹ cho email / hotline */
 .footer-info strong {
   color: #ff7a00; /* cam nổi bật */
+  .footer-policy h4 {
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 12px;
+  }
+
+  .footer-policy ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-policy ul li {
+    margin-bottom: 8px;
+  }
+
+  .footer-policy ul li a {
+    color: #d0d8f0;
+    text-decoration: none;
+    display: inline-block;
+    padding: 6px 4px;
+    transition:
+      color 0.18s ease,
+      transform 0.18s ease;
+  }
+
+  .footer-policy ul li a:hover,
+  .footer-policy ul li a:focus {
+    color: #ffcc66;
+    transform: translateX(6px);
+    outline: none;
+  }
 }
 
 /* Footer Bottom */
