@@ -147,7 +147,7 @@ Hệ thống sử dụng các bảng chính:
 2.  **Cài đặt Database:**
     - Mở phpMyAdmin (thường là `http://localhost/phpmyadmin`).
     - Tạo database mới tên: `shipper_db`.
-    - Import file `database.sql` (đã đính kèm trong mã nguồn) vào database vừa tạo.
+    - Import file `database/shipper_db.sql` (đã đính kèm trong mã nguồn) vào database vừa tạo.
 
 3.  **Cấu hình kết nối:**
     Mở file `config/db.php` và chỉnh sửa thông tin:
@@ -164,7 +164,7 @@ Hệ thống sử dụng các bảng chính:
     - Vào phpMyAdmin, bảng `users`, sửa cột `role` của tài khoản vừa tạo thành `admin`.
 
 5.  **Chạy dự án:**
-    - Tạo thư mục `uploads/` tại thư mục gốc để lưu ảnh bằng chứng giao hàng (POD).
+    - Tạo thư mục `public/uploads/` để lưu ảnh để lưu ảnh bằng chứng giao hàng (POD).
     - Đảm bảo thư mục này có quyền ghi (Write permission).
       Truy cập `http://localhost/Web%20shipper/` (hoặc đường dẫn tương ứng).
 
@@ -197,7 +197,7 @@ _Lưu ý: Giá trên chỉ mang tính chất tham khảo và có thể thay đ�
 | Shipper  | `Thien`       | `123456` |
 | Customer | `Anguyen`     | `291503` |
 
-> _Lưu ý: Bạn cần tạo các tài khoản này thủ công hoặc import file `database.sql` có sẵn._
+> _Lưu ý: Bạn cần tạo các tài khoản này thủ công hoặc Import file `database/shipper_db.sql` có sẵn._
 
 </details>
 
@@ -221,26 +221,17 @@ _Lưu ý: Giá trên chỉ mang tính chất tham khảo và có thể thay đ�
 
 ```
 Web shipper/
-├──  assets/                  # Tài nguyên tĩnh (CSS, JS, Images)
-├──  config/                  # Cấu hình hệ thống (db.php)
-├──  includes/                # Các đoạn mã dùng chung (Header, Footer)
-│
-├──  index.php                # Trang chủ (Landing Page)
-├──  login.php / register.php # Trang đăng nhập / đăng ký
-├──  tracking.php             # Trang tra cứu đơn hàng công khai
-│
-├──  dashboard.php            # Dashboard Khách hàng & Lịch sử đơn
-├──  order.php                # File xử lý tạo đơn hàng
-│
-├──  shipper_dashboard.php    # Dashboard cho Shipper
-├──  shipper_order_detail.php # Chi tiết & Xử lý đơn của Shipper
-│
-├──  orders_manage.php        # Quản lý toàn bộ đơn hàng (Admin)
-├──  users_manage.php         # Quản lý người dùng (Admin)
-├──  services_manage.php      # Quản lý dịch vụ & giá cước (Admin)
-├──  admin_settings.php       # Cấu hình hệ thống (Admin)
-│
-└── ... (các file xử lý AJAX và chi tiết khác)
+├── public/                 # Web root
+│   ├── assets/             # CSS, JS, Images
+│   ├── uploads/            # POD images
+│   ├── index.php
+│   └── *.php, *.html        # Entry pages
+├── config/                 # db.php, settings_helper.php
+├── includes/               # header/footer partials
+├── database/               # shipper_db.sql
+├── index.html
+├── README.md
+└── .git/
 ```
 
 </details>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>Dịch vụ Shipper | FastGo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="public/assets/css/styles.css" />
     <!-- Thêm SwiperJS CSS -->
     <link
       rel="stylesheet"
@@ -176,7 +176,7 @@
                 openBookingModal();
                 return false;
               ">Đặt hàng</a></li>
-          <li><a href="huong-dan-dat-hang.html" target="_blank">Hướng dẫn</a></li>
+          <li><a href="public/huong-dan-dat-hang.html" target="_blank">Hướng dẫn</a></li>
           <li><a href="#login">Đăng nhập</a></li>
           <li>
             <a
@@ -216,7 +216,7 @@
               >Đặt hàng ngay</a
             >
             <a
-              href="huong-dan-dat-hang.html"
+              href="public/huong-dan-dat-hang.html"
               class="btn-secondary btn-blink"
               target="_blank"
               >📖 Hướng dẫn</a
@@ -246,7 +246,7 @@
           </div>
         </div>
         <div class="hero-image animate-right">
-          <img src="assets/images/hero.png" alt="FastGo Shipper" />
+          <img src="public/assets/images/hero.png" alt="FastGo Shipper" />
         </div>
       </div>
     </section>
@@ -288,7 +288,7 @@
         <div class="process-container">
           <div class="process-item animate-up">
             <img
-              src="assets/images/order.png"
+              src="public/assets/images/order.png"
               alt="Đặt đơn"
               class="process-img"
             />
@@ -301,7 +301,7 @@
           <div class="process-arrow">➔</div>
           <div class="process-item animate-up" style="animation-delay: 0.2s">
             <img
-              src="assets/images/hero-shipper.png"
+              src="public/assets/images/hero-shipper.png"
               alt="Lấy hàng"
               class="process-img"
             />
@@ -313,7 +313,7 @@
           <div class="process-arrow">➔</div>
           <div class="process-item animate-up" style="animation-delay: 0.4s">
             <img
-              src="assets/images/package.png"
+              src="public/assets/images/package.png"
               alt="Giao hàng"
               class="process-img"
             />
@@ -328,38 +328,71 @@
     </section>
 
     <!-- SERVICES -->
-    <section id="services">
-      <h2 class="section-title">Dịch vụ của chúng tôi</h2>
-      <p class="section-desc">
-        FastGo cung cấp đa dạng dịch vụ giao hàng, đáp ứng mọi nhu cầu của bạn.
-      </p>
-      <div class="service-list" id="services-list">
-        <div class="service-card" id="standard-delivery">
-          <h3>Giao nội thành</h3>
-          <p>Giao hàng nhanh trong khu vực nội thành chỉ từ 30–60 phút.</p>
-        </div>
-        <div class="service-card" id="express-delivery">
-          <h3>Giao hỏa tốc</h3>
-          <p>Ưu tiên đơn gấp, giao ngay trong thời gian sớm nhất.</p>
-        </div>
-        <div class="service-card" id="cod-delivery">
-          <h3>Giao COD</h3>
-          <p>Thu hộ tiền mặt an toàn, minh bạch và nhanh chóng.</p>
-        </div>
-        <div class="service-card" id="bulk-delivery">
-          <h3>Giao hàng số lượng lớn</h3>
-          <p>Hỗ trợ doanh nghiệp và shop online giao nhiều đơn cùng lúc.</p>
-        </div>
-        <div class="service-card" id="corporate-delivery">
-          <h3>Dịch vụ doanh nghiệp</h3>
-          <p>Giải pháp giao hàng chuyên nghiệp cho doanh nghiệp.</p>
-        </div>
-        <div class="service-card" id="moving-service">
-          <h3>Chuyển nhà / Vận chuyển lớn</h3>
-          <p>Hỗ trợ vận chuyển hàng hóa lớn, chuyển nhà, văn phòng.</p>
-        </div>
+<section id="services">
+  <h2 class="section-title">Dịch vụ của chúng tôi</h2>
+  <p class="section-desc">
+    FastGo cung cấp 2 nhóm dịch vụ chính để bạn chọn nhanh đúng nhu cầu.
+  </p>
+
+  <div class="services-group">
+    <h3 class="services-group-title">⚡ Giao Hàng Chặng Ngắn & Thương Mại Điện Tử</h3>
+    <p class="services-group-desc">
+      Phù hợp cho cá nhân, shop online và doanh nghiệp cần giao trong ngày.
+    </p>
+    <div class="service-list" id="services-list-delivery">
+      <div class="service-card">
+        <h3>Giao nội thành</h3>
+        <p>Giao hàng nhanh trong khu vực nội thành chỉ từ 30–60 phút.</p>
       </div>
-    </section>
+
+      <div class="service-card">
+        <h3>Giao hỏa tốc</h3>
+        <p>Ưu tiên đơn gấp, giao ngay trong thời gian sớm nhất.</p>
+      </div>
+
+      <div class="service-card">
+        <h3>Giao COD</h3>
+        <p>Thu hộ tiền mặt an toàn, minh bạch và nhanh chóng.</p>
+      </div>
+
+      <div class="service-card">
+        <h3>Giao hàng số lượng lớn</h3>
+        <p>Hỗ trợ doanh nghiệp và shop online giao nhiều đơn cùng lúc.</p>
+      </div>
+
+      <div class="service-card">
+        <h3>Dịch vụ doanh nghiệp</h3>
+        <p>Giải pháp giao hàng chuyên nghiệp cho doanh nghiệp.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="services-group">
+    <h3 class="services-group-title">🚛 Dịch Vụ Chuyển Dọn Chuyên Nghiệp</h3>
+    <p class="services-group-desc">
+      Dành cho nhu cầu di dời tài sản khối lượng lớn và cần đội vận chuyển chuyên biệt.
+    </p>
+    <div class="service-list" id="services-list-moving">
+      <div class="service-card">
+        <h3>Chuyển nhà</h3>
+        <p>Dịch vụ chuyển nhà trọn gói, đóng gói và vận chuyển an toàn.</p>
+        <a href="/public/chuyen-nha.html" class="btn-primary">Xem chi tiết</a>
+      </div>
+
+      <div class="service-card">
+        <h3>Chuyển kho bãi</h3>
+        <p>Vận chuyển hàng hóa số lượng lớn cho kho và doanh nghiệp.</p>
+        <a href="/public/chuyen-kho-bai.html" class="btn-primary">Xem chi tiết</a>
+      </div>
+
+      <div class="service-card">
+        <h3>Chuyển văn phòng</h3>
+        <p>Di dời thiết bị, bàn ghế và tài liệu văn phòng nhanh chóng.</p>
+        <a href="/public/chuyen-van-phong.html" class="btn-primary">Xem chi tiết</a>
+      </div>
+    </div>
+  </div>
+</section>
 
     <!-- FEATURES -->
     <section id="features">
@@ -627,14 +660,14 @@
         <div class="footer-services">
           <h4>Dịch vụ</h4>
           <ul>
-            <li><a href="#standard-delivery">Giao hàng tiêu chuẩn</a></li>
-            <li><a href="#express-delivery">Giao hàng hỏa tốc</a></li>
-            <li><a href="#express-delivery">Giao hàng trong ngày</a></li>
-            <li><a href="#cod-delivery">Giao hàng COD</a></li>
-            <li><a href="#services">Giao hàng liên tỉnh</a></li>
-            <li><a href="#moving-service">Giao hàng xe tải / hàng lớn</a></li>
-            <li><a href="#quick-quote">Tính giá vận chuyển</a></li>
-            <li><a href="#home-tracking">Theo dõi đơn hàng</a></li>
+            <li><a href="#services">Giao nội thành</a></li>
+            <li><a href="#services">Giao hỏa tốc</a></li>
+            <li><a href="#services">Giao COD</a></li>
+            <li><a href="#services">Giao hàng số lượng lớn</a></li>
+            <li><a href="#services">Dịch vụ doanh nghiệp</a></li>
+            <li><a href="public/chuyen-nha.html">Chuyển nhà</a></li>
+            <li><a href="public/chuyen-kho-bai.html">Chuyển kho bãi</a></li>
+            <li><a href="public/chuyen-van-phong.html">Chuyển văn phòng</a></li>
           </ul>
         </div>
 
@@ -645,7 +678,7 @@
             <li><a href="#shipping-policy">Chính sách vận chuyển</a></li>
             <li><a href="#privacy">Chính sách bảo mật</a></li>
             <li><a href="#terms">Điều khoản sử dụng</a></li>
-            <li><a href="huong-dan-dat-hang.html" target="_blank">Hướng dẫn sử dụng</a></li>
+            <li><a href="public/huong-dan-dat-hang.html" target="_blank">Hướng dẫn sử dụng</a></li>
           </ul>
         </div>
 
@@ -677,7 +710,7 @@
 
     <!-- Thêm SwiperJS JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="public/assets/js/main.js"></script>
     <!-- AUTH MODAL (Popup Đăng nhập) -->
     <div id="auth-modal" class="modal">
       <div class="modal-content">
@@ -1003,9 +1036,31 @@
         </p>
 
         <form id="quick-booking-form">
+          <!-- 0. CHỌN LOẠI DỊCH VỤ (Đưa lên đầu) -->
+          <div class="form-section">
+            <h3>1. Chọn loại dịch vụ</h3>
+            <div class="form-grid">
+              <div style="grid-column: 1/-1">
+                <select name="service_type" id="service_type" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                  <option value="">-- Vui lòng chọn dịch vụ --</option>
+                  <optgroup label="Giao hàng nhanh">
+                    <option value="standard">Giao tiêu chuẩn (30,000đ)</option>
+                    <option value="express">Giao hỏa tốc (50,000đ)</option>
+                    <option value="bulk">Giao hàng số lượng lớn</option>
+                  </optgroup>
+                  <optgroup label="Dịch vụ chuyển dọn">
+                    <option value="moving_house">🚛 Chuyển nhà trọn gói</option>
+                    <option value="moving_office">🏢 Chuyển văn phòng</option>
+                    <option value="moving_warehouse">🏭 Chuyển kho bãi</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <!-- THÔNG TIN NGƯỜI GỬI -->
           <div class="form-section">
-            <h3>1. Thông tin người gửi</h3>
+            <h3>2. Thông tin người gửi</h3>
             <div class="form-grid">
               <div>
                 <label
@@ -1087,10 +1142,10 @@
           </div>
 
           <!-- THÔNG TIN NGƯỜI NHẬN -->
-          <div class="form-section">
-            <h3>2. Thông tin người nhận</h3>
+          <div class="form-section dynamic-group">
+            <h3>3. Thông tin người nhận</h3>
             <div class="form-grid">
-              <div>
+              <div id="receiver-name-group">
                 <label
                   style="
                     display: block;
@@ -1115,7 +1170,7 @@
                   "
                 />
               </div>
-              <div>
+              <div id="receiver-phone-group">
                 <label
                   style="
                     display: block;
@@ -1171,37 +1226,9 @@
 
           <!-- THÔNG TIN HÀNG HÓA -->
           <div class="form-section">
-            <h3>3. Thông tin hàng hóa</h3>
+            <h3>4. Thông tin hàng hóa / Yêu cầu</h3>
             <div class="form-grid">
-              <div>
-                <label
-                  style="
-                    display: block;
-                    font-size: 13px;
-                    font-weight: 600;
-                    color: #0a2a66;
-                    margin-bottom: 5px;
-                  "
-                  >Loại dịch vụ *</label
-                >
-                <select
-                  name="service_type"
-                  required
-                  style="
-                    width: 100%;
-                    padding: 10px;
-                    border: 1px solid #ddd;
-                    border-radius: 6px;
-                    font-size: 14px;
-                  "
-                >
-                  <option value="">-- Chọn dịch vụ --</option>
-                  <option value="standard">Giao tiêu chuẩn (30,000đ)</option>
-                  <option value="express">Giao hỏa tốc (50,000đ)</option>
-                  <option value="bulk">Giao hàng số lượng lớn</option>
-                </select>
-              </div>
-              <div>
+              <div id="package-type-group" class="dynamic-group">
                 <label
                   style="
                     display: block;
@@ -1231,7 +1258,7 @@
                   <option value="other">Khác</option>
                 </select>
               </div>
-              <div>
+              <div id="weight-group" class="dynamic-group">
                 <label
                   style="
                     display: block;
@@ -1258,7 +1285,7 @@
                   "
                 />
               </div>
-              <div>
+              <div id="cod-group" class="dynamic-group">
                 <label
                   style="
                     display: block;
@@ -1284,6 +1311,90 @@
                   "
                 />
               </div>
+
+              <!-- UI Động cho nhóm Chuyển dọn (Moving) -->
+              <div id="moving-fields" class="dynamic-group hidden" style="display: none; grid-column: 1/-1; background: #f8faff; padding: 15px; border-radius: 8px; border: 1px dashed #0a2a66;">
+                <h4 style="font-size: 14px; color: #0a2a66; margin-bottom: 10px; font-weight: 600; border-bottom: 1px solid #e0e0e0; padding-bottom: 5px;">📦 Thông tin chuyển dọn</h4>
+                <div class="form-grid">
+                    <!-- Chung cho Moving -->
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #0a2a66; margin-bottom: 5px;">Số tầng (Đi ➔ Đến)</label>
+                        <input type="text" name="moving_floors" placeholder="VD: Tầng 3 ➔ Tầng 1" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+                    <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px;">
+                         <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor: pointer; color: #333;">
+                            <input type="checkbox" name="moving_elevator" style="width: 16px; height: 16px;"> Có thang máy
+                         </label>
+                         <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor: pointer; color: #333;">
+                            <input type="checkbox" name="moving_packing" style="width: 16px; height: 16px;"> Cần đóng gói/tháo lắp
+                         </label>
+                    </div>
+
+                    <!-- Riêng Chuyển Nhà -->
+                    <div class="moving-house-only" style="display:none;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #0a2a66; margin-bottom: 5px;">Loại nhà</label>
+                        <select name="house_type" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                            <option value="nhapho">Nhà phố</option>
+                            <option value="chungcu">Chung cư</option>
+                            <option value="bietthu">Biệt thự</option>
+                            <option value="phongtro">Phòng trọ</option>
+                        </select>
+                    </div>
+                    <div class="moving-house-only" style="display:none;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #0a2a66; margin-bottom: 5px;">Số phòng ngủ</label>
+                        <input type="number" name="house_bedrooms" placeholder="VD: 2" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+                    <div class="moving-house-only" style="display:none; grid-column: 1/-1;">
+                         <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor: pointer; color: #333; margin-bottom: 10px;">
+                            <input type="checkbox" name="house_truck_access" style="width: 16px; height: 16px;"> Hẻm xe tải vào được?
+                         </label>
+                         <label style="display: block; font-size: 13px; font-weight: 600; color: #0a2a66; margin-bottom: 5px;">Vật dụng đặc biệt (Piano, Két sắt...)</label>
+                         <textarea name="house_special_items" placeholder="Mô tả vật dụng nặng, cồng kềnh..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; min-height: 60px; font-family: inherit;"></textarea>
+                    </div>
+
+                    <!-- Riêng Văn Phòng -->
+                    <div class="moving-office-only" style="display:none;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #0a2a66; margin-bottom: 5px;">Số lượng nhân viên</label>
+                        <input type="number" name="office_employees" placeholder="VD: 10" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+                    <div class="moving-office-only" style="display:none;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #0a2a66; margin-bottom: 5px;">Số lượng bàn làm việc</label>
+                        <input type="number" name="office_desks" placeholder="VD: 15" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+                    <div class="moving-office-only" style="display:none;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #0a2a66; margin-bottom: 5px;">Diện tích văn phòng (m²)</label>
+                        <input type="number" name="office_area" placeholder="VD: 100" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+                    <div class="moving-office-only" style="display:none; grid-column: 1/-1;">
+                         <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor: pointer; color: #333;">
+                            <input type="checkbox" name="office_it_move" style="width: 16px; height: 16px;"> Có di dời hệ thống Server/IT không?
+                         </label>
+                    </div>
+
+                    <!-- Riêng Kho Bãi -->
+                    <div class="moving-warehouse-only" style="display:none;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #0a2a66; margin-bottom: 5px;">Loại hàng hóa chính</label>
+                        <select name="warehouse_cargo_type" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                            <option value="general">Hàng đóng kiện/pallet</option>
+                            <option value="bulk">Hàng rời</option>
+                            <option value="machinery">Máy móc công nghiệp</option>
+                            <option value="construction">Vật liệu xây dựng</option>
+                            <option value="frozen">Hàng đông lạnh</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    <div class="moving-warehouse-only" style="display:none;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: #0a2a66; margin-bottom: 5px;">Tổng khối lượng/Thể tích</label>
+                        <input type="text" name="warehouse_volume" placeholder="VD: 5 tấn hoặc 20m³" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+                    <div class="moving-warehouse-only" style="display:none; grid-column: 1/-1;">
+                         <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor: pointer; color: #333;">
+                            <input type="checkbox" name="warehouse_forklift" style="width: 16px; height: 16px;"> Yêu cầu xe nâng / xe cẩu?
+                         </label>
+                    </div>
+                </div>
+              </div>
+
               <div style="grid-column: 1/-1">
                 <label
                   style="
@@ -1314,7 +1425,7 @@
 
           <!-- THÔNG TIN THANH TOÁN -->
           <div class="form-section">
-            <h3>4. Thanh toán & Hóa đơn</h3>
+            <h3>5. Thanh toán & Hóa đơn</h3>
             <div class="form-grid">
               <div>
                 <label
@@ -1520,6 +1631,60 @@
           closeBookingModal();
         }
       });
+
+      // --- LOGIC MỚI: Xử lý hiển thị form động cho dịch vụ Moving ---
+      document.addEventListener('DOMContentLoaded', function() {
+
+      const serviceSelect = document.querySelector('select[name="service_type"]');
+      const deliveryGroups = document.querySelectorAll('.dynamic-group:not(#moving-fields)');
+      const movingFields = document.getElementById('moving-fields');
+
+      const houseFields = document.querySelectorAll('.moving-house-only');
+      const officeFields = document.querySelectorAll('.moving-office-only');
+      const warehouseFields = document.querySelectorAll('.moving-warehouse-only');
+
+      // ===== Logic change dịch vụ =====
+      if (serviceSelect) {
+          serviceSelect.addEventListener('change', function() {
+              const val = this.value;
+              const isMoving = val.startsWith('moving_');
+
+              // 1. Ẩn/Hiện nhóm giao hàng
+              if (isMoving) {
+                  deliveryGroups.forEach(el => el.style.display = 'none');
+              } else {
+                  deliveryGroups.forEach(el => el.style.display = 'block');
+              }
+
+              // 2. Ẩn/Hiện khu vực Moving
+              if (movingFields) {
+                  movingFields.style.display = isMoving ? 'block' : 'none';
+              }
+
+              // 3. Logic bên trong Moving
+              houseFields.forEach(el => el.style.display = (val === 'moving_house') ? 'block' : 'none');
+              officeFields.forEach(el => el.style.display = (val === 'moving_office') ? 'block' : 'none');
+              warehouseFields.forEach(el => el.style.display = (val === 'moving_warehouse') ? 'block' : 'none');
+          });
+      }
+
+      // ===== Tự động mở modal từ URL =====
+      const urlParams = new URLSearchParams(window.location.search);
+
+      if (urlParams.get('open_booking') === 'true') {
+
+          if (typeof openBookingModal === "function") {
+              openBookingModal();
+          }
+
+          const serviceParam = urlParams.get('service');
+
+          if (serviceParam && serviceSelect) {
+              serviceSelect.value = serviceParam;
+              serviceSelect.dispatchEvent(new Event('change'));
+          }
+      }
+    });
     </script>
   </body>
 </html>
