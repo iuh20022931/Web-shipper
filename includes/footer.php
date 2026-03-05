@@ -21,7 +21,6 @@
                 <li><a href="../index.html#services">Giao tiêu chuẩn</a></li>
                 <li><a href="../index.html#services">Giao nhanh</a></li>
                 <li><a href="../index.html#services">Giao hỏa tốc</a></li>
-                <li><a href="../index.html#services">Giao COD</a></li>
                 <li><a href="../index.html#services">Giao hàng quốc tế</a></li>
                 <li><a href="chuyen-nha.html">Chuyển nhà</a></li>
                 <li><a href="chuyen-van-phong.html">Chuyển văn phòng</a></li>

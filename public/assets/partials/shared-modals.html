@@ -1,14 +1,11 @@
 <!-- DELIVERY BOOKING MODAL -->
-<div id="booking-modal-delivery" class="modal" style="display: none">
-  <div
-    class="modal-content"
-    style="max-width: 900px; max-height: 90vh; overflow-y: auto"
-  >
+<div id="booking-modal-delivery" class="modal booking-modal">
+  <div class="modal-content booking-modal-content">
     <span class="modal-close-btn" onclick="closeBookingModal('delivery')"
       >&times;</span
     >
-    <h2 style="color: #0a2a66; margin-bottom: 10px">📦 Đặt đơn giao hàng</h2>
-    <p style="color: #666; margin-bottom: 20px">
+    <h2 class="booking-modal-title">📦 Đặt đơn giao hàng</h2>
+    <p class="booking-modal-subtitle">
       Dành cho giao chậm, tiêu chuẩn, giao nhanh và hỏa tốc.
     </p>
 
@@ -20,7 +17,7 @@
       <div class="form-section">
         <h3>1. Chọn gói giao hàng</h3>
         <div class="form-grid">
-          <div style="grid-column: 1/-1">
+          <div class="grid-span-full">
             <select name="service_type" id="order-service-type" required>
               <option value="">-- Vui lòng chọn gói --</option>
               <option value="slow">Giao chậm</option>
@@ -56,7 +53,7 @@
               required
             />
           </div>
-          <div style="grid-column: 1/-1">
+          <div class="grid-span-full">
             <label>Địa chỉ lấy hàng *</label>
             <input
               type="text"
@@ -91,7 +88,7 @@
               required
             />
           </div>
-          <div style="grid-column: 1/-1">
+          <div class="grid-span-full">
             <label>Địa chỉ giao hàng *</label>
             <input
               type="text"
@@ -101,13 +98,13 @@
               required
             />
           </div>
-          <div id="delivery-intl-country-group" style="display: none">
+          <div id="delivery-intl-country-group" class="is-hidden">
             <label>Quốc gia nhận *</label>
             <select id="delivery-intl-country" name="intl_country">
               <option value="">Chọn quốc gia nhận</option>
             </select>
           </div>
-          <div id="delivery-intl-province-group" style="display: none">
+          <div id="delivery-intl-province-group" class="is-hidden">
             <label>Tỉnh/Thành phố nhận (quốc tế)</label>
             <select id="delivery-intl-province" name="intl_province" disabled>
               <option value="">Chọn tỉnh/thành phố nhận</option>
@@ -152,7 +149,7 @@
               min="0"
             />
           </div>
-          <div style="grid-column: 1/-1">
+          <div class="grid-span-full">
             <label>Ghi chú cho tài xế</label>
             <textarea
               name="note"
@@ -161,32 +158,16 @@
           </div>
 
           <!-- Hidden Dimensions -->
-          <div style="grid-column: 1/-1">
+          <div class="grid-span-full">
             <a
               href="#"
-              onclick="
-                document.getElementById(
-                  'modal-dimensions-group',
-                ).style.display = 'grid';
-                this.style.display = 'none';
-                return false;
-              "
-              style="
-                color: #ff7a00;
-                font-size: 13px;
-                text-decoration: none;
-                font-weight: 600;
-              "
+              id="toggle-delivery-dimensions"
+              class="dimensions-toggle-link"
               >+ Nhập kích thước (Nếu hàng cồng kềnh)</a
             >
             <div
               id="modal-dimensions-group"
-              class="form-grid"
-              style="
-                display: none;
-                margin-top: 10px;
-                grid-template-columns: 1fr 1fr 1fr;
-              "
+              class="form-grid dimensions-grid is-hidden"
             >
               <div>
                 <label>Dài (cm)</label>
@@ -245,10 +226,10 @@
           </div>
           <div
             id="corporate-fields-delivery"
-            style="grid-column: 1/-1; display: none"
+            class="grid-span-full corporate-fields is-hidden"
           >
             <div class="form-grid">
-              <div style="grid-column: 1/-1">
+              <div class="grid-span-full">
                 <label>Tên công ty *</label>
                 <input
                   type="text"
@@ -272,7 +253,7 @@
                   placeholder="Nhập mã số thuế"
                 />
               </div>
-              <div style="grid-column: 1/-1">
+              <div class="grid-span-full">
                 <label>Địa chỉ công ty *</label>
                 <textarea
                   name="company_address"
@@ -284,7 +265,7 @@
         </div>
       </div>
 
-      <div id="price-preview" style="display: none; margin-bottom: 15px">
+      <div id="price-preview" class="price-preview is-hidden">
         Phí vận chuyển dự kiến: <strong id="shipping-fee-display">0</strong>đ
         <input
           type="hidden"
@@ -309,18 +290,15 @@
 </div>
 
 <!-- MOVING BOOKING MODAL -->
-<div id="booking-modal-moving" class="modal" style="display: none">
-  <div
-    class="modal-content"
-    style="max-width: 900px; max-height: 90vh; overflow-y: auto"
-  >
+<div id="booking-modal-moving" class="modal booking-modal">
+  <div class="modal-content booking-modal-content">
     <span class="modal-close-btn" onclick="closeBookingModal('moving')"
       >&times;</span
     >
-    <h2 style="color: #0a2a66; margin-bottom: 10px">
+    <h2 class="booking-modal-title">
       🚚 Đặt dịch vụ chuyển dọn
     </h2>
-    <p style="color: #666; margin-bottom: 20px">
+    <p class="booking-modal-subtitle">
       Dành cho chuyển nhà, chuyển văn phòng và chuyển kho bãi.
     </p>
 
@@ -332,7 +310,7 @@
       <div class="form-section">
         <h3>1. Chọn dịch vụ chuyển dọn</h3>
         <div class="form-grid">
-          <div style="grid-column: 1/-1">
+          <div class="grid-span-full">
             <select name="service_type" id="order-service-type-moving" required>
               <option value="moving_house">🚛 Chuyển nhà trọn gói</option>
               <option value="moving_office">🏢 Chuyển văn phòng</option>
@@ -364,7 +342,7 @@
               required
             />
           </div>
-          <div style="grid-column: 1/-1">
+          <div class="grid-span-full">
             <label>Điểm đi (Địa chỉ lấy hàng) *</label>
             <input
               type="text"
@@ -374,7 +352,7 @@
               required
             />
           </div>
-          <div style="grid-column: 1/-1">
+          <div class="grid-span-full">
             <label>Điểm đến (Địa chỉ giao hàng) *</label>
             <input
               type="text"
@@ -420,13 +398,9 @@
           </div>
         </div>
 
-        <div
-          class="moving-detail"
-          data-moving-service="moving_house"
-          style="margin-top: 12px"
-        >
+        <div class="moving-detail detail-panel" data-moving-service="moving_house">
           <div class="form-grid">
-            <div style="grid-column: 1/-1">
+            <div class="grid-span-full">
               <label class="checkbox-inline"
                 ><input type="checkbox" name="house_truck_access" /> Hẻm xe tải
                 vào được?</label
@@ -436,12 +410,11 @@
         </div>
 
         <div
-          class="moving-detail"
+          class="moving-detail detail-panel is-hidden"
           data-moving-service="moving_office"
-          style="display: none; margin-top: 12px"
         >
           <div class="form-grid">
-            <div style="grid-column: 1/-1">
+            <div class="grid-span-full">
               <label class="checkbox-inline"
                 ><input type="checkbox" name="office_it_move" /> Có di dời hệ
                 thống Server/IT không?</label
@@ -451,9 +424,8 @@
         </div>
 
         <div
-          class="moving-detail"
+          class="moving-detail detail-panel is-hidden"
           data-moving-service="moving_warehouse"
-          style="display: none; margin-top: 12px"
         >
           <div class="form-grid">
             <div>
@@ -464,7 +436,7 @@
                 placeholder="VD: 5 tấn hoặc 20m³"
               />
             </div>
-            <div style="grid-column: 1/-1">
+            <div class="grid-span-full">
               <label>Mô tả sơ bộ hàng hóa và yêu cầu đặc biệt</label>
               <textarea
                 name="warehouse_overview"
@@ -497,10 +469,10 @@
           </div>
           <div
             id="corporate-fields-moving"
-            style="grid-column: 1/-1; display: none"
+            class="grid-span-full corporate-fields is-hidden"
           >
             <div class="form-grid">
-              <div style="grid-column: 1/-1">
+              <div class="grid-span-full">
                 <label>Tên công ty *</label>
                 <input
                   type="text"
@@ -524,7 +496,7 @@
                   placeholder="Nhập mã số thuế"
                 />
               </div>
-              <div style="grid-column: 1/-1">
+              <div class="grid-span-full">
                 <label>Địa chỉ công ty *</label>
                 <textarea
                   name="company_address"
@@ -534,7 +506,7 @@
             </div>
           </div>
 
-          <div style="grid-column: 1/-1">
+          <div class="grid-span-full">
             <label>Ghi chú thêm (tùy chọn)</label>
             <textarea
               name="note"
@@ -554,7 +526,7 @@
         value="0"
       />
 
-      <div style="margin-bottom: 15px">
+      <div class="moving-price-note">
         Phí dịch vụ: <strong>Liên hệ báo giá theo khảo sát thực tế</strong>
       </div>
 

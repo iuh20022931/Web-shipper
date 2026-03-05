@@ -113,158 +113,7 @@
   }
 
   function ensureModalStyles() {
-    if (document.getElementById("shared-modal-inline-styles")) return;
-    const style = document.createElement("style");
-    style.id = "shared-modal-inline-styles";
-    style.textContent = `
-      .form-section {
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 1px dashed #eee;
-      }
-      .form-section:last-child {
-        border-bottom: none;
-      }
-      .form-section h3 {
-        color: #0a2a66;
-        margin-bottom: 15px;
-        font-size: 16px;
-        border-left: 4px solid #ff7a00;
-        padding-left: 10px;
-        background: #f8faff;
-        padding-top: 5px;
-        padding-bottom: 5px;
-      }
-      .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-      }
-      .booking-order-form label {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: #0a2a66;
-        margin-bottom: 5px;
-      }
-      .booking-order-form input,
-      .booking-order-form select,
-      .booking-order-form textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 14px;
-      }
-      .booking-order-form textarea {
-        min-height: 80px;
-        font-family: inherit;
-      }
-      .booking-order-form input[type="checkbox"],
-      .booking-order-form input[type="radio"] {
-        width: 16px;
-        height: 16px;
-        padding: 0;
-        margin: 0;
-        flex: 0 0 16px;
-        accent-color: #0a2a66;
-      }
-      .booking-order-form .checkbox-inline {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 0;
-        cursor: pointer;
-      }
-      .booking-order-form .checkbox-stack {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .booking-order-form .checkbox-center {
-        justify-content: center;
-      }
-      .booking-order-form .modal-actions {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        justify-content: flex-end;
-        margin-top: 4px;
-      }
-      .booking-order-form .modal-actions .btn-secondary,
-      .booking-order-form .modal-actions .btn-primary {
-        min-width: 140px;
-        height: 42px;
-        padding: 0 18px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        font-weight: 600;
-      }
-      .modal-close-btn {
-        position: absolute;
-        right: 16px;
-        top: 14px;
-        cursor: pointer;
-        font-size: 24px;
-        font-weight: 700;
-        width: 36px;
-        height: 36px;
-        line-height: 36px;
-        text-align: center;
-        color: #1f3f75;
-        background: linear-gradient(180deg, #ffffff 0%, #eef4ff 100%);
-        border: 1px solid #d7e4ff;
-        border-radius: 50%;
-        box-shadow: 0 4px 12px rgba(10, 42, 102, 0.12);
-        transition: transform 0.18s ease, box-shadow 0.18s ease,
-          background-color 0.18s ease, color 0.18s ease;
-        user-select: none;
-      }
-      .modal-close-btn:hover {
-        background: #0a2a66;
-        color: #fff;
-        transform: translateY(-1px) scale(1.03);
-        box-shadow: 0 8px 18px rgba(10, 42, 102, 0.28);
-      }
-      .modal-close-btn:active {
-        transform: scale(0.97);
-        box-shadow: 0 3px 8px rgba(10, 42, 102, 0.22);
-      }
-      .modal-close-btn:focus-visible {
-        outline: 3px solid rgba(255, 122, 0, 0.45);
-        outline-offset: 2px;
-      }
-      @media (max-width: 768px) {
-        .form-grid {
-          grid-template-columns: 1fr;
-        }
-        .modal-content {
-          width: 95% !important;
-          padding: 15px !important;
-          margin: 15% auto !important;
-        }
-        .modal-close-btn {
-          right: 10px;
-          top: 10px;
-          width: 34px;
-          height: 34px;
-          line-height: 34px;
-          font-size: 22px;
-        }
-        .booking-order-form .modal-actions {
-          flex-direction: column-reverse;
-          align-items: stretch;
-        }
-        .booking-order-form .modal-actions .btn-secondary,
-        .booking-order-form .modal-actions .btn-primary {
-          width: 100%;
-          min-width: 0;
-        }
-      }
-    `;
-    document.head.appendChild(style);
+    // Styles are centralized in public/assets/css/components/modal.css.
   }
 
   function ensureModalMarkup() {
@@ -556,8 +405,8 @@
       if (deliveryDistrictGroup) {
         deliveryDistrictGroup.style.display = isIntl ? "none" : "";
       }
-      if (intlCountryGroup) intlCountryGroup.style.display = isIntl ? "" : "none";
-      if (intlProvinceGroup) intlProvinceGroup.style.display = isIntl ? "" : "none";
+      if (intlCountryGroup) intlCountryGroup.style.display = isIntl ? "block" : "none";
+      if (intlProvinceGroup) intlProvinceGroup.style.display = isIntl ? "block" : "none";
       if (intlCountrySelect) {
         intlCountrySelect.required = isIntl;
       }
@@ -617,6 +466,18 @@
     applyState();
   }
 
+  function initDeliveryDimensionsToggle() {
+    const toggle = document.getElementById("toggle-delivery-dimensions");
+    const group = document.getElementById("modal-dimensions-group");
+    if (!toggle || !group) return;
+
+    toggle.addEventListener("click", function (event) {
+      event.preventDefault();
+      group.style.display = "grid";
+      toggle.style.display = "none";
+    });
+  }
+
   function initMovingServiceDetails() {
     const serviceSelect = document.getElementById("order-service-type-moving");
     if (!serviceSelect) return;
@@ -657,6 +518,7 @@
       "is_corporate_checkbox_moving",
       "corporate-fields-moving",
     );
+    initDeliveryDimensionsToggle();
     initMovingServiceDetails();
     initDeliveryItemFields();
     initDeliveryRouteFields();
