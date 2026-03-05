@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/db.php';
 
 // Kiểm tra quyền Admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php");
+    header("Location: ../index.html");
     exit;
 }
 
@@ -202,9 +202,11 @@ $pkg_map = [
     'other' => 'Khác'
 ];
 $svc_map = [
+    'slow' => 'Chậm',
     'standard' => 'Tiêu chuẩn',
+    'fast' => 'Nhanh',
     'express' => 'Hỏa tốc',
-    'bulk' => 'Số lượng lớn'
+    'bulk' => 'Số lượng lớn (cũ)'
 ];
 ?>
 <!DOCTYPE html>

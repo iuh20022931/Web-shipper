@@ -17,14 +17,15 @@
         <div class="footer-services">
             <h4>Dịch vụ</h4>
             <ul>
-                <li><a href="index.php#standard-delivery">Giao hàng tiêu chuẩn</a></li>
-                <li><a href="index.php#express-delivery">Giao hàng hỏa tốc</a></li>
-                <li><a href="index.php#express-delivery">Giao hàng trong ngày</a></li>
-                <li><a href="index.php#cod-delivery">Giao hàng COD</a></li>
-                <li><a href="index.php#services">Giao hàng liên tỉnh</a></li>
-                <li><a href="index.php#moving-service">Giao hàng xe tải / hàng lớn</a></li>
-                <li><a href="index.php#quick-quote">Tính giá vận chuyển</a></li>
-                <li><a href="index.php#home-tracking">Theo dõi đơn hàng</a></li>
+                <li><a href="../index.html#services">Giao chậm</a></li>
+                <li><a href="../index.html#services">Giao tiêu chuẩn</a></li>
+                <li><a href="../index.html#services">Giao nhanh</a></li>
+                <li><a href="../index.html#services">Giao hỏa tốc</a></li>
+                <li><a href="../index.html#services">Giao COD</a></li>
+                <li><a href="../index.html#services">Giao hàng quốc tế</a></li>
+                <li><a href="chuyen-nha.html">Chuyển nhà</a></li>
+                <li><a href="chuyen-van-phong.html">Chuyển văn phòng</a></li>
+                <li><a href="chuyen-kho-bai.html">Chuyển kho bãi</a></li>
             </ul>
         </div>
 

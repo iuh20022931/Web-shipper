@@ -3,6 +3,30 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 
 $error_msg = "";
+$redirect_target = trim($_POST['redirect'] ?? ($_GET['redirect'] ?? ''));
+
+function normalize_redirect_target($target)
+{
+    $target = trim((string) $target);
+    if ($target === '' || strlen($target) > 500) {
+        return '';
+    }
+    if (preg_match('/[\r\n]/', $target)) {
+        return '';
+    }
+    if (preg_match('/^(https?:)?\/\//i', $target)) {
+        return '';
+    }
+    if ($target[0] === '/') {
+        return $target;
+    }
+    if (!preg_match('/^[A-Za-z0-9_\-\.\/\?=&%#]+$/', $target)) {
+        return '';
+    }
+    return $target;
+}
+
+$redirect_target = normalize_redirect_target($redirect_target);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username'] ?? '');
@@ -29,14 +53,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
 
-                // Phân quyền chuyển hướng
+                // Phân quyền chuyển hướng mặc định
+                $default_redirect = "dashboard.php";
                 if ($user['role'] === 'admin') {
-                    header("Location: admin_stats.php");
+                    $default_redirect = "admin_stats.php";
                 } elseif ($user['role'] === 'shipper') {
-                    header("Location: shipper_dashboard.php");
-                } else {
-                    header("Location: dashboard.php");
+                    $default_redirect = "shipper_dashboard.php";
                 }
+
+                // Nếu có redirect hợp lệ từ request thì ưu tiên.
+                $target = $redirect_target !== '' ? $redirect_target : $default_redirect;
+                header("Location: " . $target);
                 exit;
             } else {
                 $error_msg = "Mật khẩu không chính xác.";
@@ -69,6 +96,9 @@ $conn->close();
         <?php endif; ?>
 
         <form method="POST" action="">
+            <?php if ($redirect_target !== ''): ?>
+                <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect_target); ?>">
+            <?php endif; ?>
             <div class="form-group">
                 <label>Tên đăng nhập</label>
                 <input type="text" name="username" required

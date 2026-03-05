@@ -4,6 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FastGo - Dịch Vụ Chuyển Kho Bãi Chuyên Nghiệp</title>
+    <meta
+      name="description"
+      content="FastGo cung cấp dịch vụ chuyển kho bãi chuyên nghiệp: vận chuyển hàng nặng, hàng pallet, tối ưu lộ trình và đảm bảo an toàn hàng hóa."
+    />
+    <meta
+      name="keywords"
+      content="chuyển kho bãi, dịch vụ chuyển kho, vận chuyển hàng nặng, vận chuyển pallet, chuyển kho TP.HCM, FastGo"
+    />
 
     <link rel="stylesheet" href="assets/css/styles.css" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -66,48 +74,7 @@
   <body
     class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100"
   >
-    <header id="header">
-      <nav class="navbar">
-        <div class="logo">
-          <h1>
-            <a href="../index.html" style="color: white; text-decoration: none"
-              >FastGo</a
-            >
-          </h1>
-        </div>
-
-        <button class="hamburger-menu" id="hamburger-btn" type="button">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        <ul class="nav-menu" id="nav-menu">
-          <li><a href="../index.html#hero">Trang chủ</a></li>
-          <li><a href="../index.html#services">Dịch vụ</a></li>
-          <li><a href="../index.html#pricing">Bảng giá</a></li>
-          <li><a href="../index.html#home-tracking">Tra cứu đơn</a></li>
-          <li><a href="../index.html#contact">Đặt hàng</a></li>
-          <li>
-            <a href="huong-dan-dat-hang.html" target="_blank">Hướng dẫn</a>
-          </li>
-          <li><a href="../index.html#login">Đăng nhập</a></li>
-          <li>
-            <a
-              href="../index.html#register"
-              class="btn-primary"
-              style="
-                padding: 8px 20px;
-                background: #ff7a00;
-                border: none;
-                color: white;
-              "
-              >Đăng ký</a
-            >
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <div id="site-header"></div>
 
     <main class="warehouse-page">
       <section
@@ -135,16 +102,18 @@
             </p>
             <div class="flex flex-wrap gap-4 pt-4">
               <a
-                href="../index.html?open_booking=true&service=moving_warehouse"
+                href="#"
+                onclick="openBookingModal('moving_warehouse'); return false;"
                 class="bg-brand-accent hover:bg-orange-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition-all transform hover:-translate-y-1 inline-block text-center no-underline"
               >
                 Đặt dịch vụ ngay
               </a>
-              <button
-                class="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg backdrop-blur-sm transition-all"
+              <a
+                href="#bao-gia"
+                class="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg backdrop-blur-sm transition-all inline-block text-center no-underline"
               >
                 Xem bảng giá
-              </button>
+              </a>
             </div>
           </div>
           <div class="relative min-w-0">
@@ -152,10 +121,13 @@
               class="absolute -inset-4 bg-brand-accent/20 blur-3xl rounded-full"
             ></div>
             <img
-              alt="Warehouse Logistics"
+              alt="Dịch vụ chuyển kho bãi FastGo với xe tải vận chuyển chuyên dụng"
               class="relative rounded-2xl shadow-2xl border-4 border-white/10 w-full object-cover aspect-[4/3]"
               src="assets/images/hero-kho-bai.png"
             />
+            <p class="mt-3 text-center text-sm text-blue-100/80">
+              Ảnh: Giải pháp chuyển kho bãi và vận chuyển hàng hóa số lượng lớn của FastGo.
+            </p>
           </div>
         </div>
       </section>
@@ -389,7 +361,7 @@
               class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all"
             >
               <img
-                alt="Heavy Cargo Handling"
+                alt="Xử lý và vận chuyển hàng siêu trường siêu trọng cho kho bãi"
                 class="w-full h-48 object-cover"
                 src="assets/images/feature-heavy-cargo.png"
               />
@@ -417,7 +389,7 @@
               class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all"
             >
               <img
-                alt="Pallet Transport"
+                alt="Dịch vụ vận chuyển hệ pallet bằng xe tải thùng kín FastGo"
                 class="w-full h-48 object-cover"
                 src="assets/images/feature-pallet.png"
               />
@@ -445,7 +417,7 @@
               class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all"
             >
               <img
-                alt="Warehouse Relocation"
+                alt="Quy trình di dời kho bãi và sắp xếp hàng hóa khoa học"
                 class="w-full h-48 object-cover"
                 src="assets/images/feature-relocation.png"
               />
@@ -473,6 +445,87 @@
         </div>
       </section>
 
+      <section id="bao-gia" class="py-20 bg-white dark:bg-slate-900">
+        <div class="max-w-[1200px] mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-brand-blue dark:text-white mb-4">
+              Báo Giá Tham Khảo
+            </h2>
+            <p class="text-slate-600 dark:text-slate-300">
+              Dành cho dịch vụ Chuyển Kho Bãi (yêu cầu thiết bị nâng hạ và quy trình kiểm đếm).
+            </p>
+          </div>
+
+          <div
+            class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700"
+          >
+            <table class="min-w-full text-left text-sm">
+              <thead class="bg-slate-50 dark:bg-slate-700/40 text-slate-700 dark:text-slate-200">
+                <tr>
+                  <th class="px-5 py-4 font-semibold">Loại hình</th>
+                  <th class="px-5 py-4 font-semibold">Phương thức tính</th>
+                  <th class="px-5 py-4 font-semibold">Ghi chú</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                <tr>
+                  <td class="px-5 py-4 font-medium text-slate-800 dark:text-slate-100">
+                    Thuê xe cẩu/nâng
+                  </td>
+                  <td class="px-5 py-4 text-slate-700 dark:text-slate-200">
+                    1.500.000đ - 5.000.000đ/ca
+                  </td>
+                  <td class="px-5 py-4 text-slate-600 dark:text-slate-300">
+                    Tùy tải trọng (2.5 tấn - 15 tấn).
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-5 py-4 font-medium text-slate-800 dark:text-slate-100">
+                    Vận chuyển theo lô
+                  </td>
+                  <td class="px-5 py-4 text-slate-700 dark:text-slate-200">
+                    Tính theo chuyến hoặc khối (m3)
+                  </td>
+                  <td class="px-5 py-4 text-slate-600 dark:text-slate-300">
+                    Phù hợp hàng pallet, hàng rời.
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-5 py-4 font-medium text-slate-800 dark:text-slate-100">
+                    Bốc xếp hàng nặng
+                  </td>
+                  <td class="px-5 py-4 text-slate-700 dark:text-slate-200">
+                    Thỏa thuận theo tấn
+                  </td>
+                  <td class="px-5 py-4 text-slate-600 dark:text-slate-300">
+                    Dành cho máy móc công nghiệp, thiết bị lớn.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            class="mt-6 bg-blue-50 dark:bg-slate-800 border-l-4 border-brand-blue rounded-r-xl p-5"
+          >
+            <p class="font-semibold text-brand-blue dark:text-white mb-2">Lưu ý chung</p>
+            <ul class="list-disc pl-5 text-slate-700 dark:text-slate-300 space-y-2">
+              <li>
+                <strong>Khảo sát thực tế:</strong> luôn là bước miễn phí; nên khảo sát tại chỗ để có
+                con số chính xác, tránh phát sinh chi phí bất hợp lý.
+              </li>
+              <li>
+                <strong>Bảo hiểm hàng hóa:</strong> kiểm tra kỹ điều khoản bồi thường trong hợp đồng.
+              </li>
+              <li>
+                <strong>Phụ phí:</strong> đường cấm tải, hẻm sâu, hoặc khoảng bốc dỡ xa có thể làm
+                thay đổi tổng chi phí.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <section class="py-20">
         <div class="max-w-[1200px] mx-auto px-4">
           <div
@@ -496,7 +549,8 @@
                 class="flex flex-col sm:flex-row items-center justify-center gap-4"
               >
                 <a
-                  href="../index.html?open_booking=true&service=moving_warehouse"
+                  href="#"
+                  onclick="openBookingModal('moving_warehouse'); return false;"
                   class="w-full sm:w-auto bg-brand-blue hover:bg-slate-900 text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl transition-all inline-block text-center no-underline"
                 >
                   Yêu cầu tư vấn miễn phí
@@ -507,109 +561,12 @@
         </div>
       </section>
     </main>
+    <div id="site-footer"></div>
 
-    <footer>
-      <div class="footer-content">
-        <div class="footer-brand">
-          <h3>FastGo</h3>
-          <p>Dịch vụ giao hàng nhanh chóng – an toàn – đúng giờ.</p>
-        </div>
-
-        <div class="footer-policy">
-          <h4>Giới thiệu</h4>
-          <ul>
-            <li><a href="../index.html#hero">Về chúng tôi</a></li>
-            <li><a href="../index.html#contact">Liên hệ</a></li>
-            <li><a href="#">Tuyển dụng</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-services">
-          <h4>Dịch vụ</h4>
-          <ul>
-            <li><a href="../index.html#services">Giao nội thành</a></li>
-            <li><a href="../index.html#services">Giao hỏa tốc</a></li>
-            <li><a href="../index.html#services">Giao COD</a></li>
-            <li><a href="../index.html#services">Giao hàng số lượng lớn</a></li>
-            <li><a href="../index.html#services">Dịch vụ doanh nghiệp</a></li>
-            <li><a href="chuyen-nha.html">Chuyển nhà</a></li>
-            <li><a href="chuyen-kho-bai.html">Chuyển kho bãi</a></li>
-            <li><a href="chuyen-van-phong.html">Chuyển văn phòng</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-policy">
-          <h4>Chính sách</h4>
-          <ul>
-            <li>
-              <a href="../index.html#shipping-policy">Chính sách vận chuyển</a>
-            </li>
-            <li><a href="../index.html#privacy">Chính sách bảo mật</a></li>
-            <li><a href="../index.html#terms">Điều khoản sử dụng</a></li>
-            <li>
-              <a href="huong-dan-dat-hang.html" target="_blank"
-                >Hướng dẫn sử dụng</a
-              >
-            </li>
-          </ul>
-        </div>
-
-        <div class="footer-info">
-          <p>
-            <strong>Email:</strong>
-            <a
-              href="mailto:dichvuquanhta.vn@gmail.com"
-              style="color: #ff7a00; text-decoration: none"
-              >dichvuquanhta.vn@gmail.com</a
-            >
-          </p>
-          <p>
-            <strong>Hotline:</strong>
-            <a
-              href="tel:0775472347"
-              style="color: #ff7a00; text-decoration: none"
-              >0775472347</a
-            >
-          </p>
-          <p><strong>Địa chỉ:</strong> TP. Hồ Chí Minh</p>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>© 2026 FastGo Shipper Service. All rights reserved.</p>
-      </div>
-    </footer>
-
-    <script>
-      (function () {
-        var hamburgerBtn = document.getElementById("hamburger-btn");
-        var navMenu = document.getElementById("nav-menu");
-
-        if (!hamburgerBtn || !navMenu) return;
-
-        hamburgerBtn.addEventListener("click", function (event) {
-          event.stopPropagation();
-          hamburgerBtn.classList.toggle("active");
-          navMenu.classList.toggle("active");
-        });
-
-        navMenu.querySelectorAll("a").forEach(function (link) {
-          link.addEventListener("click", function () {
-            hamburgerBtn.classList.remove("active");
-            navMenu.classList.remove("active");
-          });
-        });
-
-        document.addEventListener("click", function (event) {
-          var isInsideMenu = navMenu.contains(event.target);
-          var isInsideHamburger = hamburgerBtn.contains(event.target);
-
-          if (!isInsideMenu && !isInsideHamburger) {
-            hamburgerBtn.classList.remove("active");
-            navMenu.classList.remove("active");
-          }
-        });
-      })();
-    </script>
+    <script src="assets/js/shared-layout.js"></script>
+    <script src="assets/js/shared-modals.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
   </body>
 </html>
+
+

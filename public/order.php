@@ -2,6 +2,7 @@
 session_start();
 // 1. Kết nối database
 require_once __DIR__ . '/../config/db.php';
+header('Content-Type: application/json; charset=UTF-8');
 
 
 // 2. Nhận dữ liệu từ form
@@ -20,6 +21,33 @@ $pickup_time = $_POST['pickup_time'] ?? '';
 $payment_method = $_POST['payment_method'] ?? 'cod';
 $note = $_POST['note'] ?? '';
 
+// Đồng bộ giá trị từ nhiều form frontend cũ/mới
+if ($payment_method === 'bank') {
+    $payment_method = 'bank_transfer';
+}
+$is_moving = strpos($service_type, 'moving_') === 0;
+$is_international = strpos($service_type, 'intl_') === 0;
+
+// Dịch vụ chuyển dọn chỉ cần 1 đầu mối liên hệ
+if ($is_moving) {
+    if (empty(trim($receiver_name))) {
+        $receiver_name = $name;
+    }
+    if (empty(trim($receiver_phone))) {
+        $receiver_phone = $phone;
+    }
+    if (empty(trim($package_type))) {
+        $package_type = 'other';
+    }
+    if ($weight === '' || !is_numeric($weight)) {
+        $weight = 0;
+    }
+    $cod_amount = 0;
+}
+if ($is_international) {
+    $cod_amount = 0;
+}
+
 // Thêm: Nhận dữ liệu hóa đơn công ty
 $is_corporate = isset($_POST['is_corporate']) ? 1 : 0;
 $company_name = $is_corporate ? trim($_POST['company_name'] ?? '') : null;
@@ -35,9 +63,9 @@ if (empty($name))
     $errors[] = "Chưa nhập họ tên";
 if (empty($phone))
     $errors[] = "Chưa nhập số điện thoại";
-if (empty($receiver_name))
+if (!$is_moving && empty($receiver_name))
     $errors[] = "Chưa nhập tên người nhận";
-if (empty($receiver_phone))
+if (!$is_moving && empty($receiver_phone))
     $errors[] = "Chưa nhập SĐT người nhận";
 if (empty($pickup))
     $errors[] = "Chưa nhập địa chỉ lấy hàng";
@@ -50,13 +78,19 @@ if (empty($delivery))
     $errors[] = "Chưa nhập địa chỉ giao hàng";
 elseif (strlen($delivery) < 10)
     $errors[] = "Địa chỉ giao hàng quá ngắn (tối thiểu 10 ký tự)";
-elseif (!preg_match('/(quận|huyện|tp|thành phố|phường|xã|q\.|p\.|q\d)/iu', $delivery))
+elseif (!$is_international && !preg_match('/(quận|huyện|tp|thành phố|phường|xã|q\.|p\.|q\d)/iu', $delivery))
     $errors[] = "Địa chỉ giao hàng thiếu Quận/Huyện (VD: Quận 1)";
+
+if ($is_international) {
+    $intl_country = trim($_POST['intl_country'] ?? '');
+    if (empty($intl_country))
+        $errors[] = "Vui lòng chọn quốc gia nhận cho đơn quốc tế";
+}
 
 // Kiểm tra số điện thoại hợp lệ
 if (!preg_match('/^0[0-9]{9,10}$/', $phone))
     $errors[] = "Số điện thoại không hợp lệ (phải bắt đầu bằng 0)";
-if (!preg_match('/^0[0-9]{9,10}$/', $receiver_phone))
+if (!$is_moving && !preg_match('/^0[0-9]{9,10}$/', $receiver_phone))
     $errors[] = "SĐT người nhận không hợp lệ";
 
 // Kiểm tra weight >=0
@@ -75,11 +109,11 @@ if (!empty($pickup_time) && strlen($pickup_time) > 50)
 
 // Kiểm tra package_type hợp lệ
 $valid_types = ['document', 'food', 'clothes', 'electronic', 'other'];
-if (!in_array($package_type, $valid_types))
+if (!$is_moving && !in_array($package_type, $valid_types))
     $errors[] = "Loại hàng không hợp lệ";
 
 // Nếu là chuyển khoản, tiền thu hộ phải bằng 0
-if ($payment_method === 'bank_transfer') {
+if ($payment_method === 'bank_transfer' || $is_moving || $is_international) {
     $cod_amount = 0;
 }
 
@@ -103,7 +137,10 @@ if (count($errors) > 0) {
 // BẮT BUỘC ĐĂNG NHẬP: Kiểm tra session user_id
 if (empty($_SESSION['user_id'])) {
     // Trả về lỗi nếu chưa đăng nhập (Backend enforcement)
-    echo json_encode(['status' => 'error', 'message' => 'Vui lòng đăng nhập để thực hiện đặt hàng.']);
+    echo json_encode([
+        'status' => 'auth_required',
+        'message' => 'Vui lòng đăng nhập để thực hiện đặt hàng.'
+    ]);
     exit;
 }
 $user_id = $_SESSION['user_id'];

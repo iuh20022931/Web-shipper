@@ -16,8 +16,7 @@
     <header>
       <div class="container">
         <div class="logo">
-          <a href="index.html">FastGo</a>
-          <!-- Đổi link về index.html cho GitHub Pages -->
+          <a href="../index.html">FastGo</a>
         </div>
       </div>
     </header>
@@ -56,20 +55,20 @@
         <span class="role-badge badge-customer">Khách hàng</span>
         <h2 class="section-title">I. Hướng dẫn cho Khách hàng</h2>
         <p>
-          Bạn cần có tài khoản thành viên để bắt đầu đặt đơn và quản lý lịch sử
-          vận chuyển.
+          Bạn có thể mở form đặt đơn ngay từ trang chủ. Khi bấm xác nhận
+          <strong>Đặt lịch</strong>, hệ thống sẽ yêu cầu đăng nhập/đăng ký nếu
+          bạn chưa có phiên đăng nhập.
         </p>
 
         <div class="timeline" style="margin-top: 30px">
           <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-              <h3>Bước 1: Vào trang Đăng ký</h3>
+              <h3>Bước 1: Tạo tài khoản / Đăng nhập</h3>
               <p>
-                Nhấn nút <strong>Đăng ký</strong> trên menu hoặc truy cập
-                <a href="register.php" style="color: var(--secondary)"
-                  >tại đây</a
-                >.
+                Từ trang chủ, bạn có thể mở form đặt đơn trước. Nếu chưa đăng
+                nhập, hãy chọn <strong>Đăng ký</strong> hoặc
+                <strong>Đăng nhập</strong> tại thông báo xác thực.
               </p>
               <div class="screenshot-placeholder">
                 <img
@@ -83,7 +82,7 @@
           <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-              <h3>Bước 2: Điền thông tin</h3>
+              <h3>Bước 2: Điền thông tin tài khoản</h3>
               <ul class="field-list">
                 <li>
                   <strong>Vai trò:</strong> Chọn
@@ -109,8 +108,11 @@
           <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-              <h3>Bước 3: Hoàn tất</h3>
-              <p>Sau khi đăng ký thành công, hệ thống sẽ tự động đăng nhập.</p>
+              <h3>Bước 3: Hoàn tất & quay lại đặt đơn</h3>
+              <p>
+                Sau khi đăng nhập thành công, hệ thống quay về trang trước đó
+                và có thể mở lại form đặt đơn để bạn tiếp tục thao tác.
+              </p>
             </div>
           </div>
         </div>
@@ -129,10 +131,11 @@
           <!-- Bước 1 -->
           <div class="step-card">
             <div class="step-number">1</div>
-            <h3>Đăng nhập & Thông tin</h3>
+            <h3>Mở form & xác thực</h3>
             <p>
-              Bạn phải <strong>đăng nhập</strong> để tạo đơn. Hệ thống sẽ tự
-              động điền thông tin của bạn.
+              Bạn có thể mở form đặt hàng ngay cả khi chưa đăng nhập. Chỉ khi
+              bấm <strong>Đặt lịch</strong>, hệ thống mới yêu cầu đăng nhập để
+              xác nhận đơn.
             </p>
           </div>
 
@@ -141,12 +144,12 @@
             <div class="step-number">2</div>
             <h3>Địa chỉ chi tiết</h3>
             <p>
-              Nhập địa chỉ chính xác hoặc chọn nhanh từ
-              <strong>Sổ địa chỉ đã lưu</strong> để tiết kiệm thời gian.
+              Nhập đầy đủ điểm lấy và điểm giao. Với đơn quốc tế, chọn thêm
+              <strong>quốc gia nhận</strong> và <strong>tỉnh/thành phố nhận</strong>.
             </p>
             <div class="alert-box">
-              ⚠️ <strong>Lưu ý:</strong> Phải ghi rõ Quận/Huyện để hệ thống tính
-              phí tự động.
+              ⚠️ <strong>Lưu ý:</strong> Ghi đầy đủ số nhà, đường, phường, quận
+              để nhân viên có thể liên hệ và báo giá chính xác.
             </div>
             <div class="screenshot-placeholder">
               <img
@@ -160,7 +163,22 @@
           <div class="step-card">
             <div class="step-number">3</div>
             <h3>Thông tin gói hàng</h3>
-            <p>Chọn loại hàng, khối lượng và tiền thu hộ (COD).</p>
+            <p>
+              Chọn gói dịch vụ, loại hàng, khối lượng/kích thước, COD (nội địa)
+              và hình thức thanh toán.
+            </p>
+            <div
+              class="alert-box"
+              style="
+                background-color: #e2e3ff;
+                color: #0a2a66;
+                border-left-color: #0a2a66;
+              "
+            >
+              ⚡ <strong>Phí dự kiến cập nhật liên tục:</strong> Khi thay đổi
+              địa chỉ, dịch vụ, cân nặng, kích thước, COD hoặc quốc gia nhận,
+              hệ thống sẽ tự động tính lại ngay.
+            </div>
             <div
               class="alert-box"
               style="
@@ -177,17 +195,56 @@
           <!-- Bước 4 (Mới) -->
           <div class="step-card">
             <div class="step-number">4</div>
-            <h3>Nhận hàng & Đánh giá</h3>
+            <h3>Theo dõi & Đánh giá</h3>
             <p>
-              Kiểm tra ảnh xác nhận giao hàng (POD) và đừng quên
+              Sau khi đặt, bạn có thể theo dõi hành trình đơn hàng trong
+              Dashboard. Khi đơn hoàn tất, đừng quên
               <strong>Đánh giá 5 sao</strong> cho shipper nhé!
             </p>
           </div>
         </div>
 
-        <div style="text-align: center; margin-top: 30px">
-          <a href="create_order.php" class="btn-primary">Đặt hàng ngay</a>
+        <h3
+          style="
+            margin: 40px 0 20px 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+          "
+        >
+          🚚 Quy trình Đặt dịch vụ Chuyển dọn (Nhà/Văn phòng/Kho bãi)
+        </h3>
+        <p style="text-align: center; max-width: 700px; margin: 0 auto 20px">
+          Đối với các dịch vụ quy mô lớn như chuyển nhà, chuyển văn phòng và
+          chuyển kho bãi, quy trình sẽ là
+          <strong>"Gửi yêu cầu báo giá"</strong> để nhân viên khảo sát và liên
+          hệ lại.
+        </p>
+
+        <div class="step-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Chọn loại dịch vụ</h3>
+            <p>Chọn "Chuyển nhà", "Chuyển văn phòng" hoặc "Chuyển kho bãi".</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Cung cấp thông tin chi tiết</h3>
+            <p>
+              Cung cấp các thông tin quan trọng như: Số tầng, có thang máy
+              không, ngày giờ dự kiến, các vật dụng đặc biệt (piano, két
+              sắt...).
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Chờ xác nhận</h3>
+            <p>
+              Nhân viên FastGo sẽ gọi lại cho bạn để tư vấn, khảo sát (nếu cần)
+              và gửi báo giá chính thức theo thông tin thực tế.
+            </p>
+          </div>
         </div>
+
       </section>
 
       <!-- ========================================= -->
@@ -406,37 +463,21 @@
 
           <!-- Bảng giá -->
           <div>
-            <h3>💰 Bảng giá tham khảo</h3>
-            <table class="pricing-table">
-              <thead>
-                <tr>
-                  <th>Dịch vụ</th>
-                  <th>Giá cước (Nội thành)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Tiêu chuẩn</td>
-                  <td style="color: var(--primary); font-weight: bold">
-                    30.000đ
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hỏa tốc</td>
-                  <td style="color: var(--secondary); font-weight: bold">
-                    50.000đ
-                  </td>
-                </tr>
-                <tr>
-                  <td>Phí quá cân (>2kg)</td>
-                  <td>+5.000đ / kg</td>
-                </tr>
-                <tr>
-                  <td>Phí thu hộ (COD)</td>
-                  <td>+5.000đ / đơn</td>
-                </tr>
-              </tbody>
-            </table>
+            <h3>💰 Cách xem giá chính xác</h3>
+            <ul class="field-list">
+              <li>
+                Dùng mục <strong>Tự tính cước phí vận chuyển</strong> tại trang
+                chủ để xem giá theo tuyến nội địa hoặc quốc tế.
+              </li>
+              <li>
+                Danh sách <strong>tỉnh/thành, quận/huyện, quốc gia</strong> đã
+                được đồng bộ một nguồn dữ liệu để tránh trùng/lệch tên.
+              </li>
+              <li>
+                Giá cuối cùng phụ thuộc gói dịch vụ, loại hàng, khối lượng tính
+                cước, kích thước, COD và khai giá bảo hiểm.
+              </li>
+            </ul>
           </div>
         </div>
       </section>

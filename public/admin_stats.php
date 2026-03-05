@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/db.php';
 
 // Kiểm tra quyền Admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php");
+    header("Location: ../index.html");
     exit;
 }
 
@@ -72,7 +72,13 @@ foreach ($dates as $date => $data) {
 // Dịch vụ
 $svc_labels = [];
 $svc_data = [];
-$svc_map = ['standard' => 'Tiêu chuẩn', 'express' => 'Hỏa tốc', 'bulk' => 'Số lượng lớn'];
+$svc_map = [
+    'slow' => 'Chậm',
+    'standard' => 'Tiêu chuẩn',
+    'fast' => 'Nhanh',
+    'express' => 'Hỏa tốc',
+    'bulk' => 'Số lượng lớn (cũ)'
+];
 $res = $conn->query("SELECT service_type, COUNT(*) as c FROM orders GROUP BY service_type");
 while ($row = $res->fetch_assoc()) {
     $svc_labels[] = $svc_map[$row['service_type']] ?? $row['service_type'];
@@ -226,128 +232,26 @@ while ($row = $res->fetch_assoc()) {
 
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 
+    <!-- Truyền dữ liệu từ PHP sang JS -->
     <script>
-    // Register DataLabels plugin globally
-    Chart.register(ChartDataLabels);
-
-    // 1. Biểu đồ Doanh thu & Đơn hàng (Mixed Chart)
-    const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
-    new Chart(ctxRevenue, {
-        type: 'bar',
-        data: {
+    window.chartData = {
+        revenue: {
             labels: <?php echo json_encode($chart_labels); ?>,
-            datasets: [{
-                    label: 'Doanh thu (VNĐ)',
-                    data: <?php echo json_encode($chart_revenue); ?>,
-                    backgroundColor: 'rgba(255, 122, 0, 0.2)',
-                    borderColor: '#ff7a00',
-                    borderWidth: 2,
-                    yAxisID: 'y',
-                    type: 'line',
-                    tension: 0.4
-                },
-                {
-                    label: 'Số đơn hàng',
-                    data: <?php echo json_encode($chart_orders); ?>,
-                    backgroundColor: '#0a2a66',
-                    yAxisID: 'y1'
-                }
-            ]
+            revenue: <?php echo json_encode($chart_revenue); ?>,
+            orders: <?php echo json_encode($chart_orders); ?>
         },
-        options: {
-            plugins: {
-                datalabels: {
-                    display: false
-                } // Tắt label số trên biểu đồ cột/line cho đỡ rối
-            },
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false
-            },
-            scales: {
-                y: {
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    title: {
-                        display: true,
-                        text: 'Doanh thu'
-                    }
-                },
-                y1: {
-                    type: 'linear',
-                    display: true,
-                    position: 'right',
-                    grid: {
-                        drawOnChartArea: false
-                    },
-                    title: {
-                        display: true,
-                        text: 'Số đơn'
-                    }
-                }
-            }
-        }
-    });
-
-    // 2. Biểu đồ Dịch vụ (Doughnut)
-    const ctxService = document.getElementById('serviceChart').getContext('2d');
-    new Chart(ctxService, {
-        type: 'doughnut',
-        data: {
+        service: {
             labels: <?php echo json_encode($svc_labels); ?>,
-            datasets: [{
-                data: <?php echo json_encode($svc_data); ?>,
-                backgroundColor: ['#0a2a66', '#ff7a00', '#28a745', '#17a2b8'],
-            }],
+            data: <?php echo json_encode($svc_data); ?>
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                datalabels: {
-                    color: '#fff',
-                    font: {
-                        weight: 'bold'
-                    },
-                    formatter: (value, ctx) => {
-                        return value > 0 ? value : '';
-                    }
-                }
-            }
-        }
-    });
-
-    // 3. Biểu đồ Hàng hóa (Pie)
-    const ctxPackage = document.getElementById('packageChart').getContext('2d');
-    new Chart(ctxPackage, {
-        type: 'pie',
-        data: {
+        package: {
             labels: <?php echo json_encode($pkg_labels); ?>,
-            datasets: [{
-                data: <?php echo json_encode($pkg_data); ?>,
-                backgroundColor: ['#ffc107', '#dc3545', '#007bff', '#6610f2', '#6c757d'],
-            }],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                datalabels: {
-                    color: '#fff',
-                    font: {
-                        weight: 'bold'
-                    },
-                    formatter: (value, ctx) => {
-                        return value > 0 ? value : '';
-                    }
-                }
-            }
+            data: <?php echo json_encode($pkg_data); ?>
         }
-    });
+    };
     </script>
+    <!-- Nhúng tệp JS riêng cho trang thống kê -->
+    <script src="assets/js/admin-stats.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>

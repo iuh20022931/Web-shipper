@@ -40,7 +40,13 @@ if ($log_res)
         $logs[] = $r;
 
 $pkg_map = ['document' => 'Tài liệu', 'food' => 'Đồ ăn', 'clothes' => 'Quần áo', 'electronic' => 'Điện tử', 'other' => 'Khác'];
-$svc_map = ['standard' => 'Tiêu chuẩn', 'express' => 'Hỏa tốc', 'bulk' => 'Số lượng lớn'];
+$svc_map = [
+    'slow' => 'Chậm',
+    'standard' => 'Tiêu chuẩn',
+    'fast' => 'Nhanh',
+    'express' => 'Hỏa tốc',
+    'bulk' => 'Số lượng lớn (cũ)'
+];
 $status_map = [
     'pending' => 'Chờ xử lý',
     'shipping' => 'Đang giao hàng',

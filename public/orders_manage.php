@@ -194,9 +194,11 @@ $result = $stmt->get_result();
                             <td>
                                 <?php
                                         $svc_map = [
+                                            'slow' => 'Chậm',
                                             'standard' => 'Tiêu chuẩn',
+                                            'fast' => '<span style="color:#0a7d4f; font-weight:bold;">Nhanh</span>',
                                             'express' => '<span style="color:#d9534f; font-weight:bold;">Hỏa tốc</span>',
-                                            'bulk' => '<span style="color:#0a2a66; font-weight:bold;">Số lượng lớn</span>'
+                                            'bulk' => '<span style="color:#0a2a66; font-weight:bold;">Số lượng lớn (cũ)</span>'
                                         ];
                                         echo $svc_map[$row['service_type'] ?? 'standard'] ?? ($row['service_type'] ?? 'standard');
                                         ?>
