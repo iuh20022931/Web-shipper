@@ -219,6 +219,174 @@
     if (shipping) shipping.value = "0";
   }
 
+  function getFieldValue(form, name) {
+    return String(form.querySelector(`[name="${name}"]`)?.value || "").trim();
+  }
+
+  function getCheckedValues(form, name) {
+    return Array.from(form.querySelectorAll(`[name="${name}"]:checked`))
+      .map((item) => String(item.value || "").trim())
+      .filter(Boolean);
+  }
+
+  function getSelectText(form, name) {
+    const select = form.querySelector(`[name="${name}"]`);
+    if (!select) return "";
+    const option = select.options[select.selectedIndex];
+    const text = String(option?.textContent || "").trim();
+    if (!option || !option.value) return "";
+    return text;
+  }
+
+  function buildMovingSummary(form, serviceType) {
+    const serviceLabels = {
+      moving_house: "Chuyển nhà",
+      moving_office: "Chuyển văn phòng",
+      moving_warehouse: "Chuyển kho bãi",
+    };
+    const serviceLabel = serviceLabels[serviceType] || "Chuyển dọn";
+    const lines = [`[${serviceLabel}] Yêu cầu khảo sát`];
+
+    const name = getFieldValue(form, "name");
+    const phone = getFieldValue(form, "phone");
+    const pickup = getFieldValue(form, "pickup");
+    const delivery = getFieldValue(form, "delivery");
+    const surveyDate = getFieldValue(form, "moving_survey_date");
+    const surveySlot = getSelectText(form, "moving_survey_time_slot");
+
+    lines.push("");
+    lines.push("Thông tin liên hệ:");
+    lines.push(`- Họ và tên: ${name}`);
+    lines.push(`- Số điện thoại: ${phone}`);
+
+    lines.push("");
+    lines.push("Thông tin địa điểm:");
+    lines.push(`- Địa chỉ chuyển đi: ${pickup}`);
+    lines.push(`- Địa chỉ chuyển đến: ${delivery}`);
+
+    lines.push("");
+    lines.push("Thông tin khảo sát:");
+    lines.push(`- Ngày khảo sát mong muốn: ${surveyDate || "Chưa chọn"}`);
+    lines.push(`- Khung giờ khảo sát: ${surveySlot || "Chưa chọn"}`);
+
+    if (serviceType === "moving_house") {
+      const email = getFieldValue(form, "moving_house_email");
+      const houseType = getSelectText(form, "moving_house_type");
+      const floors = getFieldValue(form, "moving_house_floors");
+      const elevator = getSelectText(form, "moving_house_elevator");
+      const items = getFieldValue(form, "moving_house_items");
+      const note = getFieldValue(form, "moving_house_note");
+      const services = getCheckedValues(form, "moving_house_services[]");
+      const serviceOther = getFieldValue(form, "moving_house_service_other");
+
+      lines.push(`- Email: ${email || "Không có"}`);
+      lines.push("");
+      lines.push("Thông tin chi tiết:");
+      lines.push(`- Loại nhà: ${houseType || "Không có"}`);
+      lines.push(`- Số tầng: ${floors || "Không có"}`);
+      lines.push(`- Có thang máy không: ${elevator || "Không có"}`);
+      lines.push("");
+      lines.push("Thông tin thêm:");
+      lines.push(
+        `- Danh sách đồ cần chuyển: ${items || "Không có"}`,
+      );
+      lines.push(
+        `- Dịch vụ cần tư vấn: ${services.length ? services.join(", ") : "Chưa chọn"}`,
+      );
+      lines.push(`- Dịch vụ khác: ${serviceOther || "Không có"}`);
+      lines.push(`- Ghi chú thêm: ${note || "Không có"}`);
+    } else if (serviceType === "moving_office") {
+      const email = getFieldValue(form, "moving_office_email");
+      const company = getFieldValue(form, "moving_office_company");
+      const staffCount = getFieldValue(form, "moving_office_staff_count");
+      const area = getFieldValue(form, "moving_office_area");
+      const elevator = getSelectText(form, "moving_office_elevator");
+      const dismantle = getSelectText(form, "moving_office_dismantle");
+      const note = getFieldValue(form, "moving_office_note");
+      const services = getCheckedValues(form, "moving_office_services[]");
+      const serviceOther = getFieldValue(form, "moving_office_service_other");
+
+      lines.push(`- Email: ${email || "Không có"}`);
+      lines.push(`- Tên công ty: ${company || "Không có"}`);
+      lines.push("");
+      lines.push("Thông tin văn phòng:");
+      lines.push(`- Số lượng nhân viên: ${staffCount || "Không có"}`);
+      lines.push(`- Diện tích văn phòng (ước lượng): ${area || "Không có"}`);
+      lines.push(`- Có thang máy không: ${elevator || "Không có"}`);
+      lines.push("");
+      lines.push("Thông tin thêm:");
+      lines.push(
+        `- Có cần tháo lắp nội thất không: ${dismantle || "Không có"}`,
+      );
+      lines.push(
+        `- Dịch vụ cần tư vấn: ${services.length ? services.join(", ") : "Chưa chọn"}`,
+      );
+      lines.push(`- Dịch vụ khác: ${serviceOther || "Không có"}`);
+      lines.push(`- Ghi chú thêm: ${note || "Không có"}`);
+    } else if (serviceType === "moving_warehouse") {
+      const email = getFieldValue(form, "moving_warehouse_email");
+      const company = getFieldValue(form, "moving_warehouse_company");
+      const goodsType = getSelectText(form, "moving_warehouse_goods_type");
+      const estimatedVolume = getFieldValue(
+        form,
+        "moving_warehouse_estimated_volume",
+      );
+      const area = getFieldValue(form, "moving_warehouse_area");
+      const equipmentSupport = getSelectText(
+        form,
+        "moving_warehouse_equipment_support",
+      );
+      const note = getFieldValue(form, "moving_warehouse_note");
+      const services = getCheckedValues(form, "moving_warehouse_services[]");
+      const serviceOther = getFieldValue(
+        form,
+        "moving_warehouse_service_other",
+      );
+
+      lines.push(`- Email: ${email || "Không có"}`);
+      lines.push(`- Tên công ty (nếu có): ${company || "Không có"}`);
+      lines.push("");
+      lines.push("Thông tin kho:");
+      lines.push(`- Loại hàng hóa: ${goodsType || "Không có"}`);
+      lines.push(`- Khối lượng ước tính: ${estimatedVolume || "Không có"}`);
+      lines.push(`- Diện tích kho: ${area || "Không có"}`);
+      lines.push("");
+      lines.push("Thông tin thêm:");
+      lines.push(
+        `- Có cần xe nâng / thiết bị hỗ trợ không: ${equipmentSupport || "Không có"}`,
+      );
+      lines.push(
+        `- Dịch vụ cần tư vấn: ${services.length ? services.join(", ") : "Chưa chọn"}`,
+      );
+      lines.push(`- Dịch vụ khác: ${serviceOther || "Không có"}`);
+      lines.push(`- Ghi chú thêm: ${note || "Không có"}`);
+    }
+
+    return lines.join("\n");
+  }
+
+  function prepareMovingPayload(form, serviceType) {
+    const noteField = form.querySelector("[name=note]");
+    if (noteField) {
+      noteField.value = buildMovingSummary(form, serviceType);
+    }
+
+    const pickupTimeField = form.querySelector("[name=pickup_time]");
+    if (pickupTimeField) {
+      const surveyDate = getFieldValue(form, "moving_survey_date");
+      const surveySlot = getSelectText(form, "moving_survey_time_slot");
+      const normalizedSlot = surveySlot || getFieldValue(form, "moving_survey_time_slot");
+      pickupTimeField.value = [surveyDate, normalizedSlot].filter(Boolean).join(" - ");
+    }
+
+    const senderName = form.querySelector("[name=name]");
+    const senderPhone = form.querySelector("[name=phone]");
+    const receiverName = form.querySelector("[name=receiver_name]");
+    const receiverPhone = form.querySelector("[name=receiver_phone]");
+    if (receiverName && senderName) receiverName.value = senderName.value.trim();
+    if (receiverPhone && senderPhone) receiverPhone.value = senderPhone.value.trim();
+  }
+
   function buildPaymentContent(data) {
     const amountNum = parseInt(data.amount, 10) || 0;
     if (data.payment_method !== "bank_transfer" || amountNum <= 0) {
@@ -321,6 +489,7 @@
 
       if (isMovingService) {
         applyMovingDefaults(form);
+        prepareMovingPayload(form, serviceTypeValue);
       } else {
         core.calculateOrderShipping();
       }

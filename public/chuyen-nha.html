@@ -68,13 +68,10 @@
             <div class="flex flex-wrap gap-4">
               <a
                 href="#"
-                onclick="
-                  openBookingModal('moving_house');
-                  return false;
-                "
+                data-open-booking="moving_house"
                 class="bg-accent hover:bg-orange-600 text-white px-8 py-4 rounded-twelve font-bold text-lg transition-transform hover:scale-105 inline-block text-center no-underline"
               >
-                Đặt dịch vụ ngay
+                Liên hệ tư vấn
               </a>
               <a
                 href="#bao-gia"
@@ -780,6 +777,8 @@
               class="bg-primary/5 p-8 md:p-12 flex items-center justify-center"
             >
               <button
+                type="button"
+                data-open-booking="moving_house"
                 class="bg-accent hover:bg-orange-600 text-white px-10 py-4 rounded-twelve font-bold text-lg shadow-lg transition-all hover:-translate-y-1"
               >
                 Nhận tư vấn ngay
@@ -808,12 +807,13 @@
             Đừng để việc chuyển nhà trở thành gánh nặng. Hãy để FastGo đồng hành
             cùng bạn một cách trọn vẹn nhất.
           </p>
-          <button
-            onclick="openBookingModal('moving_house')"
+          <a
+            href="#"
+            data-open-booking="moving_house"
             class="bg-accent hover:bg-orange-600 text-white px-12 py-5 rounded-twelve text-xl font-bold shadow-xl transition-all transform hover:scale-110 inline-block text-center no-underline"
           >
-            ĐẶT DỊCH VỤ NGAY
-          </button>
+            LIÊN HỆ TƯ VẤN
+          </a>
         </div>
       </section>
       <!-- END: BottomCTA -->

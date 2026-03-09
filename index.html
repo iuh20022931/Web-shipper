@@ -7,7 +7,7 @@
       href="public/assets/images/favicon.ico"
     />
     <meta charset="UTF-8" />
-    <title>Dịch vụ Shipper | FastGo</title>
+    <title>FastGo - Giao hàng và chuyển dọn chuyên nghiệp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
@@ -17,7 +17,7 @@
       name="keywords"
       content="dịch vụ shipper, giao hàng nhanh, giao hàng nội thành, giao COD, chuyển nhà, chuyển văn phòng, chuyển kho bãi, FastGo"
     />
-    <link rel="stylesheet" href="public/assets/css/styles.css?v=20260304-5" />
+    <link rel="stylesheet" href="public/assets/css/styles.css" />
     <!-- Thêm SwiperJS CSS -->
     <link
       rel="stylesheet"
@@ -32,27 +32,20 @@
     <section id="hero" class="hero-section">
       <div class="container hero-container">
         <div class="hero-content">
-          <h1 class="animate-top">Giao hàng nhanh – An toàn – Đúng giờ</h1>
+          <h1 class="animate-top">
+            Giao hàng và chuyển dọn <br />chuyên nghiệp
+          </h1>
           <p class="animate-bottom">
-            Dịch vụ giao hàng nội thành & liên tỉnh, hỗ trợ 24/7. Nhận hàng ngay
-            sau 15 phút!
+            FastGo cung cấp giải pháp giao hàng nội địa/quốc tế và chuyển dọn
+            nhà - văn phòng - kho bãi với quy trình rõ ràng, hỗ trợ 24/7.
           </p>
           <div class="hero-btns animate-bottom">
-            <a href="#quick-quote" class="btn-primary">Tính giá ngay</a>
-            <a
-              href="#"
-              class="btn-secondary"
-              onclick="
-                openBookingModal();
-                return false;
-              "
-              >Đặt hàng ngay</a
-            >
+            <a href="#quick-quote" class="btn-primary">Tính giá giao hàng</a>
             <a
               href="public/huong-dan-dat-hang.html"
               class="btn-secondary btn-blink"
               target="_blank"
-              >📖 Hướng dẫn</a
+              >Hướng dẫn đặt đơn</a
             >
           </div>
 
@@ -173,10 +166,10 @@
     <!-- SERVICES -->
     <section id="services">
       <div class="container">
-        <h2 class="section-title">Các Dịch Vụ Của FastGo</h2>
+        <h2 class="section-title">Các dịch vụ của FastGo</h2>
         <p class="section-desc">
-          Tất cả dịch vụ được trình bày đồng đều theo dạng thẻ để bạn dễ so sánh
-          và chọn nhanh.
+          Hệ sinh thái giao hàng và chuyển dọn được chuẩn hóa theo cùng một hệ
+          chất lượng dịch vụ.
         </p>
 
         <div class="moving-service-grid">
@@ -333,11 +326,19 @@
                 <strong>Phù hợp:</strong> Hộ gia đình và cá nhân chuyển nơi ở.
               </li>
             </ul>
-            <a
-              href="./public/chuyen-nha.html"
-              class="service-action-btn service-action-primary"
-              >Xem chi tiết →</a
-            >
+            <div class="service-card-actions">
+              <a
+                href="#"
+                data-open-booking="moving_house"
+                class="service-action-btn service-action-dark"
+                >Liên hệ tư vấn</a
+              >
+              <a
+                href="./public/chuyen-nha.html"
+                class="service-action-btn service-action-outline"
+                >Xem trang dịch vụ</a
+              >
+            </div>
           </article>
 
           <article class="moving-card">
@@ -361,11 +362,19 @@
                 hành.
               </li>
             </ul>
-            <a
-              href="./public/chuyen-van-phong.html"
-              class="service-action-btn service-action-primary"
-              >Xem chi tiết →</a
-            >
+            <div class="service-card-actions">
+              <a
+                href="#"
+                data-open-booking="moving_office"
+                class="service-action-btn service-action-dark"
+                >Liên hệ tư vấn</a
+              >
+              <a
+                href="./public/chuyen-van-phong.html"
+                class="service-action-btn service-action-outline"
+                >Xem trang dịch vụ</a
+              >
+            </div>
           </article>
 
           <article class="moving-card">
@@ -390,11 +399,19 @@
                 vận chuyển.
               </li>
             </ul>
-            <a
-              href="./public/chuyen-kho-bai.html"
-              class="service-action-btn service-action-primary"
-              >Xem chi tiết →</a
-            >
+            <div class="service-card-actions">
+              <a
+                href="#"
+                data-open-booking="moving_warehouse"
+                class="service-action-btn service-action-dark"
+                >Liên hệ tư vấn</a
+              >
+              <a
+                href="./public/chuyen-kho-bai.html"
+                class="service-action-btn service-action-outline"
+                >Xem trang dịch vụ</a
+              >
+            </div>
           </article>
         </div>
       </div>
@@ -402,7 +419,7 @@
 
     <!-- FEATURES -->
     <section id="features">
-      <h2 class="section-title">Vì sao chọn FastGo?</h2>
+      <h2 class="section-title">Vì sao khách hàng chọn FastGo?</h2>
       <div class="feature-list">
         <div class="feature-item">
           <span class="feature-icon">🚀</span>
@@ -740,21 +757,14 @@
 
     <!-- CONTACT -->
     <section id="contact">
-      <h2 class="section-title">Sẵn sàng vận chuyển?</h2>
+      <h2 class="section-title">Sẵn sàng tạo đơn hoặc đăng ký khảo sát?</h2>
       <p class="section-desc">
-        Liên hệ với chúng tôi: <strong>0775472347</strong> |
+        Đội ngũ FastGo luôn sẵn sàng hỗ trợ: <strong>0775472347</strong> |
         <strong>dichvuquanhta.vn@gmail.com</strong>
       </p>
       <div class="hero-btns centered-btns">
-        <a
-          id="contact-primary-btn"
-          href="#"
-          class="btn-primary"
-          onclick="
-            openBookingModal();
-            return false;
-          "
-          >Đặt Đơn Hàng Ngay</a
+        <a id="contact-primary-btn" href="public/login.php" class="btn-primary"
+          >Đăng nhập để tạo đơn</a
         >
         <a
           id="contact-secondary-btn"
@@ -903,8 +913,6 @@
     <script src="public/assets/js/shared-layout.js"></script>
     <script src="public/assets/js/shared-modals.js" defer></script>
     <script src="public/assets/js/main.js" defer></script>
-
-    <!-- Shared Modals are loaded from public/assets/partials/shared-modals.html -->
 
     <!-- Static Configuration -->
     <script>
@@ -1091,23 +1099,13 @@
             }
 
             if (contactSecondary) {
-              contactSecondary.href = dashboardUrl;
-              contactSecondary.textContent = "Vào trang quản lý";
+              contactSecondary.href = logoutUrl;
+              contactSecondary.textContent = "Đăng xuất";
             }
 
             if (contactPrimary) {
-              if (role === "admin" || role === "shipper") {
-                contactPrimary.removeAttribute("onclick");
-                contactPrimary.href = dashboardUrl;
-                contactPrimary.textContent = "Vào trang quản lý";
-              } else {
-                contactPrimary.setAttribute(
-                  "onclick",
-                  "openBookingModal(); return false;",
-                );
-                contactPrimary.href = "#";
-                contactPrimary.textContent = "Đặt Đơn Hàng Ngay";
-              }
+              contactPrimary.href = dashboardUrl;
+              contactPrimary.textContent = "Vào trang quản lý";
             }
           } else {
             if (navLoginItem) {
@@ -1120,12 +1118,8 @@
             }
 
             if (contactPrimary) {
-              contactPrimary.setAttribute(
-                "onclick",
-                "openBookingModal(); return false;",
-              );
-              contactPrimary.href = "#";
-              contactPrimary.textContent = "Đặt Đơn Hàng Ngay";
+              contactPrimary.href = loginUrl;
+              contactPrimary.textContent = "Đăng nhập để tạo đơn";
             }
             if (contactSecondary) {
               contactSecondary.href = registerUrl;
@@ -1134,46 +1128,57 @@
           }
         }
 
-        try {
-          const xhr = new XMLHttpRequest();
-          xhr.open("GET", toPublicUrl("landing_data_ajax.php"), false);
-          xhr.send(null);
+        async function loadLandingData() {
+          try {
+            const response = await fetch(toPublicUrl("landing_data_ajax.php"), {
+              method: "GET",
+              credentials: "same-origin",
+              headers: {
+                Accept: "application/json",
+              },
+            });
 
-          if (xhr.status < 200 || xhr.status >= 300 || !xhr.responseText)
-            return;
-          const response = JSON.parse(xhr.responseText);
-          if (!response || response.status !== "success" || !response.data)
-            return;
+            if (!response.ok) return;
 
-          const data = response.data;
-          // Use hardcoded data from pricing-data.js if available, otherwise fallback to AJAX data.
-          const servicesToRender = window.servicesData || data.services;
+            const payload = await response.json();
+            if (!payload || payload.status !== "success" || !payload.data)
+              return;
 
-          if (Array.isArray(servicesToRender) && servicesToRender.length) {
-            const deliveryServices =
-              normalizeDeliveryServices(servicesToRender);
-            if (deliveryServices.length) {
-              window.servicesData = deliveryServices; // Ensure global variable is set correctly
-              renderQuickQuoteServices(deliveryServices);
+            const data = payload.data;
+            // Use hardcoded data from pricing-data.js if available, otherwise fallback to AJAX data.
+            const servicesToRender = window.servicesData || data.services;
+
+            if (Array.isArray(servicesToRender) && servicesToRender.length) {
+              const deliveryServices =
+                normalizeDeliveryServices(servicesToRender);
+              if (deliveryServices.length) {
+                window.servicesData = deliveryServices; // Ensure global variable is set correctly
+                renderQuickQuoteServices(deliveryServices);
+              }
             }
-          }
 
-          if (data.pricing_config && typeof data.pricing_config === "object") {
-            // Still use pricing config from server
-            window.pricingConfig = data.pricing_config;
-          }
-          if (Array.isArray(data.testimonials)) {
-            renderTestimonials(data.testimonials);
-          }
-          if (Array.isArray(data.faqs)) {
-            renderFaqs(data.faqs);
-          }
+            if (
+              data.pricing_config &&
+              typeof data.pricing_config === "object"
+            ) {
+              // Still use pricing config from server
+              window.pricingConfig = data.pricing_config;
+            }
+            if (Array.isArray(data.testimonials)) {
+              renderTestimonials(data.testimonials);
+            }
+            if (Array.isArray(data.faqs)) {
+              renderFaqs(data.faqs);
+            }
 
-          window.isLoggedIn = !!data.is_logged_in;
-          renderAuthUi(window.isLoggedIn, data.role || "guest");
-        } catch (err) {
-          console.error("Cannot bootstrap landing page", err);
+            window.isLoggedIn = !!data.is_logged_in;
+            renderAuthUi(window.isLoggedIn, data.role || "guest");
+          } catch (err) {
+            console.error("Cannot bootstrap landing page", err);
+          }
         }
+
+        loadLandingData();
       })();
     </script>
   </body>
