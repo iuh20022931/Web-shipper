@@ -27,8 +27,7 @@
 
   const partialUrl = `${basePath}assets/partials/shared-modals.html`;
   const deliveryModalId = "booking-modal-delivery";
-  const movingModalId = "booking-modal-moving";
-  let initialized = false;
+    let initialized = false;
   const deliveryItemOptionsByType = {
     thuong: [
       "Quần áo/vải vóc",
@@ -85,16 +84,6 @@
     ],
   };
 
-  function isMovingType(typeKey) {
-    if (
-      window.serviceHelper &&
-      typeof window.serviceHelper.isMovingService === "function"
-    ) {
-      return window.serviceHelper.isMovingService(typeKey);
-    }
-    return String(typeKey || "").startsWith("moving_");
-  }
-
   function isDeliveryType(typeKey) {
     const value = String(typeKey || "").trim().toLowerCase();
     return [
@@ -118,8 +107,7 @@
 
   function ensureModalMarkup() {
     const hasDelivery = !!document.getElementById(deliveryModalId);
-    const hasMoving = !!document.getElementById(movingModalId);
-    if (hasDelivery && hasMoving) return true;
+    if (hasDelivery) return true;
 
     try {
       const xhr = new XMLHttpRequest();
@@ -139,7 +127,6 @@
 
   function getModal(kind) {
     if (kind === "delivery") return document.getElementById(deliveryModalId);
-    if (kind === "moving") return document.getElementById(movingModalId);
     return null;
   }
 
@@ -149,8 +136,7 @@
 
   function syncBodyScrollState() {
     const deliveryModal = getModal("delivery");
-    const movingModal = getModal("moving");
-    const anyOpen = isVisible(deliveryModal) || isVisible(movingModal);
+    const anyOpen = isVisible(deliveryModal);
     document.body.style.overflow = anyOpen ? "hidden" : "auto";
   }
 
@@ -170,7 +156,6 @@
 
   function closeAllModals() {
     closeModal("delivery");
-    closeModal("moving");
   }
 
   function setSelectOptions(selectEl, options, placeholder) {
@@ -315,9 +300,7 @@
     [
       "pickup-addr",
       "delivery-addr",
-      "pickup-addr-moving",
-      "delivery-addr-moving",
-    ]
+          ]
       .map((id) => document.getElementById(id))
       .filter(Boolean)
       .forEach((input) => {
@@ -480,34 +463,6 @@
     applyState();
   }
 
-  function initMovingRouteFields() {
-    const pickupCity = document.getElementById("pickup-city-moving");
-    const pickupDistrict = document.getElementById("pickup-district-moving");
-    const deliveryCity = document.getElementById("delivery-city-moving");
-    const deliveryDistrict = document.getElementById("delivery-district-moving");
-
-    if (!pickupCity || !pickupDistrict || !deliveryCity || !deliveryDistrict) return;
-
-    const { cityMap, cities } = getRouteLocationSource();
-
-    bindCityDistrictFields(
-      pickupCity,
-      pickupDistrict,
-      "Chọn tỉnh/thành phố lấy hàng",
-      "Chọn quận/huyện lấy hàng",
-      cities,
-      cityMap,
-    );
-    bindCityDistrictFields(
-      deliveryCity,
-      deliveryDistrict,
-      "Chọn tỉnh/thành phố giao hàng",
-      "Chọn quận/huyện giao hàng",
-      cities,
-      cityMap,
-    );
-  }
-
   function initCorporateSection(checkboxId, fieldsId) {
     const checkbox = document.getElementById(checkboxId);
     const fields = document.getElementById(fieldsId);
@@ -533,67 +488,6 @@
     });
   }
 
-  function toggleMovingPanelInputs(panel, isActive) {
-    if (!panel) return;
-    const controls = panel.querySelectorAll("input, select, textarea");
-    controls.forEach((control) => {
-      if (!control.dataset.wasRequired) {
-        control.dataset.wasRequired = control.required ? "true" : "false";
-      }
-      control.required = isActive && control.dataset.wasRequired === "true";
-      control.disabled = !isActive;
-    });
-  }
-
-  function syncMovingOtherServiceFields() {
-    const toggles = document.querySelectorAll(
-      ".moving-other-service-checkbox[data-target]",
-    );
-    toggles.forEach((toggle) => {
-      const targetId = String(toggle.dataset.target || "").trim();
-      const targetInput = targetId ? document.getElementById(targetId) : null;
-      if (!targetInput) return;
-
-      const enabled = !toggle.disabled && toggle.checked;
-      targetInput.disabled = !enabled;
-      if (!enabled) targetInput.value = "";
-    });
-  }
-
-  function initMovingOtherServiceFields() {
-    const toggles = document.querySelectorAll(
-      ".moving-other-service-checkbox[data-target]",
-    );
-    toggles.forEach((toggle) => {
-      if (toggle.dataset.bound === "true") return;
-      toggle.dataset.bound = "true";
-      toggle.addEventListener("change", syncMovingOtherServiceFields);
-    });
-    syncMovingOtherServiceFields();
-  }
-
-  function initMovingServiceDetails() {
-    const serviceSelect = document.getElementById("order-service-type-moving");
-    if (!serviceSelect) return;
-
-    const details = Array.from(
-      document.querySelectorAll(".moving-detail[data-moving-service]"),
-    );
-    const applyState = () => {
-      const selected = String(serviceSelect.value || "").trim().toLowerCase();
-      details.forEach((block) => {
-        const key = String(block.dataset.movingService || "").toLowerCase();
-        const isActive = key === selected;
-        block.style.display = isActive ? "block" : "none";
-        toggleMovingPanelInputs(block, isActive);
-      });
-      syncMovingOtherServiceFields();
-    };
-
-    serviceSelect.addEventListener("change", applyState);
-    applyState();
-  }
-
   function initBookingTriggerButtons() {
     const triggers = document.querySelectorAll("[data-open-booking]");
     triggers.forEach((trigger) => {
@@ -608,10 +502,10 @@
 
   function ensureCoreBindings() {
     if (
-      window.FastGoCore &&
-      typeof window.FastGoCore.bindOrderShippingInputs === "function"
+      window.GiaoHangNhanhCore &&
+      typeof window.GiaoHangNhanhCore.bindOrderShippingInputs === "function"
     ) {
-      window.FastGoCore.bindOrderShippingInputs();
+      window.GiaoHangNhanhCore.bindOrderShippingInputs();
     }
   }
 
@@ -623,27 +517,18 @@
       "is_corporate_checkbox_delivery",
       "corporate-fields-delivery",
     );
-    initCorporateSection(
-      "is_corporate_checkbox_moving",
-      "corporate-fields-moving",
-    );
     initDeliveryDimensionsToggle();
-    initMovingOtherServiceFields();
-    initMovingServiceDetails();
     initBookingTriggerButtons();
     initAddressAutocomplete();
     initDeliveryItemFields();
     initDeliveryRouteFields();
     initInternationalDestinationFields();
     initDeliveryServiceMode();
-    initMovingRouteFields();
     ensureCoreBindings();
 
     window.addEventListener("click", function (event) {
       const deliveryModal = getModal("delivery");
-      const movingModal = getModal("moving");
-      if (event.target === deliveryModal) closeModal("delivery");
-      if (event.target === movingModal) closeModal("moving");
+        if (event.target === deliveryModal) closeModal("delivery");
     });
   }
 
@@ -652,23 +537,6 @@
     initModalBindings();
 
     const normalized = String(serviceType || "").trim().toLowerCase();
-    const openingMoving = isMovingType(normalized);
-    closeAllModals();
-
-    if (openingMoving) {
-      const movingSelect = document.getElementById("order-service-type-moving");
-      if (
-        movingSelect &&
-        normalized &&
-        ["moving_house", "moving_office", "moving_warehouse"].includes(normalized)
-      ) {
-        movingSelect.value = normalized;
-        movingSelect.dispatchEvent(new Event("change"));
-      }
-      openModal("moving");
-      return;
-    }
-
     const deliverySelect = document.getElementById("order-service-type");
     if (deliverySelect && isDeliveryType(normalized)) {
       deliverySelect.value = normalized;
@@ -680,10 +548,6 @@
   window.closeBookingModal = function (modalType) {
     if (modalType === "delivery") {
       closeModal("delivery");
-      return;
-    }
-    if (modalType === "moving") {
-      closeModal("moving");
       return;
     }
     closeAllModals();

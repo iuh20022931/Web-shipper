@@ -161,7 +161,7 @@ $service_options = [
 $known_keys = array_column($service_options, 'key');
 foreach ($services_list as $svc) {
     $key = strtolower(trim((string) ($svc['type_key'] ?? '')));
-    if ($key === '' || strpos($key, 'moving_') === 0 || in_array($key, $known_keys, true)) {
+    if ($key === '' || in_array($key, $known_keys, true)) {
         continue;
     }
     $service_options[] = [
@@ -210,7 +210,7 @@ $default_route_type = (strpos($selected_service_type, 'intl_') === 0) ? 'interna
 
 <head>
     <meta charset="UTF-8">
-    <title>Tạo đơn hàng mới | FastGo</title>
+    <title>Tạo đơn hàng mới | Giao Hàng Nhanh</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
 </head>

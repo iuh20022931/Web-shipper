@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Tracking đơn hàng | FastGo</title>
+    <title>Tracking đơn hàng | Giao Hàng Nhanh</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>" />
 </head>
@@ -14,7 +14,7 @@
 
     <!-- MAIN TRACKING -->
     <main>
-        <h1 style="text-align: center; margin-bottom: 32px; color: #0a2a66">Tracking đơn hàng FastGo</h1>
+        <h1 style="text-align: center; margin-bottom: 32px; color: #0a2a66">Tracking đơn hàng Giao Hàng Nhanh</h1>
 
         <ul class="internal-dropdown">
             <li><a href="#track-order">Đơn hàng tiêu chuẩn</a></li>
@@ -31,7 +31,7 @@
             </form>
             <div id="loading-spinner-standard" style="display: none; text-align: center; margin: 20px 0">
                 <div class="spinner"></div>
-                <p style="color: #0a2a66; font-size: 14px; margin-top: 10px">Đang kết nối hệ thống FastGo...</p>
+                <p style="color: #0a2a66; font-size: 14px; margin-top: 10px">Đang kết nối hệ thống Giao Hàng Nhanh...</p>
             </div>
             <div id="result-standard" class="tracking-result"></div>
         </section>
@@ -45,7 +45,7 @@
             </form>
             <div id="loading-spinner-bulk" style="display: none; text-align: center; margin: 20px 0">
                 <div class="spinner"></div>
-                <p style="color: #0a2a66; font-size: 14px; margin-top: 10px">Đang kết nối hệ thống FastGo...</p>
+                <p style="color: #0a2a66; font-size: 14px; margin-top: 10px">Đang kết nối hệ thống Giao Hàng Nhanh...</p>
             </div>
             <div id="result-bulk" class="tracking-result"></div>
         </section>
@@ -59,7 +59,7 @@
             </form>
             <div id="loading-spinner-cod" style="display: none; text-align: center; margin: 20px 0">
                 <div class="spinner"></div>
-                <p style="color: #0a2a66; font-size: 14px; margin-top: 10px">Đang kết nối hệ thống FastGo...</p>
+                <p style="color: #0a2a66; font-size: 14px; margin-top: 10px">Đang kết nối hệ thống Giao Hàng Nhanh...</p>
             </div>
             <div id="result-cod" class="tracking-result"></div>
         </section>

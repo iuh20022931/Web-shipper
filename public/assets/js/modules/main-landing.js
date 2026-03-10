@@ -1,8 +1,8 @@
 (function (window, document) {
-  if (window.__fastGoLandingInitDone) return;
-  window.__fastGoLandingInitDone = true;
+  if (window.__giaoHangNhanhLandingInitDone) return;
+  window.__giaoHangNhanhLandingInitDone = true;
 
-  const core = window.FastGoCore;
+  const core = window.GiaoHangNhanhCore;
   if (!core) return;
 
   function onReady(fn) {

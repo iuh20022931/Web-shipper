@@ -37,7 +37,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
     <nav class="navbar container">
         <div class="logo">
             <a href="index.php" style="text-decoration: none;">
-                <h1>FastGo</h1>
+                <h1>Giao Hàng Nhanh</h1>
             </a>
         </div>
         <ul class="nav-menu" id="nav-menu">

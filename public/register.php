@@ -74,7 +74,7 @@ $conn->close();
 
 <head>
     <meta charset="UTF-8">
-    <title>Đăng ký tài khoản | FastGo</title>
+    <title>Đăng ký tài khoản | Giao Hàng Nhanh</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -223,7 +223,7 @@ $conn->close();
 
 <body>
     <div class="auth-card">
-        <h2 class="auth-title">Đăng Ký FastGo</h2>
+        <h2 class="auth-title">Đăng Ký Giao Hàng Nhanh</h2>
         <p class="auth-subtitle">Tạo tài khoản mới để bắt đầu vận chuyển</p>
 
         <?php if (!empty($error_msg)): ?>

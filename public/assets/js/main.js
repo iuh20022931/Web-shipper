@@ -1,6 +1,6 @@
 (function (window, document) {
-  if (window.__fastGoMainBootstrapLoaded) return;
-  window.__fastGoMainBootstrapLoaded = true;
+  if (window.__giaoHangNhanhMainBootstrapLoaded) return;
+  window.__giaoHangNhanhMainBootstrapLoaded = true;
 
   const inPublicDir = window.location.pathname.toLowerCase().includes("/public/");
   const scriptBase = inPublicDir ? "assets/js/" : "public/assets/js/";
@@ -20,7 +20,7 @@
 
   function hasModule(modulePath) {
     return !!document.querySelector(
-      `script[data-fastgo-module="${modulePath}"]`,
+      `script[data-ghn-module="${modulePath}"]`,
     );
   }
 
@@ -37,7 +37,7 @@
     script.src = `${scriptBase}${modulePath}${versionSuffix}`;
     script.async = false;
     script.defer = false;
-    script.dataset.fastgoModule = modulePath;
+    script.dataset.ghnModule = modulePath;
     script.onload = function () {
       loadModuleAt(index + 1);
     };

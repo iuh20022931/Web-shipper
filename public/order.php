@@ -107,7 +107,6 @@ $note = $_POST['note'] ?? '';
 if ($payment_method === 'bank') {
     $payment_method = 'bank_transfer';
 }
-$is_moving = strpos($service_type, 'moving_') === 0;
 $is_international = strpos($service_type, 'intl_') === 0;
 
 // Dịch vụ chuyển dọn chỉ cần 1 đầu mối liên hệ
@@ -424,7 +423,7 @@ if ($stmt->execute()) {
         'bank_info' => [ // Dữ liệu động từ DB
             'bank_id' => $bank_settings['bank_id'] ?? 'MB',
             'account_no' => $bank_settings['bank_account_no'] ?? '0333666999',
-            'account_name' => $bank_settings['bank_account_name'] ?? 'FASTGO LOGISTICS',
+            'account_name' => $bank_settings['bank_account_name'] ?? 'GIAO HÀNG NHANH',
             'template' => $bank_settings['qr_template'] ?? 'compact'
         ]
     ]);

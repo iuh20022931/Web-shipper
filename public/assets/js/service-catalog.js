@@ -27,15 +27,8 @@
             area: "international",
             areaLabel: "Quoc te",
             packages: ["intl_economy", "intl_express"],
-          }
+          },
         ],
-      },
-      {
-        key: "moving",
-        label: "Chuyen don",
-        rank: 2,
-        notes: "Nha, van phong, kho bai",
-        serviceTypes: ["moving_house", "moving_office", "moving_warehouse"],
       },
     ],
     addOns: [
@@ -73,21 +66,6 @@
         mainGroup: "delivery",
         speed: "express",
       },
-      moving_house: {
-        label: "Chuyen nha",
-        mainGroup: "moving",
-        subtype: "house",
-      },
-      moving_office: {
-        label: "Chuyen van phong",
-        mainGroup: "moving",
-        subtype: "office",
-      },
-      moving_warehouse: {
-        label: "Chuyen kho bai",
-        mainGroup: "moving",
-        subtype: "warehouse",
-      },
     },
     defaultDeliveryTypeOrder: ["slow", "standard", "fast", "express"],
   };
@@ -101,10 +79,6 @@
   function getMainGroupKey(typeKey) {
     const meta = getServiceMeta(typeKey);
     return meta ? meta.mainGroup : null;
-  }
-
-  function isMovingService(typeKey) {
-    return getMainGroupKey(typeKey) === "moving";
   }
 
   function isDeliveryLikeService(typeKey) {
@@ -132,7 +106,6 @@
   global.serviceHelper = {
     getServiceMeta,
     getMainGroupKey,
-    isMovingService,
     isDeliveryLikeService,
     getAddOnsForType,
     orderDeliveryTypes,

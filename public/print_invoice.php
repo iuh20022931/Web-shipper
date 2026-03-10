@@ -29,7 +29,7 @@ if (!$order)
     </div>
 
     <div class="header">
-        <h1>FASTGO SHIPPER</h1>
+        <h1>GIAO HÀNG NHANH SHIPPER</h1>
         <p>Biên nhận gửi hàng</p>
         <p>Mã đơn: <strong><?php echo $order['order_code']; ?></strong></p>
         <p>Ngày: <?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></p>
@@ -69,7 +69,7 @@ if (!$order)
     </div>
 
     <div style="text-align: center; margin-top: 50px; font-size: 12px;">
-        <p>Cảm ơn quý khách đã sử dụng dịch vụ của FastGo!</p>
+        <p>Cảm ơn quý khách đã sử dụng dịch vụ của Giao Hàng Nhanh!</p>
         <p>Hotline: 0123 456 789</p>
     </div>
 </body>

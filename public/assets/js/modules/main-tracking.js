@@ -1,8 +1,8 @@
 (function (window, document) {
-  if (window.__fastGoTrackingInitDone) return;
-  window.__fastGoTrackingInitDone = true;
+  if (window.__giaoHangNhanhTrackingInitDone) return;
+  window.__giaoHangNhanhTrackingInitDone = true;
 
-  const core = window.FastGoCore;
+  const core = window.GiaoHangNhanhCore;
   if (!core) return;
 
   let currentCancelCode = "";

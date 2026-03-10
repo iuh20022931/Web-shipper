@@ -81,14 +81,14 @@ $conn->close();
 
 <head>
     <meta charset="UTF-8">
-    <title>Đăng nhập | FastGo</title>
+    <title>Đăng nhập | Giao Hàng Nhanh</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
 </head>
 
 <body class="auth-page-body">
     <div class="auth-card">
-        <h2 class="auth-title">Đăng Nhập FastGo</h2>
+        <h2 class="auth-title">Đăng Nhập Giao Hàng Nhanh</h2>
         <?php if (!empty($error_msg)): ?>
             <div class="error-box">
                 <?php echo $error_msg; ?>

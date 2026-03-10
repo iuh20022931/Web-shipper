@@ -1,96 +1,60 @@
-# FastGo - Hệ thống quản lý vận chuyển
+# Giao Hàng Nhanh - Hệ thống quản lý vận chuyển chuyên biệt
 
-FastGo là dự án web logistics dùng PHP + MySQL, gồm landing page, đặt đơn, tra cứu vận đơn, dashboard cho khách hàng/shipper/admin và các công cụ quản trị.
+Giao Hàng Nhanh là nền tảng logistics và giao nhận hàng hóa (Shipper) được xây dựng với kiến trúc Frontend tĩnh kết hợp Backend PHP + MySQL. Hệ thống tập trung cung cấp giải pháp đặt đơn, tra cứu vận đơn, và quản lý giao nhận cho khách hàng cá nhân, shipper và quản trị viên.
 
-## Tổng quan nhanh
+## Đặc điểm Hệ thống
 
-- Frontend chính: `index.html` (landing + tính cước + mở modal đặt đơn).
-- Backend xử lý: các trang/endpoint trong `public/*.php`.
-- Dữ liệu giá và danh sách địa điểm: `public/assets/js/pricing-data.js`.
-- Modal đặt đơn dùng chung: `public/assets/partials/shared-modals.html`.
+- Trang chủ độc lập: `index.html` (Landing page giới thiệu dịch vụ, tính cước siêu tốc, theo dõi đơn hàng mã vạch).
+- Xử lý nghiệp vụ: Đặt tại thư mục `public/*.php` (Authentication, Xử lý đơn, Thống kê).
+- Quản lý trạng thái và UI: Framework JS thuần tối ưu đặt tại `public/assets/js`. Modular hóa mạnh mẽ.
+- Pop-up thông minh: Mọi thao tác chọn dịch vụ mở modal trung tâm `public/assets/partials/shared-modals.html`.
 
-## Cập nhật mới (đã áp dụng)
+## Trải nghiệm người dùng cải tiến
 
-- Luồng đặt đơn:
-  - Người dùng có thể mở form đặt đơn ngay cả khi chưa đăng nhập.
-  - Chỉ khi bấm `Đặt lịch`/`Gửi yêu cầu`, hệ thống mới yêu cầu đăng nhập.
-  - Sau đăng nhập có `redirect` quay lại trang trước (hỗ trợ mở lại modal đặt đơn).
-- Form giao hàng:
-  - Hỗ trợ nội địa và quốc tế (`intl_economy`, `intl_express`).
-  - Tên gói quốc tế hiển thị: `Tiêu chuẩn quốc tế` và `Chuyển phát nhanh quốc tế`.
-  - Đơn quốc tế bắt buộc chọn quốc gia nhận; COD tự ẩn và đưa về `0`.
-- Form chuyển dọn:
-  - Luồng thống nhất là `khảo sát trước - chốt đơn sau`.
-  - Nút/confirm/thông báo thành công được đổi sang ngữ cảnh `Gửi yêu cầu khảo sát`.
-  - Backend lưu thông tin khảo sát ban đầu vào `note` và đánh dấu `request_stage = survey_pending`.
-- Phí vận chuyển dự kiến:
-  - Cập nhật liên tục khi thay đổi thông số (dịch vụ, địa chỉ, cân nặng, kích thước, COD, quốc gia/tỉnh nhận quốc tế...).
-- Đồng bộ danh sách địa điểm:
-  - Danh sách tỉnh/thành, quận/huyện, quốc gia/tỉnh nhận được chuẩn hóa theo cùng nguồn `QUOTE_SHIPPING_DATA` để tránh trùng/lệch tên.
-- Tracking:
-  - Endpoint tra cứu trả JSON ổn định hơn khi lỗi (`tracking_ajax.php`).
+- **Luồng đặt đơn linh hoạt**:
+  - Khách vãng lai (Guest) có thể tham khảo bảng giá và điền đơn ngay lập tức.
+  - Hệ thống chỉ yêu cầu xác thực (Login/Register) ở bước cuối cùng trước khi chốt đơn.
+  - Tự động lưu trạng thái bảo toàn dữ liệu thao tác sau khi đăng nhập thành công.
+- **Tính cước thời gian thực**:
+  - Giao diện báo giá tự động (Real-time Calculator) khi thay đổi khu vực nội thành/ngoại thành/quốc tế và cân nặng.
+  - Phụ phí COD, Bảo hiểm, Bùng nổ kích thước được bóc tách minh bạch trên UI.
+- **Đa dạng Phương thức Vận chuyển**:
+  - Nội địa: Giao Tiêu Chuẩn, Giao Nhanh, Hỏa Tốc.
+  - Quốc tế: Tiêu chuẩn quốc tế, Chuyển phát nhanh. Tự động tắt tính năng COD đối với đơn ngoại biên.
 
-## Tính năng theo vai trò
+## Phân quyền & Vai trò (Role-based functions)
 
-### 1) Guest
+### 1) Khách vãng lai (Guest)
 
-- Xem dịch vụ, FAQ, testimonial ở landing page.
-- Tính cước nội địa/quốc tế (Quick Quote).
-- Tra cứu hành trình vận đơn theo mã đơn.
-- Mở modal đặt hàng/chuyển dọn từ trang chủ.
+- Mở bảng tính cước nhanh tính phí trước khi đặt.
+- Kiểm tra lộ trình đơn hàng từ đối tác qua mã bưu phẩm.
+- Truy cập FAQ, tư vấn và các thông tin dịch vụ.
 
-### 2) Customer
+### 2) Khách hàng (Customer)
 
-- Tạo đơn giao hàng trực tuyến.
-- Theo dõi lịch sử đơn, xem chi tiết đơn, in phiếu gửi.
-- Theo dõi timeline trạng thái đơn.
-- Nhận thông báo và quản lý hồ sơ cá nhân.
+- Quản lý danh bạ địa chỉ nhận hàng/ gửi hàng.
+- Theo dõi đơn hàng đã tạo, tải In bill PDF/Mã vạch cho từng kiện.
+- Cập nhật hồ sơ người dùng.
 
-### 3) Shipper
+### 3) Đối tác Giao nhận (Shipper)
 
-- Dashboard nhận đơn được phân công.
-- Cập nhật trạng thái vận chuyển theo quy trình.
-- Upload ảnh POD khi hoàn tất đơn.
-- Quản lý hồ sơ shipper.
+- Bảng điều khiển (Dashboard) tiếp nhận đơn hàng phân bổ dựa trên khu vực.
+- Cập nhật tiến trình: "Đang lấy hàng", "Đang giao", "Hoàn thành".
+- Upload hình ảnh bằng chứng giao hàng (POD).
 
-### 4) Admin
+### 4) Quản trị viên (Admin)
 
-- Dashboard thống kê doanh thu/đơn hàng.
-- Quản lý đơn hàng, người dùng, dịch vụ, FAQ, testimonial.
-- Duyệt shipper mới, khóa/mở khóa tài khoản.
-- Cấu hình thông tin hệ thống.
+- Dashboard phân tích chỉ số kinh doanh, tỷ lệ giao thành công.
+- Quản lý mạng lưới khách hàng, thiết lập giá sàn, cước vận chuyển động.
+- Duyệt đối tác tài xế mới, phân phối công việc.
 
-## Luồng đặt đơn hiện tại
+## Logic tính cước & Thuật toán
 
-### Giao hàng (`create-order-form`)
+- Sử dụng Module `pricing-data.js` kết xuất dữ liệu phân vùng cấp ba (Tỉnh/Thành ➔ Quận/Huyện ➔ Phường/Xã) từ `QUOTE_SHIPPING_DATA`.
+- Phí = [Giá gốc gói dịch vụ] + [Phụ thu khối lượng vượt mức] + [Dung sai thể tích VWA] + [Bảo hiểm giá trị] + [COD]
+- Quốc tế: Tính theo phân nhóm Vùng lãnh thổ (Zone-based Pricing) phụ thuộc thủ tục hải quan và phụ phí nhiên liệu bay.
 
-1. Mở modal từ `index.html` bằng `openBookingModal()`.
-2. Nhập thông tin gửi/nhận, hàng hóa, thanh toán, hóa đơn.
-3. Phí dự kiến tự tính realtime.
-4. Bấm `Đặt lịch`:
-   - Nếu chưa đăng nhập: hiển thị nút Đăng nhập/Đăng ký ngay trong thông báo của form.
-   - Nếu đã đăng nhập: gửi dữ liệu sang `public/order.php`.
-
-### Chuyển dọn (`create-order-form-moving`)
-
-1. Chọn loại chuyển dọn (nhà/văn phòng/kho bãi).
-2. Nhập thông tin khảo sát ban đầu (điểm đi/đến, số tầng, thang máy, khung giờ...).
-3. Bấm `Gửi yêu cầu`, hệ thống ghi nhận `yêu cầu khảo sát` (chưa phải đơn chính thức).
-4. Nhân viên liên hệ khảo sát thực tế, chốt phương án và xác nhận đơn chính thức sau khảo sát.
-
-## Logic tính cước
-
-- Có 2 lớp dữ liệu/công thức:
-  - `SHIPPING_DATA`: cấu hình cơ bản.
-  - `QUOTE_SHIPPING_DATA`: dữ liệu chi tiết nội địa/quốc tế + danh sách địa điểm.
-- Nội địa:
-  - Xác định vùng tuyến.
-  - Tính theo gói dịch vụ + khối lượng tính cước (thực cân/thể tích) + phụ phí hàng hóa/COD/bảo hiểm.
-- Quốc tế:
-  - Xác định zone theo quốc gia nhận.
-  - Tính cước theo service quốc tế + phụ phí nhiên liệu/an ninh/hải quan/bảo hiểm.
-
-## Cấu trúc thư mục chính
+## Cấu trúc Thư mục
 
 ```text
 Web shipper/
@@ -106,35 +70,19 @@ Web shipper/
 │   └── header.html / footer.html
 └── public/
     ├── assets/
-    │   ├── css/
-    │   ├── js/
+    │   ├── css/          # Các tệp phong cách theo module (landing, dashboard, modal, ...)
+    │   ├── js/           # Các script nghiệp vụ (Core logic, Order, Tracking, Chart)
     │   ├── images/
     │   └── partials/shared-modals.html
-    ├── login.php / register.php / login_ajax.php / register_ajax.php
-    ├── order.php / tracking_ajax.php / inquiry_ajax.php
+    ├── \*.php             # (login, register, order, profile...)
     ├── dashboard.php / shipper_dashboard.php / admin_stats.php
-    └── ...các trang quản trị và nghiệp vụ khác
+    └── ...các trang quản lý người dùng tương ứng
 ```
 
-## Hướng dẫn cài đặt local
+## Các API Endpoint phổ biến (AJAX)
 
-1. Copy source vào `htdocs` (XAMPP) hoặc `www` (WAMP/Laragon).
-2. Tạo DB `shipper_db`.
-3. Import `database/shipper_db.sql`.
-4. Cập nhật kết nối DB tại `config/db.php`.
-5. Đảm bảo thư mục upload có quyền ghi nếu cần lưu ảnh POD.
-6. Truy cập dự án qua localhost (ví dụ: `http://localhost/Web%20shipper/`).
+- `public/login_ajax.php` / `public/register_ajax.php`: Xác thực JWT / Session.
+- `public/tracking_ajax.php`: Trả về mốc thời gian hành trình kiện hàng.
+- `public/order.php`: Bóc tách payload tính phí, lưu vào cơ sở dữ liệu và Push Notification đến shipper.
 
-## Endpoint AJAX thường dùng
-
-- `public/login_ajax.php`: đăng nhập qua AJAX.
-- `public/register_ajax.php`: đăng ký qua AJAX.
-- `public/tracking_ajax.php`: tra cứu vận đơn.
-- `public/inquiry_ajax.php`: gửi liên hệ.
-- `public/landing_data_ajax.php`: dữ liệu động cho landing.
-- `public/order.php`: tạo đơn giao hàng và ghi nhận yêu cầu khảo sát chuyển dọn.
-
-## Ghi chú
-
-- `login.php` và các file PHP backend vẫn cần giữ để xử lý xác thực/đơn hàng.
-- `index.html` là điểm vào chính cho landing và booking modal.
+_Lưu ý: Sau khi thực hiện chiến lược tái cấu trúc (Refactoring), toàn bộ Module liên quan đến Mảng kinh doanh "Chuyển nhà/Văn phòng" đã được bóc tách hoàn toàn sang một dự án Landing Page độc lập khác nhằm giữ cho kiến trúc hệ thống Core Giao Hàng đạt hiệu suất cao nhất._

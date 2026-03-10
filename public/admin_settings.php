@@ -91,7 +91,7 @@ if ($result) {
                         <label for="bank_account_name">Tên chủ tài khoản</label>
                         <input type="text" id="bank_account_name" name="settings[bank_account_name]"
                             value="<?php echo htmlspecialchars($settings['bank_account_name']['setting_value'] ?? ''); ?>"
-                            placeholder="VD: FASTGO LOGISTICS" required>
+                            placeholder="VD: GIAO HÀNG NHANH" required>
                     </div>
 
                     <div class="form-group">
@@ -116,7 +116,7 @@ if ($result) {
                         <label for="company_name">Tên công ty</label>
                         <input type="text" id="company_name" name="settings[company_name]"
                             value="<?php echo htmlspecialchars($settings['company_name']['setting_value'] ?? ''); ?>"
-                            placeholder="VD: FastGo Logistics">
+                            placeholder="VD: Giao Hàng Nhanh Logistics">
                     </div>
 
                     <div class="form-group">
@@ -130,7 +130,7 @@ if ($result) {
                         <label for="company_email">Email liên hệ</label>
                         <input type="email" id="company_email" name="settings[company_email]"
                             value="<?php echo htmlspecialchars($settings['company_email']['setting_value'] ?? ''); ?>"
-                            placeholder="VD: contact@fastgo.vn">
+                            placeholder="VD: contact@giao_hang_nhanh.vn">
                     </div>
 
                     <div class="form-group">
@@ -169,7 +169,7 @@ if ($result) {
         function previewQR() {
             const bankId = document.getElementById('bank_id').value || 'MB';
             const accountNo = document.getElementById('bank_account_no').value || '0333666999';
-            const accountName = document.getElementById('bank_account_name').value || 'FASTGO LOGISTICS';
+            const accountName = document.getElementById('bank_account_name').value || 'GIAO HÀNG NHANH';
             const template = document.getElementById('qr_template').value || 'compact';
 
             const amount = 50000; // Số tiền mẫu

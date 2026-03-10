@@ -1,15 +1,12 @@
 (function (window, document) {
-  if (window.__fastGoSharedLayoutLoaded) return;
-  window.__fastGoSharedLayoutLoaded = true;
+  if (window.__giaoHangNhanhSharedLayoutLoaded) return;
+  window.__giaoHangNhanhSharedLayoutLoaded = true;
 
   const currentPath = window.location.pathname.toLowerCase();
   const inPublicDir = currentPath.includes("/public/");
   const currentPage = currentPath.split("/").pop() || "index.html";
   const includesBase = inPublicDir ? "../includes/" : "includes/";
   const servicePageKeyByFile = {
-    "chuyen-nha.html": "moving-house",
-    "chuyen-kho-bai.html": "moving-warehouse",
-    "chuyen-van-phong.html": "moving-office",
   };
 
   function isServiceLandingPage(fileName) {
@@ -63,9 +60,6 @@
         guide: "huong-dan-dat-hang.html",
         login: "login.php",
         register: "register.php",
-        "moving-house": "chuyen-nha.html",
-        "moving-warehouse": "chuyen-kho-bai.html",
-        "moving-office": "chuyen-van-phong.html",
         "shipping-policy": "chinh-sach-van-chuyen.html",
         privacy: "chinh-sach-bao-mat.html",
         terms: "dieu-khoan-su-dung.html",
@@ -85,9 +79,6 @@
       guide: "public/huong-dan-dat-hang.html",
       login: "public/login.php",
       register: "public/register.php",
-      "moving-house": "public/chuyen-nha.html",
-      "moving-warehouse": "public/chuyen-kho-bai.html",
-      "moving-office": "public/chuyen-van-phong.html",
       "shipping-policy": "public/chinh-sach-van-chuyen.html",
       privacy: "public/chinh-sach-bao-mat.html",
       terms: "public/dieu-khoan-su-dung.html",

@@ -61,9 +61,9 @@ CREATE TABLE `faqs` (
 --
 
 INSERT INTO `faqs` (`id`, `question`, `answer`, `display_order`, `created_at`) VALUES
-(1, 'FastGo giao hàng trong bao lâu?', 'Thời gian giao hàng nội thành: 30–60 phút, liên tỉnh: 1–3 ngày.', 1, '2026-02-02 02:39:12'),
+(1, 'Giao Hàng Nhanh giao hàng trong bao lâu?', 'Thời gian giao hàng nội thành: 30–60 phút, liên tỉnh: 1–3 ngày.', 1, '2026-02-02 02:39:12'),
 (2, 'Có thể hủy hoặc thay đổi đơn không?', 'Vui lòng liên hệ hotline trước khi đơn được shipper nhận.', 2, '2026-02-02 02:39:12'),
-(3, 'FastGo có thu hộ COD không?', 'Có, chúng tôi hỗ trợ dịch vụ thu hộ tiền mặt minh bạch.', 3, '2026-02-02 02:39:12');
+(3, 'Giao Hàng Nhanh có thu hộ COD không?', 'Có, chúng tôi hỗ trợ dịch vụ thu hộ tiền mặt minh bạch.', 3, '2026-02-02 02:39:12');
 
 -- --------------------------------------------------------
 
@@ -223,11 +223,11 @@ INSERT INTO `system_settings` (`id`, `setting_key`, `setting_value`, `descriptio
 (1, 'bank_id', 'MB', 'Mã ngân hàng (VD: MB, VCB, ACB)', '2026-02-02 10:11:57'),
 (2, 'bank_name', 'MB Bank (Quân đội)', 'Tên ngân hàng đầy đủ', '2026-02-02 10:11:57'),
 (3, 'bank_account_no', '0333666999', 'Số tài khoản ngân hàng', '2026-02-02 10:11:57'),
-(4, 'bank_account_name', 'FASTGO LOGISTICS', 'Tên chủ tài khoản', '2026-02-02 10:11:57'),
+(4, 'bank_account_name', 'GIAO HÀNG NHANH', 'Tên chủ tài khoản', '2026-02-02 10:11:57'),
 (5, 'qr_template', 'compact', 'Mẫu QR Code (compact, print, qr_only)', '2026-02-02 10:11:57'),
-(6, 'company_name', 'FastGo Logistics', 'Tên công ty', '2026-02-02 10:11:57'),
+(6, 'company_name', 'Giao Hàng Nhanh', 'Tên công ty', '2026-02-02 10:11:57'),
 (7, 'company_hotline', '0123 456 789', 'Hotline hỗ trợ', '2026-02-02 10:11:57'),
-(8, 'company_email', 'contact@fastgo.vn', 'Email liên hệ', '2026-02-02 10:11:57'),
+(8, 'company_email', 'contact@giaohangnhanh.vn', 'Email liên hệ', '2026-02-02 10:11:57'),
 (9, 'company_address', 'TP. Hồ Chí Minh', 'Địa chỉ công ty', '2026-02-02 10:11:57');
 
 -- --------------------------------------------------------
@@ -253,7 +253,7 @@ CREATE TABLE `testimonials` (
 INSERT INTO `testimonials` (`id`, `customer_name`, `customer_role`, `rating`, `content`, `is_visible`, `created_at`) VALUES
 (1, 'Nguyễn Thu Hà', 'Shop Online', 5, 'Giao hàng siêu nhanh, shipper thân thiện. Mình gửi hàng từ Q1 sang Thủ Đức mà chưa đầy 1 tiếng đã nhận được.', 1, '2026-01-28 06:55:38'),
 (2, 'Trần Minh Tuấn', 'Văn phòng phẩm', 5, 'Hệ thống tracking rất tiện lợi, mình có thể theo dõi đơn hàng từng phút. Rất yên tâm khi sử dụng dịch vụ.', 1, '2026-01-28 06:55:38'),
-(3, 'Lê Bảo Ngọc', 'Cửa hàng thời trang', 4, 'Giá cước hợp lý, có thu hộ COD nhanh chóng. Sẽ ủng hộ FastGo dài dài.', 1, '2026-01-28 06:55:38');
+(3, 'Lê Bảo Ngọc', 'Cửa hàng thời trang', 4, 'Giá cước hợp lý, có thu hộ COD nhanh chóng. Sẽ ủng hộ Giao Hàng Nhanh dài dài.', 1, '2026-01-28 06:55:38');
 
 -- --------------------------------------------------------
 

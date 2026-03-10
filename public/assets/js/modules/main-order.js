@@ -1,8 +1,8 @@
 (function (window, document) {
-  if (window.__fastGoOrderInitDone) return;
-  window.__fastGoOrderInitDone = true;
+  if (window.__giaoHangNhanhOrderInitDone) return;
+  window.__giaoHangNhanhOrderInitDone = true;
 
-  const core = window.FastGoCore;
+  const core = window.GiaoHangNhanhCore;
   if (!core) return;
 
   core.bindOrderShippingInputs();
@@ -14,13 +14,6 @@
       messageId: "form-message-delivery",
       shippingFeeInputId: "shipping-fee-input",
       paymentSelectId: "payment_method_delivery",
-    },
-    {
-      id: "create-order-form-moving",
-      type: "moving",
-      messageId: "form-message-moving",
-      shippingFeeInputId: "shipping-fee-input-moving",
-      paymentSelectId: "payment_method_moving",
     },
   ];
 
@@ -73,13 +66,12 @@
     `;
   }
 
-  function validateOrderForm(form, isMovingService) {
+  function validateOrderForm(form) {
     let isValid = true;
 
     const serviceTypeInp = form.querySelector("[name=service_type]");
     const serviceSuggestion = form.querySelector("#order-service-suggestion");
     const isIntlService =
-      !isMovingService &&
       typeof core.isInternationalServiceType === "function" &&
       core.isInternationalServiceType(serviceTypeInp?.value || "");
 
@@ -120,7 +112,7 @@
       serviceSuggestion.classList.remove("is-error");
     }
 
-    if (!isMovingService && (!serviceTypeInp || !serviceTypeInp.value.trim())) {
+    if ((!serviceTypeInp || !serviceTypeInp.value.trim())) {
       if (serviceSuggestion) {
         serviceSuggestion.textContent =
           "Vui lòng điền đủ thông tin và chọn một gói dịch vụ trước khi xác nhận đơn.";
@@ -220,7 +212,7 @@
       }
     }
 
-    if (!isMovingService && itemNameInp && !itemNameInp.value.trim()) {
+    if (itemNameInp && !itemNameInp.value.trim()) {
       if (itemNameInp.type === "hidden") {
         if (serviceSuggestion) {
           serviceSuggestion.textContent =
@@ -233,39 +225,17 @@
       isValid = false;
     }
 
-    if (!isMovingService && weightInp && parseFloat(weightInp.value || "0") < 0) {
+    if (weightInp && parseFloat(weightInp.value || "0") < 0) {
       core.showFieldError(weightInp, "Khối lượng không được âm");
       isValid = false;
     }
 
-    if (!isMovingService && codInp && parseFloat(codInp.value || "0") < 0) {
+    if (codInp && parseFloat(codInp.value || "0") < 0) {
       core.showFieldError(codInp, "Tiền thu hộ không được âm");
       isValid = false;
     }
 
     return isValid;
-  }
-
-  function applyMovingDefaults(form) {
-    const senderName = form.querySelector("[name=name]");
-    const senderPhone = form.querySelector("[name=phone]");
-    const receiverName = form.querySelector("[name=receiver_name]");
-    const receiverPhone = form.querySelector("[name=receiver_phone]");
-    const packageType = form.querySelector("[name=package_type]");
-    const weight = form.querySelector("[name=weight]");
-    const cod = form.querySelector("[name=cod_amount]");
-    const shipping = form.querySelector("[name=shipping_fee]");
-
-    if (receiverName && !receiverName.value.trim() && senderName) {
-      receiverName.value = senderName.value.trim();
-    }
-    if (receiverPhone && !receiverPhone.value.trim() && senderPhone) {
-      receiverPhone.value = senderPhone.value.trim();
-    }
-    if (packageType && !packageType.value) packageType.value = "other";
-    if (weight) weight.value = "0";
-    if (cod) cod.value = "0";
-    if (shipping) shipping.value = "0";
   }
 
   function getFieldValue(form, name) {
@@ -287,138 +257,8 @@
     return text;
   }
 
-  function buildMovingSummary(form, serviceType) {
-    const serviceLabels = {
-      moving_house: "Chuyển nhà",
-      moving_office: "Chuyển văn phòng",
-      moving_warehouse: "Chuyển kho bãi",
-    };
-    const serviceLabel = serviceLabels[serviceType] || "Chuyển dọn";
-    const lines = [`[${serviceLabel}] Yêu cầu khảo sát`];
-
-    const name = getFieldValue(form, "name");
-    const phone = getFieldValue(form, "phone");
-    const pickup = getFieldValue(form, "pickup");
-    const delivery = getFieldValue(form, "delivery");
-    const surveyDate = getFieldValue(form, "moving_survey_date");
-    const surveySlot = getSelectText(form, "moving_survey_time_slot");
-
-    lines.push("");
-    lines.push("Thông tin liên hệ:");
-    lines.push(`- Họ và tên: ${name}`);
-    lines.push(`- Số điện thoại: ${phone}`);
-
-    lines.push("");
-    lines.push("Thông tin địa điểm:");
-    lines.push(`- Địa chỉ chuyển đi: ${pickup}`);
-    lines.push(`- Địa chỉ chuyển đến: ${delivery}`);
-
-    lines.push("");
-    lines.push("Thông tin khảo sát:");
-    lines.push(`- Ngày khảo sát mong muốn: ${surveyDate || "Chưa chọn"}`);
-    lines.push(`- Khung giờ khảo sát: ${surveySlot || "Chưa chọn"}`);
-
-    if (serviceType === "moving_house") {
-      const email = getFieldValue(form, "moving_house_email");
-      const houseType = getSelectText(form, "moving_house_type");
-      const floors = getFieldValue(form, "moving_house_floors");
-      const elevator = getSelectText(form, "moving_house_elevator");
-      const items = getFieldValue(form, "moving_house_items");
-      const note = getFieldValue(form, "moving_house_note");
-      const services = getCheckedValues(form, "moving_house_services[]");
-      const serviceOther = getFieldValue(form, "moving_house_service_other");
-
-      lines.push(`- Email: ${email || "Không có"}`);
-      lines.push("");
-      lines.push("Thông tin chi tiết:");
-      lines.push(`- Loại nhà: ${houseType || "Không có"}`);
-      lines.push(`- Số tầng: ${floors || "Không có"}`);
-      lines.push(`- Có thang máy không: ${elevator || "Không có"}`);
-      lines.push("");
-      lines.push("Thông tin thêm:");
-      lines.push(
-        `- Danh sách đồ cần chuyển: ${items || "Không có"}`,
-      );
-      lines.push(
-        `- Dịch vụ cần tư vấn: ${services.length ? services.join(", ") : "Chưa chọn"}`,
-      );
-      lines.push(`- Dịch vụ khác: ${serviceOther || "Không có"}`);
-      lines.push(`- Ghi chú thêm: ${note || "Không có"}`);
-    } else if (serviceType === "moving_office") {
-      const email = getFieldValue(form, "moving_office_email");
-      const company = getFieldValue(form, "moving_office_company");
-      const staffCount = getFieldValue(form, "moving_office_staff_count");
-      const area = getFieldValue(form, "moving_office_area");
-      const elevator = getSelectText(form, "moving_office_elevator");
-      const dismantle = getSelectText(form, "moving_office_dismantle");
-      const note = getFieldValue(form, "moving_office_note");
-      const services = getCheckedValues(form, "moving_office_services[]");
-      const serviceOther = getFieldValue(form, "moving_office_service_other");
-
-      lines.push(`- Email: ${email || "Không có"}`);
-      lines.push(`- Tên công ty: ${company || "Không có"}`);
-      lines.push("");
-      lines.push("Thông tin văn phòng:");
-      lines.push(`- Số lượng nhân viên: ${staffCount || "Không có"}`);
-      lines.push(`- Diện tích văn phòng (ước lượng): ${area || "Không có"}`);
-      lines.push(`- Có thang máy không: ${elevator || "Không có"}`);
-      lines.push("");
-      lines.push("Thông tin thêm:");
-      lines.push(
-        `- Có cần tháo lắp nội thất không: ${dismantle || "Không có"}`,
-      );
-      lines.push(
-        `- Dịch vụ cần tư vấn: ${services.length ? services.join(", ") : "Chưa chọn"}`,
-      );
-      lines.push(`- Dịch vụ khác: ${serviceOther || "Không có"}`);
-      lines.push(`- Ghi chú thêm: ${note || "Không có"}`);
-    } else if (serviceType === "moving_warehouse") {
-      const email = getFieldValue(form, "moving_warehouse_email");
-      const company = getFieldValue(form, "moving_warehouse_company");
-      const goodsType = getSelectText(form, "moving_warehouse_goods_type");
-      const estimatedVolume = getFieldValue(
-        form,
-        "moving_warehouse_estimated_volume",
-      );
-      const area = getFieldValue(form, "moving_warehouse_area");
-      const equipmentSupport = getSelectText(
-        form,
-        "moving_warehouse_equipment_support",
-      );
-      const note = getFieldValue(form, "moving_warehouse_note");
-      const services = getCheckedValues(form, "moving_warehouse_services[]");
-      const serviceOther = getFieldValue(
-        form,
-        "moving_warehouse_service_other",
-      );
-
-      lines.push(`- Email: ${email || "Không có"}`);
-      lines.push(`- Tên công ty (nếu có): ${company || "Không có"}`);
-      lines.push("");
-      lines.push("Thông tin kho:");
-      lines.push(`- Loại hàng hóa: ${goodsType || "Không có"}`);
-      lines.push(`- Khối lượng ước tính: ${estimatedVolume || "Không có"}`);
-      lines.push(`- Diện tích kho: ${area || "Không có"}`);
-      lines.push("");
-      lines.push("Thông tin thêm:");
-      lines.push(
-        `- Có cần xe nâng / thiết bị hỗ trợ không: ${equipmentSupport || "Không có"}`,
-      );
-      lines.push(
-        `- Dịch vụ cần tư vấn: ${services.length ? services.join(", ") : "Chưa chọn"}`,
-      );
-      lines.push(`- Dịch vụ khác: ${serviceOther || "Không có"}`);
-      lines.push(`- Ghi chú thêm: ${note || "Không có"}`);
-    }
-
     return lines.join("\n");
   }
-
-  function prepareMovingPayload(form, serviceType) {
-    const noteField = form.querySelector("[name=note]");
-    if (noteField) {
-      noteField.value = buildMovingSummary(form, serviceType);
-    }
 
     const pickupTimeField = form.querySelector("[name=pickup_time]");
     if (pickupTimeField) {
@@ -454,7 +294,7 @@
       </div>`;
   }
 
-  function renderSubmitResult(form, msgDiv, data, config, isMovingService) {
+  function renderSubmitResult(form, msgDiv, data, config) {
     const pickup = core.escapeHtml(form.querySelector("[name=pickup]").value);
     const delivery = core.escapeHtml(form.querySelector("[name=delivery]").value);
     const shippingInput = config.shippingFeeInputId
@@ -467,7 +307,7 @@
       ? '<p style="margin-bottom:5px;">💵 <strong>Phí dịch vụ:</strong> Báo giá theo khảo sát</p>'
       : `<p style="margin-bottom:5px;">💵 <strong>Phí ship:</strong> ${shipFee.toLocaleString()}đ</p>`;
     const codLine =
-      !isMovingService && codValue > 0
+      codValue > 0
         ? `<p>💰 <strong>Thu hộ:</strong> ${codValue.toLocaleString()}đ</p>`
         : "";
     const paymentContent = buildPaymentContent(data);
@@ -516,16 +356,13 @@
 
       const serviceTypeInp = form.querySelector("[name=service_type]");
       const serviceTypeValue = serviceTypeInp?.value || "";
-      const isMovingService =
-        config.type === "moving" || core.isMovingType(serviceTypeValue);
-
       if (!window.isLoggedIn) {
         renderAuthRequiredMessage(msgDiv, serviceTypeValue);
         setButtonState(submitBtn, defaultSubmitText, false);
         return;
       }
 
-      const isValid = validateOrderForm(form, isMovingService);
+      const isValid = validateOrderForm(form);
       if (!isValid) {
         setButtonState(submitBtn, defaultSubmitText, false);
         return;
@@ -536,12 +373,7 @@
         return;
       }
 
-      if (isMovingService) {
-        applyMovingDefaults(form);
-        prepareMovingPayload(form, serviceTypeValue);
-      } else {
-        core.calculateOrderShipping();
-      }
+      core.calculateOrderShipping();
 
       const formData = new FormData(form);
       const codInp = form.querySelector("[name=cod_amount]");
@@ -556,15 +388,10 @@
         .then((res) => res.json())
         .then((data) => {
           if (data.status === "success") {
-            renderSubmitResult(form, msgDiv, data, config, isMovingService);
+            renderSubmitResult(form, msgDiv, data, config);
             if (submitBtn) submitBtn.style.display = "none";
             form.reset();
-            if (config.type === "moving") {
-              const movingSelect = form.querySelector("[name=service_type]");
-              if (movingSelect) movingSelect.dispatchEvent(new Event("change"));
-            } else {
-              core.calculateOrderShipping();
-            }
+            core.calculateOrderShipping();
             return;
           }
 
@@ -604,7 +431,7 @@
     const bankSettings = window.bankSettings || {
       bankId: "MB",
       accountNo: "0333666999",
-      accountName: "FASTGO LOGISTICS",
+      accountName: "GIAO HÀNG NHANH",
       template: "compact",
     };
 
@@ -652,12 +479,7 @@
       const paymentSelect = document.getElementById(cfg.paymentSelectId);
       if (paymentSelect) paymentSelect.dispatchEvent(new Event("change"));
 
-      if (cfg.type === "moving") {
-        const movingSelect = form.querySelector("[name=service_type]");
-        if (movingSelect) movingSelect.dispatchEvent(new Event("change"));
-      } else {
-        core.calculateOrderShipping();
-      }
+      core.calculateOrderShipping();
     });
 
     window.scrollTo({ top: 0, behavior: "smooth" });

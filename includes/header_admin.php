@@ -27,7 +27,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="logo">
             <h1>
                 <a href="admin_stats.php" class="header-logo-link">
-                    FastGo <span class="header-accent">Admin</span>
+                    Giao Hàng Nhanh <span class="header-accent">Admin</span>
                 </a>
             </h1>
         </div>

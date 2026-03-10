@@ -261,7 +261,7 @@ $status_map = [
                 <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-top:20px;">
                     <p style="margin:5px 0;"><strong>Ngân hàng:</strong> <?php echo htmlspecialchars(getSetting($conn, 'bank_name', 'MB Bank')); ?></p>
                     <p style="margin:5px 0;"><strong>Số TK:</strong> <?php echo htmlspecialchars(getSetting($conn, 'bank_account_no', '0333666999')); ?></p>
-                    <p style="margin:5px 0;"><strong>Chủ TK:</strong> <?php echo htmlspecialchars(getSetting($conn, 'bank_account_name', 'FASTGO LOGISTICS')); ?></p>
+                    <p style="margin:5px 0;"><strong>Chủ TK:</strong> <?php echo htmlspecialchars(getSetting($conn, 'bank_account_name', 'GIAO HÀNG NHANH')); ?></p>
                     <p style="margin:5px 0; color:#d9534f; font-weight:600;"><strong>Số tiền:</strong> <span id="payment-amount"></span>đ</p>
                     <p style="margin:5px 0; font-size:13px; color:#666;"><strong>Nội dung:</strong> <span id="payment-note"></span></p>
                 </div>
@@ -305,7 +305,7 @@ $status_map = [
         window.bankSettings = {
             bankId: "<?php echo getSetting($conn, 'bank_id', 'MB'); ?>",
             accountNo: "<?php echo getSetting($conn, 'bank_account_no', '0333666999'); ?>",
-            accountName: "<?php echo getSetting($conn, 'bank_account_name', 'FASTGO LOGISTICS'); ?>",
+            accountName: "<?php echo getSetting($conn, 'bank_account_name', 'GIAO HÀNG NHANH'); ?>",
             template: "<?php echo getSetting($conn, 'qr_template', 'compact'); ?>"
         };
     </script>

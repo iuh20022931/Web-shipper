@@ -1,5 +1,5 @@
 (function (window) {
-  if (window.FastGoCore) return;
+  if (window.GiaoHangNhanhCore) return;
 
   const inPublicDir = window.location.pathname
     .toLowerCase()
@@ -616,7 +616,7 @@
     orderShippingBound = true;
   }
 
-  window.FastGoCore = {
+  window.GiaoHangNhanhCore = {
     inPublicDir,
     apiBasePath,
     districtGroups,

@@ -1,6 +1,6 @@
 (function (window, document) {
-  if (window.__fastGoCreateOrderPageInitDone) return;
-  window.__fastGoCreateOrderPageInitDone = true;
+  if (window.__giaoHangNhanhCreateOrderPageInitDone) return;
+  window.__giaoHangNhanhCreateOrderPageInitDone = true;
 
   const ITEM_TYPE_OPTIONS = [
     { value: "thuong", label: "Hàng thông thường" },

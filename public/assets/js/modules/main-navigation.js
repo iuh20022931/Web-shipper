@@ -1,8 +1,8 @@
 (function (window, document) {
-  if (window.__fastGoNavInitDone) return;
-  window.__fastGoNavInitDone = true;
+  if (window.__giaoHangNhanhNavInitDone) return;
+  window.__giaoHangNhanhNavInitDone = true;
 
-  const core = window.FastGoCore;
+  const core = window.GiaoHangNhanhCore;
   if (!core) return;
 
   const hamburgerBtn = document.getElementById("hamburger-btn");

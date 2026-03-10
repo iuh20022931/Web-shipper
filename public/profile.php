@@ -83,7 +83,7 @@ $user_info = $stmt->get_result()->fetch_assoc();
 
 <head>
     <meta charset="UTF-8">
-    <title>Thông tin tài khoản | FastGo</title>
+    <title>Thông tin tài khoản | Giao Hàng Nhanh</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>">
 </head>
