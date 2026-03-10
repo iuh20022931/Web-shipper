@@ -77,6 +77,7 @@
     let isValid = true;
 
     const serviceTypeInp = form.querySelector("[name=service_type]");
+    const serviceSuggestion = form.querySelector("#order-service-suggestion");
     const isIntlService =
       !isMovingService &&
       typeof core.isInternationalServiceType === "function" &&
@@ -89,9 +90,13 @@
     const pickupInp = form.querySelector("[name=pickup]");
     const deliveryInp = form.querySelector("[name=delivery]");
     const intlCountryInp = form.querySelector("[name=intl_country]");
+    const receiverIdTypeInp = form.querySelector("[name=receiver_id_type]");
+    const receiverIdNumberInp = form.querySelector("[name=receiver_id_number]");
+    const intlPurposeInp = form.querySelector("[name=intl_purpose]");
     const weightInp = form.querySelector("[name=weight]");
     const codInp = form.querySelector("[name=cod_amount]");
     const packageTypeInp = form.querySelector("[name=package_type]");
+    const itemNameInp = form.querySelector("[name=item_name]");
 
     [
       nameInp,
@@ -101,12 +106,28 @@
       pickupInp,
       deliveryInp,
       intlCountryInp,
+      receiverIdTypeInp,
+      receiverIdNumberInp,
+      intlPurposeInp,
       weightInp,
       codInp,
       packageTypeInp,
+      itemNameInp,
     ].forEach((inp) => {
       if (inp) core.clearFieldError(inp);
     });
+    if (serviceSuggestion) {
+      serviceSuggestion.classList.remove("is-error");
+    }
+
+    if (!isMovingService && (!serviceTypeInp || !serviceTypeInp.value.trim())) {
+      if (serviceSuggestion) {
+        serviceSuggestion.textContent =
+          "Vui lòng điền đủ thông tin và chọn một gói dịch vụ trước khi xác nhận đơn.";
+        serviceSuggestion.classList.add("is-error");
+      }
+      isValid = false;
+    }
 
     if (!nameInp || !nameInp.value.trim()) {
       if (nameInp) core.showFieldError(nameInp, "Vui lòng nhập họ và tên");
@@ -178,9 +199,37 @@
       }
       isValid = false;
     }
+    if (isIntlService) {
+      if (!receiverIdTypeInp || !receiverIdTypeInp.value.trim()) {
+        if (receiverIdTypeInp) {
+          core.showFieldError(receiverIdTypeInp, "Vui lòng chọn giấy tờ người nhận");
+        }
+        isValid = false;
+      }
+      if (!receiverIdNumberInp || !receiverIdNumberInp.value.trim()) {
+        if (receiverIdNumberInp) {
+          core.showFieldError(receiverIdNumberInp, "Vui lòng nhập số giấy tờ");
+        }
+        isValid = false;
+      }
+      if (!intlPurposeInp || !intlPurposeInp.value.trim()) {
+        if (intlPurposeInp) {
+          core.showFieldError(intlPurposeInp, "Vui lòng chọn mục đích gửi hàng");
+        }
+        isValid = false;
+      }
+    }
 
-    if (!isMovingService && packageTypeInp && !packageTypeInp.value) {
-      core.showFieldError(packageTypeInp, "Vui lòng chọn loại hàng");
+    if (!isMovingService && itemNameInp && !itemNameInp.value.trim()) {
+      if (itemNameInp.type === "hidden") {
+        if (serviceSuggestion) {
+          serviceSuggestion.textContent =
+            "Vui lòng thêm ít nhất 1 hàng hóa và chọn đủ loại hàng, tên hàng.";
+          serviceSuggestion.classList.add("is-error");
+        }
+      } else {
+        core.showFieldError(itemNameInp, "Vui lòng chọn tên hàng");
+      }
       isValid = false;
     }
 

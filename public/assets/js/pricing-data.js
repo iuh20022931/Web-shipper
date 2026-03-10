@@ -382,7 +382,7 @@ const QUOTE_SHIPPING_DATA = {
   cities: DOMESTIC_DISTRICTS_BY_CITY,
   domestic: {
     cityOptions: DOMESTIC_CITY_OPTIONS,
-    volumeDivisor: 5000,
+    volumeDivisor: 6000,
     baseIncludedWeight: 2, // Cước cơ bản áp dụng cho 2kg đầu
     zoneLabels: {
       same_district: "Nội quận/huyện",

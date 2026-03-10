@@ -501,8 +501,13 @@
               placeholder="VD: 1 tủ lạnh, 2 giường, 1 sofa..."
             ></textarea>
           </div>
+          <div class="grid-span-full" style="background-color: #f0f7ff; border-left: 4px solid #007bff; padding: 12px 16px; margin-top: 1rem; border-radius: 4px;">
+            <h4 style="margin-top: 0; font-size: 1em; color: #0056b3;">Tại sao cần khảo sát trước?</h4>
+            <p style="margin-bottom: 0; font-size: 0.9em; color: #333;">Dịch vụ chuyển nhà rất đa dạng. Khảo sát thực tế giúp chúng tôi hiểu rõ nhu cầu của bạn (khối lượng đồ, độ phức tạp tháo lắp...) để đưa ra báo giá <strong>chính xác nhất</strong> và kế hoạch tối ưu, tránh phát sinh chi phí ngoài dự kiến.</p>
+          </div>
           <div class="grid-span-full">
             <label>Dịch vụ cần tư vấn theo hạng mục</label>
+            <label>Các dịch vụ hỗ trợ bạn có thể cần:</label>
             <div class="moving-services-list">
               <label class="checkbox-inline">
                 <input
@@ -544,25 +549,19 @@
                 />
                 Bọc lót đồ dễ vỡ
               </label>
-              <label class="checkbox-inline">
-                <input
-                  type="checkbox"
-                  class="moving-other-service-checkbox"
-                  data-target="moving-house-service-other"
-                />
-                Dịch vụ khác
-              </label>
             </div>
           </div>
+          <!-- Hợp nhất checkbox và input cho Dịch vụ khác -->
           <div class="grid-span-full">
-            <label>Dịch vụ khác</label>
-            <input
-              type="text"
-              id="moving-house-service-other"
-              name="moving_house_service_other"
-              placeholder="Nhập dịch vụ khác nếu chưa có trong danh sách"
-            />
+            <label class="checkbox-inline">
+              <input type="checkbox" class="moving-other-service-checkbox" data-target="moving-house-service-other-wrapper" />
+              <span>Dịch vụ khác</span>
+            </label>
+            <div id="moving-house-service-other-wrapper" class="mt-2 hidden">
+              <input type="text" name="moving_house_service_other" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Vui lòng mô tả chi tiết dịch vụ bạn cần..." />
+            </div>
           </div>
+
           <div class="grid-span-full">
             <label>Ghi chú thêm</label>
             <textarea
@@ -615,8 +614,13 @@
               <option value="khong">Không</option>
             </select>
           </div>
+          <div class="grid-span-full" style="background-color: #f0f7ff; border-left: 4px solid #007bff; padding: 12px 16px; margin-top: 1rem; border-radius: 4px;">
+            <h4 style="margin-top: 0; font-size: 1em; color: #0056b3;">Tại sao cần khảo sát trước?</h4>
+            <p style="margin-bottom: 0; font-size: 0.9em; color: #333;">Chuyển văn phòng yêu cầu độ chính xác cao. Khảo sát giúp chúng tôi lập kế hoạch chi tiết (thiết bị IT, hồ sơ, nội thất...) để đảm bảo quá trình chuyển diễn ra <strong>nhanh chóng, an toàn</strong> và không ảnh hưởng đến hoạt động kinh doanh của bạn.</p>
+          </div>
           <div class="grid-span-full">
             <label>Dịch vụ cần tư vấn theo hạng mục</label>
+            <label>Các dịch vụ hỗ trợ bạn có thể cần:</label>
             <div class="moving-services-list">
               <label class="checkbox-inline">
                 <input
@@ -658,25 +662,19 @@
                 />
                 Điều phối ngoài giờ
               </label>
-              <label class="checkbox-inline">
-                <input
-                  type="checkbox"
-                  class="moving-other-service-checkbox"
-                  data-target="moving-office-service-other"
-                />
-                Dịch vụ khác
-              </label>
             </div>
           </div>
+          <!-- Hợp nhất checkbox và input cho Dịch vụ khác -->
           <div class="grid-span-full">
-            <label>Dịch vụ khác</label>
-            <input
-              type="text"
-              id="moving-office-service-other"
-              name="moving_office_service_other"
-              placeholder="Nhập dịch vụ khác nếu chưa có trong danh sách"
-            />
+            <label class="checkbox-inline">
+              <input type="checkbox" class="moving-other-service-checkbox" data-target="moving-office-service-other-wrapper" />
+              <span>Dịch vụ khác</span>
+            </label>
+            <div id="moving-office-service-other-wrapper" class="mt-2 hidden">
+              <input type="text" name="moving_office_service_other" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Vui lòng mô tả chi tiết dịch vụ bạn cần..." />
+            </div>
           </div>
+
           <div class="grid-span-full">
             <label>Ghi chú thêm</label>
             <textarea
@@ -728,8 +726,13 @@
               <option value="khong">Không</option>
             </select>
           </div>
+          <div class="grid-span-full" style="background-color: #f0f7ff; border-left: 4px solid #007bff; padding: 12px 16px; margin-top: 1rem; border-radius: 4px;">
+            <h4 style="margin-top: 0; font-size: 1em; color: #0056b3;">Tại sao cần khảo sát trước?</h4>
+            <p style="margin-bottom: 0; font-size: 0.9em; color: #333;">Với quy mô lớn của việc chuyển kho, khảo sát là bước bắt buộc để xác định đúng loại xe tải, xe nâng/cẩu, số lượng nhân công và các phương án gia cố hàng hóa, đảm bảo an toàn tuyệt đối cho tài sản của doanh nghiệp.</p>
+          </div>
           <div class="grid-span-full">
             <label>Dịch vụ cần tư vấn theo hạng mục</label>
+            <label>Các dịch vụ hỗ trợ bạn có thể cần:</label>
             <div class="moving-services-list">
               <label class="checkbox-inline">
                 <input
@@ -771,24 +774,17 @@
                 />
                 Đóng gói và gia cố hàng hóa
               </label>
-              <label class="checkbox-inline">
-                <input
-                  type="checkbox"
-                  class="moving-other-service-checkbox"
-                  data-target="moving-warehouse-service-other"
-                />
-                Dịch vụ khác
-              </label>
             </div>
           </div>
+          <!-- Hợp nhất checkbox và input cho Dịch vụ khác -->
           <div class="grid-span-full">
-            <label>Dịch vụ khác</label>
-            <input
-              type="text"
-              id="moving-warehouse-service-other"
-              name="moving_warehouse_service_other"
-              placeholder="Nhập dịch vụ khác nếu chưa có trong danh sách"
-            />
+            <label class="checkbox-inline">
+              <input type="checkbox" class="moving-other-service-checkbox" data-target="moving-warehouse-service-other-wrapper" />
+              <span>Dịch vụ khác</span>
+            </label>
+            <div id="moving-warehouse-service-other-wrapper" class="mt-2 hidden">
+              <input type="text" name="moving_warehouse_service_other" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Vui lòng mô tả chi tiết dịch vụ bạn cần..." />
+            </div>
           </div>
           <div class="grid-span-full">
             <label>Ghi chú thêm</label>
@@ -837,3 +833,25 @@
     </form>
   </div>
 </div>
+
+<script>
+  // Logic để ẩn/hiện ô nhập "Dịch vụ khác" trong form chuyển dọn
+  document.addEventListener('DOMContentLoaded', function () {
+    const otherServiceCheckboxes = document.querySelectorAll('.moving-other-service-checkbox');
+
+    otherServiceCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const targetId = this.getAttribute('data-target');
+        const targetElement = document.getElementById(targetId);
+
+        if (targetElement) {
+          targetElement.classList.toggle('hidden', !this.checked);
+          if (!this.checked) {
+            const input = targetElement.querySelector('input[type="text"]');
+            if (input) input.value = '';
+          }
+        }
+      });
+    });
+  });
+</script>
