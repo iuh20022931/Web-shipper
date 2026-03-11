@@ -51,16 +51,6 @@
     return `${apiBasePath}${path}`;
   }
 
-  function isMovingType(typeKey) {
-    if (
-      window.serviceHelper &&
-      typeof window.serviceHelper.isMovingService === "function"
-    ) {
-      return window.serviceHelper.isMovingService(typeKey);
-    }
-    return String(typeKey || "").startsWith("moving_");
-  }
-
   function checkDistrict(address, group) {
     if (!address) return false;
     return group.some((d) => address.toLowerCase().includes(d.toLowerCase()));
@@ -250,13 +240,6 @@
     const intlCountry = String(extras.intlCountry || "").trim();
     const intlProvince = String(extras.intlProvince || "").trim();
     const isIntlService = isInternationalServiceType(normalizedServiceType);
-
-    if (isMovingType(normalizedServiceType)) {
-      return {
-        isContactPrice: true,
-        serviceName: "Dịch vụ chuyển dọn",
-      };
-    }
 
     if (
       isIntlService &&
@@ -622,7 +605,6 @@
     districtGroups,
     allDistricts,
     toApiUrl,
-    isMovingType,
     checkDistrict,
     detectDomesticZone,
     resolveDomesticArea,

@@ -383,11 +383,11 @@ $default_route_type = (strpos($selected_service_type, 'intl_') === 0) ? 'interna
                                     </div>
                                     <div class="goods-item-field">
                                         <label>Tên hàng</label>
-                                        <select name="goods_item_name[]" class="goods-item-name-select" disabled>
+                                        <select name="goods_item_name[]" class="goods-item-name-select" disabled style="display: none;">
                                             <option value="">Chọn loại hàng trước</option>
                                         </select>
                                         <input type="text" name="goods_item_name[]" class="goods-item-name-input"
-                                            placeholder="VD: Jean pants, books, phone" disabled style="display: none;">
+                                            placeholder="VD: Jean pants, books, phone" disabled>
                                     </div>
                                     <div class="goods-item-field">
                                         <label>Khối lượng (kg)</label>
@@ -914,32 +914,6 @@ $default_route_type = (strpos($selected_service_type, 'intl_') === 0) ? 'interna
                 return getCurrentRoute() === 'international' ? intlDivisor : domesticDivisor;
             }
 
-            function buildItemNameOptionsForRow(typeSelect, nameSelect) {
-                if (!typeSelect || !nameSelect) return;
-                const itemType = String(typeSelect.value || '').trim().toLowerCase();
-                const options = Array.isArray(ITEM_OPTIONS_BY_TYPE[itemType]) ? ITEM_OPTIONS_BY_TYPE[itemType] : [];
-                const previousValue = nameSelect.value;
-
-                nameSelect.innerHTML = '';
-                const firstOption = document.createElement('option');
-                firstOption.value = '';
-                firstOption.textContent = itemType ? 'Chọn tên hàng' : 'Chọn loại hàng trước';
-                nameSelect.appendChild(firstOption);
-
-                options.forEach(function (itemName) {
-                    const option = document.createElement('option');
-                    option.value = itemName;
-                    option.textContent = itemName;
-                    nameSelect.appendChild(option);
-                });
-
-                if (previousValue && options.includes(previousValue)) {
-                    nameSelect.value = previousValue;
-                } else {
-                    nameSelect.value = '';
-                }
-                nameSelect.disabled = !itemType;
-            }
 
             function syncGoodsAggregatesFromRows() {
                 if (!goodsItemsWrapper) return;
@@ -979,10 +953,7 @@ $default_route_type = (strpos($selected_service_type, 'intl_') === 0) ? 'interna
                     const declaredField = row.querySelector('.goods-item-declared-input');
 
                     const itemType = String(typeSelect?.value || '').trim().toLowerCase();
-                    const isIntlRoute = getCurrentRoute() === 'international';
-                    const itemName = isIntlRoute ?
-                        String(nameInput?.value || '').trim() :
-                        String(nameSelect?.value || '').trim();
+                    const itemName = String(nameInput?.value || '').trim();
                     const itemCode = String(codeField?.value || '').trim();
                     const itemOrigin = String(originField?.value || '').trim();
                     const quantity = Math.max(1, toPositiveInteger(qtyField?.value || 1, 1));
@@ -1071,18 +1042,12 @@ $default_route_type = (strpos($selected_service_type, 'intl_') === 0) ? 'interna
                 populateOriginSelect(originSelect);
                 bindVndCurrencyInput(declaredInput);
 
-                if (typeSelect && nameSelect && nameInput) {
+                if (typeSelect && nameInput) {
                     typeSelect.addEventListener('change', function () {
                         const itemType = String(typeSelect.value || '').trim();
-                        const isIntlRoute = getCurrentRoute() === 'international';
-
-                        if (isIntlRoute) {
-                            nameInput.disabled = !itemType;
-                            if (!itemType) {
-                                nameInput.value = '';
-                            }
-                        } else {
-                            buildItemNameOptionsForRow(typeSelect, nameSelect);
+                        nameInput.disabled = !itemType;
+                        if (!itemType) {
+                            nameInput.value = '';
                         }
                         syncGoodsAggregatesFromRows();
                         refreshSchedule();
@@ -1122,17 +1087,11 @@ $default_route_type = (strpos($selected_service_type, 'intl_') === 0) ? 'interna
                                     inputEl.value = '';
                                 }
                             });
-                            if (typeSelect && nameSelect && nameInput) {
-                                const isIntlRoute = getCurrentRoute() === 'international';
+                            if (typeSelect && nameInput) {
                                 const codeInput = row.querySelector('.goods-item-code-input');
                                 const originSelect = row.querySelector('.goods-item-origin-select');
                                 nameInput.value = '';
-                                nameSelect.value = '';
                                 nameInput.disabled = true;
-                                nameSelect.disabled = true;
-                                if (!isIntlRoute) {
-                                    buildItemNameOptionsForRow(typeSelect, nameSelect);
-                                }
                                 if (codeInput) codeInput.value = '';
                                 if (originSelect) originSelect.value = '';
                             }
@@ -1171,8 +1130,8 @@ $default_route_type = (strpos($selected_service_type, 'intl_') === 0) ? 'interna
                     '<option value="cong-kenh">Hàng cồng kềnh/Quá khổ</option>' +
                     '</select></div>' +
                     '<div class="goods-item-field"><label>Tên hàng</label>' +
-                    '<select name="goods_item_name[]" class="goods-item-name-select" disabled><option value="">Chọn loại hàng trước</option></select>' +
-                    '<input type="text" name="goods_item_name[]" class="goods-item-name-input" placeholder="VD: Jean pants, books, phone" disabled style="display: none;">' +
+                    '<select name="goods_item_name[]" class="goods-item-name-select" disabled style="display: none;"><option value="">Chọn loại hàng trước</option></select>' +
+                    '<input type="text" name="goods_item_name[]" class="goods-item-name-input" placeholder="VD: Jean pants, books, phone" disabled>' +
                     '</div>' +
                     '<div class="goods-item-field goods-item-intl-field" style="display: none;"><label>Mã hàng (SKU)</label><input type="text" name="goods_item_code[]" class="goods-item-code-input" placeholder="Tùy chọn"></div>' +
                     '<div class="goods-item-field goods-item-intl-field" style="display: none;"><label>Xuất xứ</label><select name="goods_item_origin[]" class="goods-item-origin-select"><option value="">Chọn quốc gia</option></select></div>' +
@@ -2137,17 +2096,16 @@ $default_route_type = (strpos($selected_service_type, 'intl_') === 0) ? 'interna
                         const hasItemType = typeSelect && typeSelect.value;
 
                         if (nameSelect && nameInput) {
-                            nameSelect.style.display = isIntl ? 'none' : '';
-                            nameInput.style.display = isIntl ? '' : 'none';
+                            nameSelect.style.display = 'none';
+                            nameInput.style.display = '';
 
-                            nameSelect.disabled = isIntl || !hasItemType;
-                            nameInput.disabled = !isIntl || !hasItemType;
+                            nameSelect.disabled = true;
+                            nameInput.disabled = !hasItemType;
 
                             if (isIntl) {
-                                nameSelect.value = '';
+                                // International specific logic if any
                             } else {
-                                nameInput.value = '';
-                                buildItemNameOptionsForRow(typeSelect, nameSelect);
+                                // Domestic specific logic if any
                             }
 
                             const intlFields = Array.from(row.querySelectorAll('.goods-item-intl-field'));

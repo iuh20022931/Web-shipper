@@ -4,36 +4,59 @@
 .service-card {
   background-color: #ffffff;
   padding: 32px 24px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
+  gap: 20px;
   height: 100%;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #f0f2f5;
 }
 
 .service-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(10, 42, 102, 0.1);
+  border-color: #ff7a00;
 }
 
-.service-card h3 {
-  font-size: 22px;
-  color: #0a2a66;
-  margin-bottom: 12px;
+.service-card-head {
+  margin-bottom: 0 !important; /* Override landing.css margin */
 }
 
-.service-card p {
-  font-size: 16px;
-  color: #666;
+.service-card-slogan {
+  margin: 0;
+  font-size: 15px;
+  color: #64748b;
+  font-style: italic;
   line-height: 1.6;
 }
 
-/* Feature Item */
+.service-card-details {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
+}
+
+.service-card-details li {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #475569;
+  display: flex;
+  gap: 10px;
+}
+
+.service-card-details li strong {
+  color: #1e293b;
+  min-width: 65px;
+}
+
 .feature-item {
-  padding: 32px 24px;
+  padding: 30px 20px;
   border-radius: 12px;
   background-color: #f5f7fb;
   transition: transform 0.3s ease;

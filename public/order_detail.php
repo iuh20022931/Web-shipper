@@ -206,7 +206,6 @@ $svc_map = [
     'standard' => 'Tiêu chuẩn',
     'fast' => 'Nhanh',
     'express' => 'Hỏa tốc',
-    'bulk' => 'Số lượng lớn (cũ)'
 ];
 ?>
 <!DOCTYPE html>

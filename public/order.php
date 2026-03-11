@@ -109,22 +109,6 @@ if ($payment_method === 'bank') {
 }
 $is_international = strpos($service_type, 'intl_') === 0;
 
-// Dịch vụ chuyển dọn chỉ cần 1 đầu mối liên hệ
-if ($is_moving) {
-    if (empty(trim($receiver_name))) {
-        $receiver_name = $name;
-    }
-    if (empty(trim($receiver_phone))) {
-        $receiver_phone = $phone;
-    }
-    if (empty(trim($package_type))) {
-        $package_type = 'other';
-    }
-    if ($weight === '' || !is_numeric($weight)) {
-        $weight = 0;
-    }
-    $cod_amount = 0;
-}
 if ($is_international) {
     $cod_amount = 0;
 }
@@ -226,11 +210,11 @@ if (empty($phone))
     $errors[] = "Chưa nhập số điện thoại";
 if (empty(trim((string) $service_type)))
     $errors[] = "Chưa chọn gói dịch vụ";
-if (!$is_moving && empty($item_name))
+if (empty($item_name))
     $errors[] = "Chưa chọn tên hàng";
-if (!$is_moving && empty($receiver_name))
+if (empty($receiver_name))
     $errors[] = "Chưa nhập tên người nhận";
-if (!$is_moving && empty($receiver_phone))
+if (empty($receiver_phone))
     $errors[] = "Chưa nhập SĐT người nhận";
 if (empty($pickup))
     $errors[] = "Chưa nhập địa chỉ lấy hàng";
@@ -259,7 +243,7 @@ if ($is_international) {
 // Kiểm tra số điện thoại hợp lệ
 if (!preg_match('/^0[0-9]{9,10}$/', $phone))
     $errors[] = "Số điện thoại không hợp lệ (phải bắt đầu bằng 0)";
-if (!$is_moving && !preg_match('/^0[0-9]{9,10}$/', $receiver_phone))
+if (!preg_match('/^0[0-9]{9,10}$/', $receiver_phone))
     $errors[] = "SĐT người nhận không hợp lệ";
 
 // Kiểm tra weight >=0
@@ -282,22 +266,22 @@ if (!empty($delivery_time) && strlen($delivery_time) > 50)
 
 // Kiểm tra package_type hợp lệ
 $valid_types = ['document', 'food', 'clothes', 'electronic', 'other'];
-if (!$is_moving && !in_array($package_type, $valid_types))
+if (!in_array($package_type, $valid_types))
     $errors[] = "Loại hàng không hợp lệ";
 
 // Nếu là chuyển khoản, tiền thu hộ phải bằng 0
-if ($payment_method === 'bank_transfer' || $is_moving || $is_international) {
+if ($payment_method === 'bank_transfer' || $is_international) {
     $cod_amount = 0;
 }
 
 $note_extras = [];
-if (!$is_moving && !empty($item_name)) {
+if (!empty($item_name)) {
     $note_extras[] = "Tên hàng: " . preg_replace('/\s+/', ' ', $item_name);
 }
-if (!$is_moving && !empty($goods_description)) {
+if (!empty($goods_description)) {
     $note_extras[] = "Hàng hóa: " . preg_replace('/\s+/', ' ', $goods_description);
 }
-if (!$is_moving) {
+if (true) { // Always include fee payer info for regular delivery
     $fee_payer_label = ($fee_payer === 'receiver') ? 'Người nhận' : 'Người gửi';
     $note_extras[] = "Người trả cước: " . $fee_payer_label;
 }

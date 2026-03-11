@@ -1,5 +1,7 @@
 (function () {
-  const inPublicDir = window.location.pathname.toLowerCase().includes("/public/");
+  const inPublicDir = window.location.pathname
+    .toLowerCase()
+    .includes("/public/");
   const basePath =
     typeof window.apiBasePath === "string"
       ? window.apiBasePath
@@ -16,18 +18,27 @@
   if (!Array.isArray(window.servicesData)) {
     window.servicesData = [
       { id: 1, name: "Giao chậm", type_key: "slow", base_price: 20000.0 },
-      { id: 2, name: "Giao tiêu chuẩn", type_key: "standard", base_price: 30000.0 },
+      {
+        id: 2,
+        name: "Giao tiêu chuẩn",
+        type_key: "standard",
+        base_price: 30000.0,
+      },
       { id: 3, name: "Giao nhanh", type_key: "fast", base_price: 40000.0 },
       { id: 4, name: "Giao hỏa tốc", type_key: "express", base_price: 50000.0 },
     ];
   }
   if (!window.pricingConfig || typeof window.pricingConfig !== "object") {
-    window.pricingConfig = { weight_free: 2, weight_price: 5000, cod_min: 5000 };
+    window.pricingConfig = {
+      weight_free: 2,
+      weight_price: 5000,
+      cod_min: 5000,
+    };
   }
 
   const partialUrl = `${basePath}assets/partials/shared-modals.html`;
   const deliveryModalId = "booking-modal-delivery";
-    let initialized = false;
+  let initialized = false;
   const deliveryItemOptionsByType = {
     thuong: [
       "Quần áo/vải vóc",
@@ -85,7 +96,9 @@
   };
 
   function isDeliveryType(typeKey) {
-    const value = String(typeKey || "").trim().toLowerCase();
+    const value = String(typeKey || "")
+      .trim()
+      .toLowerCase();
     return [
       "slow",
       "standard",
@@ -97,7 +110,9 @@
   }
 
   function isInternationalDeliveryType(typeKey) {
-    const value = String(typeKey || "").trim().toLowerCase();
+    const value = String(typeKey || "")
+      .trim()
+      .toLowerCase();
     return ["intl_economy", "intl_express"].includes(value);
   }
 
@@ -206,7 +221,9 @@
     if (!itemType || !itemName) return;
 
     const applyState = () => {
-      const key = String(itemType.value || "").trim().toLowerCase();
+      const key = String(itemType.value || "")
+        .trim()
+        .toLowerCase();
       const options = deliveryItemOptionsByType[key] || [];
       setSelectOptions(itemName, options, "Chọn tên hàng");
       itemName.disabled = options.length === 0;
@@ -221,7 +238,8 @@
 
   function getRouteLocationSource() {
     const quoteData =
-      window.QUOTE_SHIPPING_DATA && typeof window.QUOTE_SHIPPING_DATA === "object"
+      window.QUOTE_SHIPPING_DATA &&
+      typeof window.QUOTE_SHIPPING_DATA === "object"
         ? window.QUOTE_SHIPPING_DATA
         : {};
     const rawCityMap =
@@ -287,9 +305,7 @@
       });
     });
 
-    const optionList = Array.from(suggestions)
-      .filter(Boolean)
-      .slice(0, 700);
+    const optionList = Array.from(suggestions).filter(Boolean).slice(0, 700);
     datalist.innerHTML = "";
     optionList.forEach((value) => {
       const option = document.createElement("option");
@@ -297,10 +313,7 @@
       datalist.appendChild(option);
     });
 
-    [
-      "pickup-addr",
-      "delivery-addr",
-          ]
+    ["pickup-addr", "delivery-addr"]
       .map((id) => document.getElementById(id))
       .filter(Boolean)
       .forEach((input) => {
@@ -346,7 +359,8 @@
     const deliveryCity = document.getElementById("delivery-city");
     const deliveryDistrict = document.getElementById("delivery-district");
 
-    if (!pickupCity || !pickupDistrict || !deliveryCity || !deliveryDistrict) return;
+    if (!pickupCity || !pickupDistrict || !deliveryCity || !deliveryDistrict)
+      return;
 
     const { cityMap, cities } = getRouteLocationSource();
 
@@ -374,7 +388,8 @@
     if (!countrySelect || !provinceSelect) return;
 
     const quoteData =
-      window.QUOTE_SHIPPING_DATA && typeof window.QUOTE_SHIPPING_DATA === "object"
+      window.QUOTE_SHIPPING_DATA &&
+      typeof window.QUOTE_SHIPPING_DATA === "object"
         ? window.QUOTE_SHIPPING_DATA
         : {};
     const intlData =
@@ -385,14 +400,17 @@
       Array.isArray(intlData.countries) ? intlData.countries : [],
     );
     const destinationRegions =
-      intlData.destinationRegions && typeof intlData.destinationRegions === "object"
+      intlData.destinationRegions &&
+      typeof intlData.destinationRegions === "object"
         ? intlData.destinationRegions
         : {};
     const countryZoneMap =
       intlData.countryZoneMap && typeof intlData.countryZoneMap === "object"
         ? intlData.countryZoneMap
         : {};
-    const regionCountries = toUniqueSortedLocations(Object.keys(destinationRegions));
+    const regionCountries = toUniqueSortedLocations(
+      Object.keys(destinationRegions),
+    );
     const zoneCountries = toUniqueSortedLocations(Object.keys(countryZoneMap));
 
     // Chỉ giữ quốc gia đồng nhất giữa danh sách hiển thị + vùng đến + zone tính giá.
@@ -427,24 +445,33 @@
     const serviceSelect = document.getElementById("order-service-type");
     if (!serviceSelect) return;
 
-    const deliveryCityGroup = document.getElementById("delivery-domestic-city-group");
+    const deliveryCityGroup = document.getElementById(
+      "delivery-domestic-city-group",
+    );
     const deliveryDistrictGroup = document.getElementById(
       "delivery-domestic-district-group",
     );
-    const intlCountryGroup = document.getElementById("delivery-intl-country-group");
-    const intlProvinceGroup = document.getElementById("delivery-intl-province-group");
+    const intlCountryGroup = document.getElementById(
+      "delivery-intl-country-group",
+    );
+    const intlProvinceGroup = document.getElementById(
+      "delivery-intl-province-group",
+    );
     const intlCountrySelect = document.getElementById("delivery-intl-country");
     const codField = document.getElementById("cod-field-group");
     const codInput = document.getElementById("cod_amount");
 
     const applyState = () => {
       const isIntl = isInternationalDeliveryType(serviceSelect.value);
-      if (deliveryCityGroup) deliveryCityGroup.style.display = isIntl ? "none" : "";
+      if (deliveryCityGroup)
+        deliveryCityGroup.style.display = isIntl ? "none" : "";
       if (deliveryDistrictGroup) {
         deliveryDistrictGroup.style.display = isIntl ? "none" : "";
       }
-      if (intlCountryGroup) intlCountryGroup.style.display = isIntl ? "block" : "none";
-      if (intlProvinceGroup) intlProvinceGroup.style.display = isIntl ? "block" : "none";
+      if (intlCountryGroup)
+        intlCountryGroup.style.display = isIntl ? "block" : "none";
+      if (intlProvinceGroup)
+        intlProvinceGroup.style.display = isIntl ? "block" : "none";
       if (intlCountrySelect) {
         intlCountrySelect.required = isIntl;
       }
@@ -528,7 +555,7 @@
 
     window.addEventListener("click", function (event) {
       const deliveryModal = getModal("delivery");
-        if (event.target === deliveryModal) closeModal("delivery");
+      if (event.target === deliveryModal) closeModal("delivery");
     });
   }
 
@@ -536,7 +563,9 @@
     if (!ensureModalMarkup()) return;
     initModalBindings();
 
-    const normalized = String(serviceType || "").trim().toLowerCase();
+    const normalized = String(serviceType || "")
+      .trim()
+      .toLowerCase();
     const deliverySelect = document.getElementById("order-service-type");
     if (deliverySelect && isDeliveryType(normalized)) {
       deliverySelect.value = normalized;
