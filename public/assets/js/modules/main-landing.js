@@ -599,6 +599,19 @@
     updateIntlProvinceOptions();
     loadAccurateDistrictData();
     setActiveMode(modeInput && modeInput.value ? modeInput.value : "domestic");
+    function initCurrencyInputs() {
+      const currencyInputs = document.querySelectorAll(".input-currency");
+      currencyInputs.forEach((input) => {
+        input.addEventListener("input", (e) => {
+          let value = e.target.value.replace(/\D/g, "");
+          if (value) {
+            value = parseInt(value, 10).toLocaleString("vi-VN");
+          }
+          e.target.value = value;
+        });
+      });
+    }
+
     initCurrencyInputs();
 
     quickQuoteForm.addEventListener("submit", function (e) {
